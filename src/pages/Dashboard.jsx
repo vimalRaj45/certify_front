@@ -22,7 +22,7 @@ import Login from './Login';
 import Loader from '../components/Loader';
 import { authClient } from '../lib/auth';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com ';
+const API_BASE = (import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com').trim();
 
 const DraggableField = ({ field, isSelected, onClick, handleDragStop, updateFieldSize, updateFieldColor, removeField }) => {
     const nodeRef = useRef(null);
@@ -402,7 +402,9 @@ function Home() {
                 }));
 
                 if (data.stage === 'completed' || data.stage === 'finalizing') {
-                    setIsGenerating(true); // Keep overlay until button clicked or data available
+                    if (data.downloadUrl) {
+                        setDownloadUrl(`${API_BASE}${data.downloadUrl}`);
+                    }
                     if (data.stage === 'completed') {
                         setShowDownload(true);
                         setIsGenerating(false);

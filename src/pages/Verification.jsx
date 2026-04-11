@@ -1,169 +1,371 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { FileUpload } from 'primereact/fileupload';
 import { Button } from 'primereact/button';
-import { ProgressBar } from 'primereact/progressbar';
 import toast, { Toaster } from 'react-hot-toast';
 import AOS from 'aos';
 
-const API_BASE ='https://certify-open.onrender.com'; // Use your actual API base
+const API_BASE = 'https://certify-open.onrender.com';
 
+const STEP_META = {
+    hashing: { label: 'Layer 1 · Cryptographic Integrity', icon: 'pi-key', color: '#6366F1', num: 1 },
+    parsing: { label: 'Layer 2 · Metadata Extraction', icon: 'pi-database', color: '#0EA5E9', num: 2 },
+    handshake: { label: 'Layer 3 · Signature Validation', icon: 'pi-verified', color: '#8B5CF6', num: 3 },
+    registry: { label: 'Layer 4 · Registry Consensus', icon: 'pi-globe', color: '#10B981', num: 4 },
+};
+
+const STEP_ORDER = ['hashing', 'parsing', 'handshake', 'registry'];
+
+// Comparison row with entrance animation
+const CompareRow = ({ row, index }) => {
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        const t = setTimeout(() => setVisible(true), index * 180);
+        return () => clearTimeout(t);
+    }, [index]);
+
+    return (
+        <div style={{
+            display: 'grid',
+            gridTemplateColumns: '110px 1fr 28px',
+            gap: '6px 10px',
+            alignItems: 'start',
+            padding: '8px 0',
+            borderBottom: '1px solid rgba(255,255,255,0.04)',
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateX(0)' : 'translateX(-8px)',
+            transition: 'opacity 0.3s ease, transform 0.3s ease',
+        }}>
+            {/* Label */}
+            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', paddingTop: 3 }}>
+                {row.label}
+            </span>
+
+            {/* Values */}
+            <div style={{ fontFamily: 'monospace', fontSize: '0.8rem', lineHeight: 1.6, wordBreak: 'break-all' }}>
+                {row.expected !== undefined && (
+                    <div style={{ marginBottom: 2 }}>
+                        <span style={{ color: '#475569', fontSize: '0.7rem', marginRight: 6 }}>EXPECTED</span>
+                        <span style={{ color: row.match ? '#94A3B8' : '#FCA5A5' }}>{row.expected}</span>
+                    </div>
+                )}
+                <div>
+                    {row.expected !== undefined && (
+                        <span style={{ color: '#475569', fontSize: '0.7rem', marginRight: 14 }}>GOT</span>
+                    )}
+                    <span style={{ color: row.match ? '#6EE7B7' : (row.expected !== undefined ? '#F87171' : '#CBD5E1') }}>
+                        {row.got}
+                    </span>
+                </div>
+            </div>
+
+            {/* Match badge */}
+            <div style={{
+                width: 22, height: 22, borderRadius: '50%',
+                background: row.match ? '#10B981' : '#EF4444',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '0.65rem', color: '#fff', fontWeight: 900,
+                marginTop: 2, flexShrink: 0,
+                boxShadow: `0 2px 6px ${row.match ? '#10B98150' : '#EF444450'}`
+            }}>
+                {row.match ? '✓' : '✗'}
+            </div>
+        </div>
+    );
+};
+
+// Single step card
+const StepCard = ({ step }) => {
+    const meta = STEP_META[step.id] || { label: step.id, icon: 'pi-circle', color: '#64748B', num: 0 };
+    const isWorking = step.status === 'working';
+    const isPassed = step.status === 'pass';
+    const isFailed = step.status === 'fail';
+    const accentColor = isPassed ? '#10B981' : (isFailed ? '#EF4444' : meta.color);
+
+    return (
+        <div style={{
+            background: '#0F172A',
+            border: `1.5px solid ${accentColor}40`,
+            borderRadius: 20,
+            overflow: 'hidden',
+            boxShadow: isWorking
+                ? `0 0 0 3px ${meta.color}30, 0 4px 20px rgba(0,0,0,0.2)`
+                : '0 2px 12px rgba(0,0,0,0.12)',
+            transition: 'box-shadow 0.4s ease, border-color 0.4s ease',
+        }}>
+            {/* ── Header ── */}
+            <div style={{
+                display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px',
+                borderBottom: step.comparisons?.length ? '1px solid rgba(255,255,255,0.06)' : 'none'
+            }}>
+                {/* Step number + icon */}
+                <div style={{
+                    width: 40, height: 40, borderRadius: 13, flexShrink: 0,
+                    background: `linear-gradient(135deg, ${accentColor}CC, ${accentColor}88)`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: `0 4px 14px ${accentColor}50`,
+                    transition: 'background 0.4s',
+                }}>
+                    {isWorking
+                        ? <i className="pi pi-spin pi-spinner" style={{ color: '#fff', fontSize: '1rem' }}></i>
+                        : <i className={`pi ${isPassed ? 'pi-check' : (isFailed ? 'pi-times' : meta.icon)}`}
+                            style={{ color: '#fff', fontSize: '1rem' }}></i>
+                    }
+                </div>
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '0.67rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+                        {meta.label}
+                    </div>
+                    <div style={{ fontSize: '0.93rem', fontWeight: 700, color: isFailed ? '#FCA5A5' : (isPassed ? '#A7F3D0' : '#E2E8F0'), lineHeight: 1.3 }}>
+                        {step.message}
+                    </div>
+                </div>
+
+                {/* Status pill */}
+                <div style={{
+                    padding: '5px 13px', borderRadius: 20, fontSize: '0.7rem', fontWeight: 800,
+                    whiteSpace: 'nowrap', flexShrink: 0,
+                    background: isPassed ? '#10B98118' : (isFailed ? '#EF444418' : `${meta.color}18`),
+                    color: isPassed ? '#34D399' : (isFailed ? '#F87171' : '#A5B4FC'),
+                    border: `1px solid ${isPassed ? '#10B98130' : (isFailed ? '#EF444430' : `${meta.color}30`)}`,
+                }}>
+                    {isWorking ? '⟳ RUNNING' : (isPassed ? '✓ PASSED' : '✗ FAILED')}
+                </div>
+            </div>
+
+            {/* ── Comparison table (drops in row by row) ── */}
+            {step.comparisons?.length > 0 && (
+                <div style={{ padding: '10px 20px 14px' }}>
+                    {step.comparisons.map((row, i) => (
+                        <CompareRow key={i} row={row} index={i} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Main page
 const VerificationPage = ({ onBack }) => {
     const [verifying, setVerifying] = useState(false);
     const [result, setResult] = useState(null);
+    const [steps, setSteps] = useState([]);
+    const esRef = useRef(null);
 
-    React.useEffect(() => {
-        AOS.init({ duration: 800 });
+    useEffect(() => {
+        AOS.init({ duration: 600 });
+        return () => { if (esRef.current) esRef.current.close(); };
     }, []);
+
+    const pushStep = (id, status, message, comparisons) => {
+        setSteps(prev => {
+            const idx = prev.findIndex(s => s.id === id);
+            const entry = { id, status, message, comparisons: comparisons || [] };
+            if (idx >= 0) {
+                const next = [...prev];
+                next[idx] = entry;
+                return next;
+            }
+            return [...prev, entry];
+        });
+    };
 
     const onUpload = async (e) => {
         const file = e.files[0];
         if (!file) return;
 
+        const verifyKey = `v_${Date.now()}_${Math.random().toString(36).substring(7)}`;
         setVerifying(true);
         setResult(null);
+        setSteps([]);
+
+        const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'https://certify-open.onrender.com' : API_BASE;
+
+        const es = new EventSource(`${currentApiBase}/progress?key=${verifyKey}`);
+        esRef.current = es;
+
+        // Wait for SSE handshake 'connected'
+        await new Promise(resolve => {
+            const onConnected = (ev) => {
+                if (ev.data === 'connected') { es.removeEventListener('message', onConnected); resolve(); }
+            };
+            es.addEventListener('message', onConnected);
+            es.onerror = () => resolve();
+        });
+
+        // Live listener — each SSE event updates or adds a step card
+        es.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type !== 'verify_progress') return;
+                pushStep(data.step, data.status, data.message, data.comparisons);
+            } catch (_) { }
+        };
 
         const formData = new FormData();
+        formData.append('verifyKey', verifyKey);
         formData.append('file', file);
 
         try {
-            const resp = await axios.post(`${API_BASE}/verify-pdf`, formData, {
+            const resp = await axios.post(`${currentApiBase}/verify-pdf`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
+            await new Promise(r => setTimeout(r, 600));
             setResult(resp.data);
-            if (resp.data.verified) {
-                toast.success('Certificate Successfully Verified!');
-            } else {
-                toast.error(resp.data.message || 'Verification Failed');
-            }
+            if (resp.data.verified) toast.success('Certificate Verified!');
+            else toast.error('Verification Failed');
         } catch (err) {
             console.error(err);
-            toast.error('Failed to process verification. Please try again.');
+            toast.error('Could not reach the verification server.');
         } finally {
             setVerifying(false);
+            es.close();
+            esRef.current = null;
         }
     };
 
-    return (
-        <div style={{ minHeight: '100vh', background: '#F8FAFF', padding: '40px 24px', fontFamily: 'Inter, sans-serif' }}>
-            <Toaster position="top-center" />
+    const handleReset = () => { setResult(null); setSteps([]); };
 
-            <nav style={{ maxWidth: 800, margin: '0 auto 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    return (
+        <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #F0F4FF 0%, #FAF5FF 100%)', padding: '40px 24px', fontFamily: 'Inter, sans-serif' }}>
+            <Toaster position="top-center" />
+            <style>{`
+                @keyframes fadeSlideIn {
+                    from { opacity:0; transform:translateY(12px); }
+                    to   { opacity:1; transform:translateY(0); }
+                }
+                .step-enter { animation: fadeSlideIn 0.35s ease forwards; }
+            `}</style>
+
+            {/* Nav */}
+            <nav style={{ maxWidth: 780, margin: '0 auto 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={onBack}>
-                    <div style={{ width: 34, height: 34, background: 'linear-gradient(135deg, #3B82F6, #A855F7)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#3B82F6,#A855F7)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <i className="pi pi-verified" style={{ color: '#fff', fontSize: '1rem' }}></i>
                     </div>
-                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.2rem', color: '#0F172A' }}>CertifyPro <span style={{ color: '#3B82F6', fontWeight: 400 }}>Verify</span></span>
+                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.2rem', color: '#0F172A' }}>
+                        CertifyPro <span style={{ color: '#3B82F6', fontWeight: 400 }}>Verify</span>
+                    </span>
                 </div>
                 <Button label="Back to Home" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={onBack} />
             </nav>
 
-            <div style={{ maxWidth: 800, margin: '0 auto' }}>
-                <div style={{
-                    background: '#fff', borderRadius: 32, padding: '48px 32px',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.03)', border: '1px solid #F1F5F9',
-                    textAlign: 'center'
-                }} data-aos="fade-up">
-                    <div className="badge badge-blue" style={{ marginBottom: 16 }}>
-                        <i className="pi pi-shield"></i> Security Audit
+            <div style={{ maxWidth: 780, margin: '0 auto' }}>
+
+                {/* Header card */}
+                <div style={{ background: '#fff', borderRadius: 28, padding: '40px 32px 32px', boxShadow: '0 4px 24px rgba(0,0,0,0.05)', border: '1px solid #E8EDF5', textAlign: 'center', marginBottom: 24 }} data-aos="fade-up">
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', padding: '6px 14px', borderRadius: 20, marginBottom: 18 }}>
+                        <i className="pi pi-shield" style={{ color: '#6366F1', fontSize: '0.8rem' }}></i>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#4338CA', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Multi-Layer Security Engine</span>
                     </div>
-                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.5rem', marginBottom: 16, color: '#0F172A', letterSpacing: '-0.02em' }}>
+                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.4rem', color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
                         Certificate Verification
                     </h1>
-                    <p style={{ color: '#64748B', fontSize: '1.1rem', maxWidth: 500, margin: '0 auto 40px', lineHeight: 1.6 }}>
-                        Upload a digital certificate issued by CertifyPro to instantly verify its authenticity and metadata.
+                    <p style={{ color: '#64748B', fontSize: '1rem', maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.7 }}>
+                        Upload a CertifyPro PDF. Each security layer computes, shows its full comparison, then passes control to the next.
                     </p>
 
-                    {!result && !verifying && (
-                        <div style={{
-                            border: '2px dashed #E2E8F0', borderRadius: 24, padding: '40px',
-                            background: 'rgba(59,130,246,0.02)', cursor: 'pointer',
-                            transition: 'all 0.3s'
-                        }} className="hover:border-blue-500 hover:bg-blue-50">
+                    {!verifying && !result && (
+                        <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: '36px', background: 'rgba(99,102,241,0.02)' }}>
                             <FileUpload mode="basic" name="file" accept="application/pdf" maxFileSize={10000000}
-                                onSelect={onUpload} auto chooseLabel="Click to Upload PDF Certificate"
-                                style={{ width: '100%', borderRadius: 16 }} />
-                            <p style={{ color: '#94A3B8', fontSize: '0.85rem', marginTop: 16 }}>
-                                Max file size: 10MB · Format: PDF
-                            </p>
+                                onSelect={onUpload} auto chooseLabel="Choose PDF Certificate to Verify"
+                                style={{ borderRadius: 14 }} />
+                            <p style={{ color: '#94A3B8', fontSize: '0.82rem', marginTop: 14 }}>Max 10MB · PDF only</p>
                         </div>
                     )}
 
-                    {verifying && (
-                        <div style={{ padding: '40px 0' }}>
-                            <div className="pi pi-spin pi-spinner" style={{ fontSize: '2.5rem', color: '#2563EB', marginBottom: 20 }}></div>
-                            <h3 style={{ fontWeight: 800, color: '#0F172A', marginBottom: 12 }}>Analyzing Digital Signature...</h3>
-                            <ProgressBar mode="indeterminate" style={{ height: 6, borderRadius: 50, maxWidth: 300, margin: '0 auto' }} />
-                        </div>
-                    )}
-
-                    {result && (
-                        <div style={{
-                            padding: '32px', borderRadius: 24,
-                            background: result.verified ? 'rgba(16,185,129,0.04)' : 'rgba(239,68,68,0.04)',
-                            border: `1px solid ${result.verified ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`
-                        }} data-aos="zoom-in">
-                            <div style={{
-                                width: 64, height: 64, borderRadius: '50%',
-                                background: result.verified ? '#10B981' : '#EF4444',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px',
-                                boxShadow: `0 10px 20px ${result.verified ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`
-                            }}>
-                                <i className={`pi ${result.verified ? 'pi-check' : (result.message && result.message.includes('SECURITY ALERT') ? 'pi-shield' : 'pi-times')}`} style={{ color: '#fff', fontSize: '2rem' }}></i>
-                            </div>
-
-                            <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.75rem', marginBottom: 8, color: result.verified ? '#065F46' : '#991B1B' }}>
-                                {result.verified ? 'Legitimate Certificate' : (result.message && result.message.includes('SECURITY ALERT') ? 'Tampered Document Detected' : 'Verification Failed')}
-                            </h2>
-
-                            {result.message && result.message.includes('SECURITY ALERT') ? (
-                                <div style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', padding: '16px', borderRadius: '12px', marginBottom: '32px', display: 'flex', alignItems: 'flex-start', gap: '12px', textAlign: 'left' }}>
-                                    <i className="pi pi-exclamation-triangle" style={{ color: '#DC2626', marginTop: '4px', fontSize: '1.2rem' }}></i>
-                                    <div>
-                                        <h4 style={{ margin: 0, color: '#991B1B', fontWeight: 800, marginBottom: '4px', fontSize: '1rem' }}>Security Alert</h4>
-                                        <p style={{ margin: 0, color: '#B91C1C', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                                            {result.message.replace('SECURITY ALERT: ', '')}
-                                        </p>
-                                    </div>
-                                </div>
-                            ) : (
-                                <p style={{ color: '#64748B', marginBottom: 32 }}>
-                                    {result.verified ? 'This certificate is authentic and recorded in our secure registry.' : result.message}
-                                </p>
-                            )}
-
-                            {result.verified && (
-                                <div style={{
-                                    background: '#fff', padding: '24px', borderRadius: 20,
-                                    textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 16,
-                                    border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)'
-                                }}>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 12 }}>
-                                        <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recipient</span>
-                                        <span style={{ fontWeight: 800, color: '#0F172A' }}>{result.data.name}</span>
-                                    </div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 12 }}>
-                                        <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Issue Date</span>
-                                        <span style={{ fontWeight: 800, color: '#0F172A' }}>{new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' })}</span>
-                                    </div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 12 }}>
-                                        <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Cert ID</span>
-                                        <span style={{ fontWeight: 700, color: '#3B82F6', fontFamily: 'monospace', fontSize: '0.8rem' }}>{result.data.id}</span>
-                                    </div>
-                                </div>
-                            )}
-
-                            <Button label="Verify Another" icon="pi pi-refresh" className="p-button-text p-button-secondary"
-                                style={{ marginTop: 32, fontWeight: 800 }} onClick={() => setResult(null)} />
-                        </div>
+                    {!verifying && result && (
+                        <Button label="Verify Another Certificate" icon="pi pi-refresh" onClick={handleReset}
+                            style={{ borderRadius: 12, fontWeight: 700, background: 'linear-gradient(135deg,#3B82F6,#6366F1)', border: 'none', padding: '12px 24px' }} />
                     )}
                 </div>
 
-                <div style={{ marginTop: 40, textAlign: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-                        <i className="pi pi-lock" style={{ color: '#10B981', fontSize: '0.8rem' }}></i>
-                        <span style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' }}>Enterprise Bank-Grade Security</span>
+                {/* Sequential step feed */}
+                {(verifying || steps.length > 0) && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+                        {/* Connecting placeholder when no steps yet */}
+                        {verifying && steps.length === 0 && (
+                            <div className="step-enter" style={{ background: '#0F172A', border: '1.5px solid #1E293B', borderRadius: 20, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 14 }}>
+                                <div className="pi pi-spin pi-spinner" style={{ color: '#6366F1', fontSize: '1.2rem' }}></div>
+                                <span style={{ color: '#64748B', fontWeight: 600 }}>Connecting to security engine...</span>
+                            </div>
+                        )}
+
+                        {/* Render each step card with entrance animation */}
+                        {steps.map((step, idx) => (
+                            <div key={step.id} className="step-enter">
+                                <StepCard step={step} />
+                            </div>
+                        ))}
+
+                        {/* Connector line + "next layer" loading dot when current layer passed and next hasn't started */}
+                        {verifying && steps.length > 0 && steps[steps.length - 1]?.status === 'pass' && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 8px' }}>
+                                <div style={{ width: 2, height: 24, background: 'linear-gradient(180deg,#6366F120,#6366F180)', borderRadius: 2, marginLeft: 18 }}></div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <div className="pi pi-spin pi-spinner" style={{ color: '#6366F1', fontSize: '0.85rem' }}></div>
+                                    <span style={{ color: '#6366F1', fontSize: '0.82rem', fontWeight: 700 }}>
+                                        Running{' '}
+                                        {(() => {
+                                            const doneIds = steps.map(s => s.id);
+                                            const next = STEP_ORDER.find(s => !doneIds.includes(s));
+                                            return next ? STEP_META[next]?.label : 'final checks';
+                                        })()}...
+                                    </span>
+                                </div>
+                            </div>
+                        )}
                     </div>
+                )}
+
+                {/* Final result card */}
+                {result && (
+                    <div data-aos="zoom-in" style={{
+                        marginTop: 20,
+                        background: result.verified ? 'linear-gradient(135deg,#F0FDF4,#DCFCE7)' : 'linear-gradient(135deg,#FFF5F5,#FEE2E2)',
+                        border: `1.5px solid ${result.verified ? '#86EFAC' : '#FCA5A5'}`,
+                        borderRadius: 24, padding: '32px', textAlign: 'center'
+                    }}>
+                        <div style={{
+                            width: 72, height: 72, borderRadius: '50%', margin: '0 auto 20px',
+                            background: result.verified ? '#10B981' : '#EF4444',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            boxShadow: `0 12px 28px ${result.verified ? '#10B98140' : '#EF444440'}`
+                        }}>
+                            <i className={`pi ${result.verified ? 'pi-check' : (result.message?.includes('SECURITY ALERT') ? 'pi-shield' : 'pi-times')}`}
+                                style={{ color: '#fff', fontSize: '2rem' }}></i>
+                        </div>
+                        <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 8px', color: result.verified ? '#064E3B' : '#991B1B' }}>
+                            {result.verified ? '✅ Legitimate Certificate' : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered Document' : '❌ Verification Failed')}
+                        </h2>
+                        <p style={{ color: result.verified ? '#065F46' : '#B91C1C', margin: '0 0 24px', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                            {result.verified ? 'This certificate is authentic and on record in our secure registry.' : result.message}
+                        </p>
+
+                        {result.verified && result.data && (
+                            <div style={{ background: '#fff', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid #D1FAE5' }}>
+                                {[
+                                    { label: 'Recipient', value: result.data.name },
+                                    { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' }) },
+                                    { label: 'Certificate ID', value: result.data.id, mono: true },
+                                ].map(row => (
+                                    <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
+                                        <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
+                                        <span style={{ fontWeight: 700, color: row.mono ? '#6366F1' : '#0F172A', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* Footer */}
+                <div style={{ marginTop: 32, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                    <i className="pi pi-lock" style={{ color: '#10B981', fontSize: '0.75rem' }}></i>
+                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' }}>Enterprise Bank-Grade Security · Certify-SSE v2</span>
                 </div>
             </div>
         </div>
