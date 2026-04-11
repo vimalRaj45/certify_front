@@ -27,37 +27,38 @@ const CompareRow = ({ row, index }) => {
     return (
         <div style={{
             display: 'grid',
-            gridTemplateColumns: '110px 1fr 28px',
-            gap: '6px 10px',
+            gridTemplateColumns: '130px 1fr 28px',
+            gap: '6px 14px',
             alignItems: 'start',
-            padding: '8px 0',
-            borderBottom: '1px solid rgba(255,255,255,0.04)',
+            padding: '10px 0',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
             opacity: visible ? 1 : 0,
             transform: visible ? 'translateX(0)' : 'translateX(-8px)',
             transition: 'opacity 0.3s ease, transform 0.3s ease',
         }}>
             {/* Label */}
-            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', paddingTop: 3 }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', paddingTop: 2 }}>
                 {row.label}
             </span>
-
+ 
             {/* Values */}
-            <div style={{ fontFamily: 'monospace', fontSize: '0.8rem', lineHeight: 1.6, wordBreak: 'break-all' }}>
+            <div style={{ fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 1.5, wordBreak: 'break-all' }}>
                 {row.expected !== undefined && (
-                    <div style={{ marginBottom: 2 }}>
-                        <span style={{ color: '#475569', fontSize: '0.7rem', marginRight: 6 }}>EXPECTED</span>
-                        <span style={{ color: row.match ? '#94A3B8' : '#FCA5A5' }}>{row.expected}</span>
+                    <div style={{ marginBottom: 4 }}>
+                        <span style={{ color: '#475569', fontSize: '0.65rem', fontWeight: 900, marginRight: 8, background: 'rgba(255,255,255,0.03)', padding: '1px 4px', borderRadius: 4 }}>EXPECTED</span>
+                        <span style={{ color: row.match ? '#94A3B8' : '#FCA5A5', fontWeight: row.match ? 400 : 700 }}>{row.expected}</span>
                     </div>
                 )}
-                <div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                     {row.expected !== undefined && (
-                        <span style={{ color: '#475569', fontSize: '0.7rem', marginRight: 14 }}>GOT</span>
+                        <span style={{ color: row.match ? '#475569' : '#EF4444', fontSize: '0.65rem', fontWeight: 900, background: row.match ? 'rgba(255,255,255,0.03)' : 'rgba(239,68,68,0.1)', padding: '1px 4px', borderRadius: 4 }}>GOT</span>
                     )}
-                    <span style={{ color: row.match ? '#6EE7B7' : (row.expected !== undefined ? '#F87171' : '#CBD5E1') }}>
+                    <span style={{ color: row.match ? '#6EE7B7' : '#F87171', fontWeight: row.match ? 400 : 700 }}>
                         {row.got}
                     </span>
                 </div>
             </div>
+
 
             {/* Match badge */}
             <div style={{
