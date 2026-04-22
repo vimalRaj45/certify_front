@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import toast, { Toaster } from 'react-hot-toast';
 import AOS from 'aos';
 
-const API_BASE = 'https://certify-open.onrender.com';
+const API_BASE = 'https://certify-vsgrps.onrender.com';
 
 const STEP_META = {
     hashing: { label: 'Layer 1 · Cryptographic Integrity', icon: 'pi-key', color: '#6366F1', num: 1 },
@@ -40,7 +40,7 @@ const CompareRow = ({ row, index }) => {
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', paddingTop: 2 }}>
                 {row.label}
             </span>
- 
+
             {/* Values */}
             <div style={{ fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 1.5, wordBreak: 'break-all' }}>
                 {row.expected !== undefined && (
@@ -182,7 +182,7 @@ const VerificationPage = ({ onBack }) => {
         setSteps([]);
 
         const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'https://certify-open.onrender.com' : API_BASE;
+            ? 'https://certify-vsgrps.onrender.com' : API_BASE;
 
         const es = new EventSource(`${currentApiBase}/progress?key=${verifyKey}`);
         esRef.current = es;

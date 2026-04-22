@@ -6,6 +6,7 @@ import { Card } from 'primereact/card';
 import quizApi from '../../services/quizApi';
 import toast from 'react-hot-toast';
 import { InputText } from 'primereact/inputtext';
+import FaceMonitor from '../../components/FaceMonitor';
 
 const TakeQuiz = () => {
   const { quizId } = useParams();
@@ -120,18 +121,7 @@ const TakeQuiz = () => {
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        const nextViolations = violations + 1;
-        setViolations(nextViolations);
-        
-        if (nextViolations >= 3) {
-          toast.error("Security Violation: Tab switch limit exceeded. Auto-submitting.", { duration: 5000 });
-          submitQuiz();
-        } else {
-          toast.error(`⚠️ WARNING (${nextViolations}/3): Do not switch tabs! Auto-submit on next strike.`, { 
-            style: { border: '2px solid red', color: 'red', fontWeight: 900 },
-            duration: 4000 
-          });
-        }
+        handleViolation("Security Violation: Tab switch detected!");
       }
     };
 
@@ -186,6 +176,33 @@ const TakeQuiz = () => {
       newAnswers.push({ question_id: questions[currentIndex].id, answer: val });
     }
     setAnswers(newAnswers);
+  };
+
+  const handleViolation = (message, isCritical = false) => {
+    if (isSubmitted || !isStarted) return;
+    
+    // We update the state, but we must use the functional update to get the latest value if called rapidly
+    setViolations(prev => {
+      const nextCount = prev + 1;
+      
+      if (nextCount >= 3 || isCritical) {
+        toast.error(isCritical ? message : `SECURITY BREACH: ${message} Auto-submitting...`, { 
+          duration: 5000,
+          style: { background: '#ef4444', color: '#fff', fontWeight: 900 }
+        });
+        
+        // Use a timeout to ensure state update propagates before submission
+        setTimeout(() => submitQuiz(), 500);
+        return nextCount;
+      }
+
+      toast.error(`${message} Strike (${nextCount}/3)`, { 
+        style: { border: '2px solid orange', color: 'orange', fontWeight: 800 },
+        duration: 4000 
+      });
+      
+      return nextCount;
+    });
   };
 
   const nextQuestion = () => {
@@ -329,6 +346,13 @@ const TakeQuiz = () => {
       padding: '40px 20px',
       color: '#f8fafc'
     }}>
+      {/* AI Face Monitoring Component */}
+      <FaceMonitor 
+        isStarted={isStarted} 
+        isSubmitted={isSubmitted} 
+        onViolation={handleViolation} 
+      />
+
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <header style={{ marginBottom: 40 }}>
            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>

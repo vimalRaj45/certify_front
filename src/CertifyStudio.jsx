@@ -15,14 +15,13 @@ import { useNavigate } from 'react-router-dom';
 import Draggable from 'react-draggable';
 import gsap from 'gsap';
 import AOS from 'aos';
-
 import LandingPage from './pages/LandingPage';
 import Signin from './pages/Signin';
 import VerificationPage from './pages/Verification';
 import Loader from './components/Loader';
 import quizApi from './services/quizApi';
 
-const API_BASE = import.meta.env.VITE_API_URL || ' https://certify-open.onrender.com ';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
 
 const DraggableField = ({ field, isSelected, onClick, handleDragStop, updateFieldSize, updateFieldColor, removeField }) => {
     const nodeRef = useRef(null);
