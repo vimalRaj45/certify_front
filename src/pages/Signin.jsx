@@ -28,7 +28,7 @@ export default function Signin() {
       }
       localStorage.setItem("user", JSON.stringify(user));
 
-      fetch(" https://certify-vsgrps.onrender.com /save-user", {
+      fetch(" https://certify-open.onrender.com /save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
