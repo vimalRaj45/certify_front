@@ -17,17 +17,25 @@ const QuizHub = () => {
   const [name, setName] = useState('');
   const navigate = useNavigate();
 
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     fetchQuizzes();
   }, []);
 
   const fetchQuizzes = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const data = await quizApi.getQuizzes();
-      if (data.success) {
+      if (data.success && Array.isArray(data.quizzes)) {
         setQuizzes(data.quizzes);
+      } else {
+        setError("Invalid data format received from server");
       }
     } catch (err) {
+      console.error("Fetch error:", err);
+      setError(err.response?.data?.error || "Failed to reach the assessment server. Check your connection.");
       toast.error("Failed to load quizzes");
     } finally {
       setLoading(false);
@@ -182,7 +190,15 @@ const QuizHub = () => {
               </div>
             )}
             
-            {!loading && quizzes.length === 0 && (
+            {error && (
+              <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: 50, color: '#ef4444' }}>
+                <i className="pi pi-exclamation-triangle" style={{ fontSize: '3rem', marginBottom: 20 }}></i>
+                <p style={{ fontWeight: 600 }}>{error}</p>
+                <Button label="Try Again" icon="pi pi-refresh" text onClick={fetchQuizzes} className="mt-3" style={{ color: '#3b82f6' }} />
+              </div>
+            )}
+            
+            {!loading && !error && quizzes.length === 0 && (
               <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: 50, color: '#64748b' }}>
                 <i className="pi pi-inbox" style={{ fontSize: '3rem', marginBottom: 20 }}></i>
                 <p>No quizzes available yet. Be the first to create one!</p>
