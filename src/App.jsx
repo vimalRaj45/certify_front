@@ -12,6 +12,7 @@ import CreateQuiz from './pages/quiz/CreateQuiz';
 import TakeQuiz from './pages/quiz/TakeQuiz';
 import Leaderboard from './pages/quiz/Leaderboard';
 import History from './pages/quiz/History';
+import Analytics from './pages/quiz/Analytics';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/quiz/take/:quizId" element={<TakeQuiz />} />
         <Route path="/quiz/leaderboard/:quizId" element={<Leaderboard />} />
         <Route path="/quiz/history" element={<History />} />
+        <Route path="/quiz/analytics/:id" element={<Analytics />} />
       </Routes>
     </BrowserRouter>
   );

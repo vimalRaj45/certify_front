@@ -28,7 +28,7 @@ const Hero = ({ onOpenApp }) => {
     return (
         <section ref={heroRef} style={{
             minHeight: '100vh',
-            background: 'linear-gradient(180deg, #F8FAFF 0%, #FFFFFF 100%)',
+            background: 'var(--bg-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             position: 'relative', overflow: 'hidden',
             padding: '100px 20px'
@@ -37,7 +37,7 @@ const Hero = ({ onOpenApp }) => {
             <div style={{
                 position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)',
                 width: '80vw', height: '80vw',
-                background: 'radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)',
                 borderRadius: '50%', pointerEvents: 'none',
             }} />
 
@@ -56,7 +56,7 @@ const Hero = ({ onOpenApp }) => {
                 <div className="gsap-anim" style={{
                     display: 'inline-flex', alignItems: 'center', gap: 8,
                     padding: '8px 16px', borderRadius: 99,
-                    background: '#EFF6FF', border: '1px solid #DBEAFE',
+                    background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)',
                     marginBottom: 32
                 }}>
                     <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#3B82F6', animation: 'pulse 2s infinite' }}></div>
@@ -78,19 +78,19 @@ const Hero = ({ onOpenApp }) => {
                     fontSize: 'clamp(2.25rem, 8vw, 4.5rem)',
                     fontWeight: 900, lineHeight: 1.1,
                     letterSpacing: '-0.04em', marginBottom: 24,
-                    color: '#0F172A', fontFamily: 'Outfit'
+                    color: 'var(--text)', fontFamily: 'Outfit'
                 }}>
                     Professional <span style={{ 
-                        background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
+                        background: 'var(--aurora-gradient)',
                         WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
                     }}>{typedText}</span><br />
-                    <span style={{ color: '#64748B' }}>Without the Effort.</span>
+                    <span style={{ color: 'var(--text-secondary)' }}>Without the Effort.</span>
                 </h1>
 
                 {/* Subtext */}
                 <p className="gsap-anim" style={{
                     fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
-                    color: '#475569', maxWidth: 640, margin: '0 auto 48px',
+                    color: 'var(--text-secondary)', maxWidth: 640, margin: '0 auto 48px',
                     lineHeight: 1.6, fontWeight: 500
                 }}>
                     <strong>We don't just generate certificates; we provide value.</strong> Validate knowledge through secure assessments and instantly recognize success with professional, verified credentials.
@@ -103,7 +103,7 @@ const Hero = ({ onOpenApp }) => {
                         onClick={onOpenApp}
                         style={{
                             padding: '16px 36px', fontSize: '1.1rem', fontWeight: 800,
-                            background: '#2563EB', color: 'white', border: 'none',
+                            background: 'var(--accent)', color: 'white', border: 'none',
                             borderRadius: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10,
                             boxShadow: '0 10px 25px -5px rgba(37,99,235,0.4)',
                             transition: 'all 0.2s'
@@ -115,7 +115,7 @@ const Hero = ({ onOpenApp }) => {
                         onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
                         style={{
                             padding: '16px 32px', fontSize: '1.1rem', fontWeight: 700,
-                            background: 'white', color: '#475569', border: '1.5px solid #E2E8F0',
+                            background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1.5px solid var(--border)',
                             borderRadius: 14, cursor: 'pointer', transition: 'all 0.2s'
                         }}
                     >
@@ -126,7 +126,7 @@ const Hero = ({ onOpenApp }) => {
                 {/* Value Props */}
                 <div className="gsap-anim" style={{
                     display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '24px 48px',
-                    marginTop: 80, borderTop: '1px solid #F1F5F9', paddingTop: 40, width: '100%', maxWidth: 840
+                    marginTop: 80, borderTop: '1px solid var(--border)', paddingTop: 40, width: '100%', maxWidth: 840
                 }}>
                     {[
                         { icon: 'pi pi-bolt', text: 'Smart Assessments' },
@@ -134,8 +134,8 @@ const Hero = ({ onOpenApp }) => {
                         { icon: 'pi pi-shield', text: 'Anti-Cheat Proctoring' },
                         { icon: 'pi pi-box', text: 'Bulk ZIP Export' },
                     ].map((item, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.85rem', fontWeight: 700, color: '#64748B' }}>
-                            <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                            <div style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <i className={item.icon} style={{ fontSize: '0.7rem' }}></i>
                             </div>
                             {item.text}

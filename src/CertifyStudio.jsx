@@ -206,6 +206,23 @@ function CertifyStudio() {
     }, []);
 
     useEffect(() => {
+        const exported = localStorage.getItem('cert_participants');
+        if (exported) {
+            try {
+                const data = JSON.parse(exported);
+                setCsvData({ 
+                    columns: ["Name", "Email", "Score", "Total"], 
+                    participants: data 
+                });
+                toast.success("Imported quiz results successfully!", { icon: '🎓' });
+                localStorage.removeItem('cert_participants');
+            } catch (err) {
+                console.error("Failed to parse exported data", err);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
         const handleBeforeUnload = (e) => {
             if (isGenerating) {
                 e.preventDefault();
@@ -556,7 +573,7 @@ function CertifyStudio() {
                 </Dialog>
 
                 {/* Topbar */}
-                <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
+                <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 24px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                         <Button icon="pi pi-arrow-left" className="p-button-text p-button-secondary"
                             onClick={() => setShowApp(false)} tooltip="Exit Console"
@@ -579,14 +596,14 @@ function CertifyStudio() {
                     </div>
 
                     <div className="topbar-center" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ display: 'flex', gap: 8, background: '#F8FAFC', padding: '4px', borderRadius: 50, border: '1px solid #E2E8F0' }}>
+                        <div style={{ display: 'flex', gap: 8, background: 'rgba(255,255,255,0.03)', padding: '4px', borderRadius: 50, border: '1px solid var(--border)' }}>
                             {[{ label: 'Import', step: 1, done: !!csvData && !!templateUrl }, { label: 'Configure', step: 2, done: fields.length > 0 }, { label: 'Generate', step: 3, done: false }].map((s, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{
                                         display: 'flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 50,
-                                        background: s.done ? 'rgba(16,185,129,0.08)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '#fff' : 'transparent'),
-                                        border: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '1.5px solid #2563EB' : '1px solid transparent',
-                                        boxShadow: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '0 4px 10px rgba(37,99,235,0.1)' : 'none',
+                                        background: s.done ? 'rgba(16,185,129,0.1)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'rgba(255,255,255,0.05)' : 'transparent'),
+                                        border: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '1.5px solid var(--accent)' : '1px solid transparent',
+                                        boxShadow: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '0 4px 10px rgba(59,130,246,0.1)' : 'none',
                                     }}>
                                         <div style={{
                                             width: 6, height: 6, borderRadius: '50%',
@@ -1054,12 +1071,12 @@ function CertifyStudio() {
                                             </div>
                                         </div>
 
-                                        <div style={{ background: '#fff', borderRadius: 20, padding: 20, border: '1px solid #F1F5F9' }}>
+                                        <div style={{ background: 'var(--bg-card)', borderRadius: 20, padding: 20, border: '1px solid var(--border)' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                                                <i className="pi pi-palette" style={{ color: '#2563EB' }}></i>
-                                                <span style={{ fontWeight: 800, fontSize: '0.8rem', color: '#64748B' }}>Color Theme</span>
+                                                <i className="pi pi-palette" style={{ color: 'var(--accent)' }}></i>
+                                                <span style={{ fontWeight: 800, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Color Theme</span>
                                             </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#F8FAFC', padding: '10px 12px', borderRadius: 14, border: '1px solid #E2E8F0', marginBottom: 12 }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.03)', padding: '10px 12px', borderRadius: 14, border: '1px solid var(--border)', marginBottom: 12 }}>
                                                 <div style={{ height: 38, width: 38, position: 'relative', overflow: 'hidden', borderRadius: 10 }}>
                                                     <ColorPicker value={fields.find(f => f.field === activeFieldId)?.color || '#000000'}
                                                         onChange={(e) => setFields(fields.map(f => f.field === activeFieldId ? { ...f, color: `#${e.value}` } : f))}
@@ -1080,9 +1097,9 @@ function CertifyStudio() {
                                         </div>
                                     </div>
 
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(226, 232, 240, 0.6)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
                                         <Button label="Remove Layer" icon="pi pi-trash" className="p-button-danger p-button-text" onClick={() => { setFields(fields.filter(f => f.field !== activeFieldId)); setActiveFieldId(null); }} />
-                                        <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontStyle: 'italic' }}>Select another field or click canvas to deselect.</div>
+                                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Select another field or click canvas to deselect.</div>
                                     </div>
                                 </div>
                             </div>

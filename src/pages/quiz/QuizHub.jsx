@@ -160,6 +160,9 @@ const QuizHub = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 15 }}>
                        <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0 }}>{quiz.title}</h3>
                        <div style={{ display: 'flex', gap: 8 }}>
+                         <Button icon="pi pi-chart-bar" className="p-button-text p-button-sm" 
+                                 style={{ color: '#8b5cf6', padding: 0, width: 30, height: 30 }} 
+                                 onClick={(e) => { e.stopPropagation(); navigate(`/quiz/analytics/${quiz.id}`); }} tooltip="Performance Analytics" />
                          <Button icon="pi pi-share-alt" className="p-button-text p-button-sm" 
                                  style={{ color: '#3b82f6', padding: 0, width: 30, height: 30 }} 
                                  onClick={(e) => handleShare(quiz.id, e)} tooltip="Copy Link" />

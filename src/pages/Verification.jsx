@@ -229,7 +229,7 @@ const VerificationPage = ({ onBack }) => {
     const handleReset = () => { setResult(null); setSteps([]); };
 
     return (
-        <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #F0F4FF 0%, #FAF5FF 100%)', padding: '40px 24px', fontFamily: 'Inter, sans-serif' }}>
+        <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', padding: '40px 24px', fontFamily: 'Inter, sans-serif' }}>
             <Toaster position="top-center" />
             <style>{`
                 @keyframes fadeSlideIn {
@@ -245,8 +245,8 @@ const VerificationPage = ({ onBack }) => {
                     <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#3B82F6,#A855F7)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <i className="pi pi-verified" style={{ color: '#fff', fontSize: '1rem' }}></i>
                     </div>
-                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.2rem', color: '#0F172A' }}>
-                        CertifyPro <span style={{ color: '#3B82F6', fontWeight: 400 }}>Verify</span>
+                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.2rem', color: 'var(--text)' }}>
+                        CertifyPro <span style={{ color: 'var(--accent)', fontWeight: 400 }}>Verify</span>
                     </span>
                 </div>
                 <Button label="Back to Home" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={onBack} />
@@ -255,20 +255,20 @@ const VerificationPage = ({ onBack }) => {
             <div style={{ maxWidth: 780, margin: '0 auto' }}>
 
                 {/* Header card */}
-                <div style={{ background: '#fff', borderRadius: 28, padding: '40px 32px 32px', boxShadow: '0 4px 24px rgba(0,0,0,0.05)', border: '1px solid #E8EDF5', textAlign: 'center', marginBottom: 24 }} data-aos="fade-up">
+                <div style={{ background: 'var(--bg-card)', borderRadius: 28, padding: '40px 32px 32px', boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)', textAlign: 'center', marginBottom: 24 }} data-aos="fade-up">
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', padding: '6px 14px', borderRadius: 20, marginBottom: 18 }}>
                         <i className="pi pi-shield" style={{ color: '#6366F1', fontSize: '0.8rem' }}></i>
                         <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#4338CA', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Multi-Layer Security Engine</span>
                     </div>
-                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.4rem', color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.4rem', color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
                         Certificate Verification
                     </h1>
-                    <p style={{ color: '#64748B', fontSize: '1rem', maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.7 }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.7 }}>
                         Upload a CertifyPro PDF. Each security layer computes, shows its full comparison, then passes control to the next.
                     </p>
 
                     {/* How it Works / Help Section */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', textAlign: 'left', marginBottom: '32px', padding: '20px', background: '#F8FAFC', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', textAlign: 'left', marginBottom: '32px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid var(--border)' }}>
                         <div>
                             <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <i className="pi pi-question-circle" style={{ color: '#3B82F6' }}></i> HOW TO USE
@@ -349,8 +349,8 @@ const VerificationPage = ({ onBack }) => {
                 {result && (
                     <div data-aos="zoom-in" style={{
                         marginTop: 20,
-                        background: result.verified ? 'linear-gradient(135deg,#F0FDF4,#DCFCE7)' : 'linear-gradient(135deg,#FFF5F5,#FEE2E2)',
-                        border: `1.5px solid ${result.verified ? '#86EFAC' : '#FCA5A5'}`,
+                        background: result.verified ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+                        border: `1.5px solid ${result.verified ? '#10B981' : '#EF4444'}`,
                         borderRadius: 24, padding: '32px', textAlign: 'center'
                     }}>
                         <div style={{

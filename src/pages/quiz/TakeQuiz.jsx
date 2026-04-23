@@ -133,9 +133,16 @@ const TakeQuiz = () => {
   const submitQuiz = async () => {
     try {
       setLoading(true);
-      const res = await quizApi.submitQuiz(attemptId, answers);
+      
+      // Map answers to backend format
+      const formattedAnswers = questions.map((q, idx) => ({
+        question_id: q.id,
+        answer: answers[idx] || ""
+      }));
+
+      const res = await quizApi.submitAttempt(attemptId, formattedAnswers);
       if (res.success) {
-        setResult(res);
+        setResult(res.result);
         setIsSubmitted(true);
         if (document.fullscreenElement) {
           document.exitFullscreen().catch(() => {});
@@ -143,7 +150,8 @@ const TakeQuiz = () => {
         toast.success("Assessment submitted successfully!");
       }
     } catch (err) {
-      toast.error("Failed to submit quiz");
+      console.error("Submission error:", err);
+      toast.error(err.response?.data?.error || "Failed to submit assessment. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -310,11 +318,11 @@ const TakeQuiz = () => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 30 }}>
                <div style={{ background: 'rgba(15, 23, 42, 0.5)', padding: 20, borderRadius: 20 }}>
                   <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase' }}>Score</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#3b82f6' }}>{result.score}/{result.totalPoints}</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#3b82f6' }}>{result.score}/{result.max_possible}</div>
                </div>
                <div style={{ background: 'rgba(15, 23, 42, 0.5)', padding: 20, borderRadius: 20 }}>
                   <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase' }}>Accuracy</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#10b981' }}>{Math.round((result.score / result.totalPoints) * 100)}%</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#10b981' }}>{result.percent}%</div>
                </div>
             </div>
 

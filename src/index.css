@@ -4,45 +4,45 @@
    AURORA DESIGN SYSTEM — TOKEN LAYER
    ═══════════════════════════════════════════ */
 :root {
-  /* Core Colors */
-  --bg:           #F0F4FF;
-  --bg-primary:   #F8FAFC;
-  --bg-card:      #FFFFFF;
-  --bg-secondary: #F1F5F9;
+  /* Core Colors (Dark Theme) */
+  --bg:           #0f172a;
+  --bg-primary:   #0f172a;
+  --bg-card:      rgba(30, 41, 59, 0.7);
+  --bg-secondary: #1e293b;
   --bg-sidebar:   linear-gradient(180deg, #070D1F 0%, #0B1832 50%, #0A1628 100%);
 
   /* Aurora Gradient */
   --aurora-1: #3B82F6;
-  --aurora-2: #A855F7;
+  --aurora-2: #8b5cf6;
   --aurora-3: #EC4899;
-  --aurora-gradient: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #A855F7 100%);
+  --aurora-gradient: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8b5cf6 100%);
 
   /* Accent */
-  --accent:         #2563EB;
-  --accent-hover:   #1D4ED8;
+  --accent:         #3b82f6;
+  --accent-hover:   #2563eb;
   --accent-light:   #60A5FA;
-  --accent-lighter: #DBEAFE;
-  --accent-glow:    0 0 40px rgba(37,99,235,0.15);
+  --accent-lighter: rgba(59, 130, 246, 0.1);
+  --accent-glow:    0 0 40px rgba(59, 130, 246, 0.15);
 
   /* Semantic */
-  --purple: #7C3AED;
+  --purple: #8b5cf6;
   --green:  #10B981;
   --amber:  #F59E0B;
   --red:    #EF4444;
 
   /* Text */
-  --text:          #0F172A;
-  --text-secondary:#334155;
-  --text-sub:      #475569;
-  --text-muted:    #94A3B8;
+  --text:          #f8fafc;
+  --text-secondary:#94a3b8;
+  --text-sub:      #64748b;
+  --text-muted:    #475569;
 
   /* Borders */
-  --border:       #E2E8F0;
-  --border-hover: #CBD5E1;
+  --border:       rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.2);
 
   /* Shadows */
-  --shadow-card:      0 1px 3px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.04);
-  --shadow-card-hover:0 4px 12px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.06);
+  --shadow-card:      0 10px 25px rgba(0,0,0,0.2);
+  --shadow-card-hover:0 20px 50px rgba(0,0,0,0.3);
   --shadow-blue:      0 8px 32px -8px rgba(37,99,235,0.35);
   --shadow-aurora:    0 20px 60px -15px rgba(59,130,246,0.25);
 
@@ -75,7 +75,7 @@
    RESET & BASE
    ═══════════════════════════════════════════ */
 * { box-sizing: border-box; margin: 0; }
-html, body { padding: 0; width: 100%; overflow-x: hidden; }
+html, body { padding: 0; width: 100%; overflow-x: hidden; min-height: 100vh; }
 html { scroll-behavior: smooth; }
 
 body {
@@ -91,8 +91,8 @@ body {
 .main-content {
   background: var(--bg-primary);
   background-image:
-    radial-gradient(ellipse 60% 50% at 10% 0%, rgba(59,130,246,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(168,85,247,0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 50% at 10% 0%, rgba(59,130,246,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(139,92,246,0.08) 0%, transparent 60%);
   min-height: 100vh;
   margin-left: 0;
   transition: margin-left 0.4s var(--ease);
@@ -124,10 +124,10 @@ a { text-decoration: none; color: inherit; }
   position: sticky;
   top: 0;
   height: var(--topbar-h);
-  background: rgba(255,255,255,0.92);
+  background: rgba(15, 23, 42, 0.8);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border-bottom: 1px solid rgba(226,232,240,0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   z-index: 50;
   display: flex;
   align-items: center;

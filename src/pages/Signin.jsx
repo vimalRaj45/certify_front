@@ -9,6 +9,15 @@ export default function Signin() {
   const [agreed, setAgreed] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [step, setStep] = useState("auth"); // "auth" or "role"
+  const [tempUser, setTempUser] = useState(null);
+
+  const roles = [
+    { id: 'Student', icon: 'pi-user', label: 'Student / Learner', desc: 'Validating my own skills' },
+    { id: 'Teacher', icon: 'pi-book', label: 'Teacher / Educator', desc: 'Certifying my students' },
+    { id: 'HR', icon: 'pi-briefcase', label: 'HR / Business', desc: 'Enterprise training & hiring' },
+    { id: 'Organizer', icon: 'pi-calendar', label: 'Event Organizer', desc: 'Hackathons & workshops' }
+  ];
 
   const parseJwt = (token) => {
     try {
@@ -20,28 +29,33 @@ export default function Signin() {
 
   useEffect(() => {
     window.__certifyGoogleCB = (response) => {
-      setLoading(true);
       const user = parseJwt(response.credential);
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-      localStorage.setItem("user", JSON.stringify(user));
+      if (!user) return;
+      
+      setTempUser(user);
+      setStep("role");
+    };
+
+    const finishSignup = (roleId) => {
+      setLoading(true);
+      const userWithRole = { ...tempUser, user_type: roleId };
+      localStorage.setItem("user", JSON.stringify(userWithRole));
 
       fetch("https://certify-vsgrps.onrender.com/save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sub: user.sub,
-          name: user.name,
-          email: user.email,
-          picture: user.picture,
+          sub: tempUser.sub,
+          name: tempUser.name,
+          email: tempUser.email,
+          picture: tempUser.picture,
+          user_type: roleId
         }),
       }).catch(() => { });
 
       setTimeout(() => {
         window.location.href = "/";
-      }, 200);
+      }, 500);
     };
 
     let attempts = 0;
@@ -233,197 +247,239 @@ export default function Signin() {
         style={{
           width: "100%",
           maxWidth: 440,
-          background: "#FFFFFF",
-          border: "1px solid #E2E8F0",
+          background: "var(--bg-card)",
+          backdropFilter: "blur(20px)",
+          border: "1px solid var(--border)",
           borderRadius: 32,
           padding: "48px 32px",
           textAlign: "center",
-          boxShadow: "0 20px 40px -15px rgba(0,0,0,0.05)",
+          boxShadow: "var(--shadow-card-hover)",
           zIndex: 1,
+          color: "var(--text)"
         }}
       >
-        {/* App Icon */}
-        <div
-          style={{
-            width: 64,
-            height: 64,
-            background: "linear-gradient(135deg, #3B82F6, #8B5CF6)",
-            borderRadius: 20,
-            margin: "0 auto 20px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 12px 24px rgba(59,130,246,0.2)",
-          }}
-        >
-          <i className="pi pi-bolt" style={{ color: "#fff", fontSize: "1.8rem" }} />
-        </div>
-
-        <div style={{
-          fontSize: '0.65rem',
-          fontWeight: 800,
-          color: '#3B82F6',
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          marginBottom: 8
-        }}>
-          product of vsgrps
-        </div>
-
-        <h1
-          style={{
-            fontFamily: "Outfit",
-            fontWeight: 800,
-            fontSize: "2.25rem",
-            color: "#0F172A",
-            margin: "0 0 12px",
-            letterSpacing: "-0.02em",
-          }}
-        >
-          Launch Your Vision
-        </h1>
-
-        <p
-          style={{
-            color: "#64748B",
-            fontSize: "1rem",
-            lineHeight: "1.6",
-            marginBottom: 36,
-            fontWeight: 500,
-            maxWidth: "320px",
-            marginInline: "auto",
-          }}
-        >
-          The fastest way to generate professional certificates in bulk. Welcome to the future of certification.
-        </p>
-
-        {/* Feature Pills (Responsive Layout) */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 10,
-            justifyContent: "center",
-            marginBottom: 40,
-          }}
-        >
-          {[
-            { icon: "pi pi-shield", label: "Private & Secure" },
-            { icon: "pi pi-bolt", label: "Instant Export" },
-            { icon: "pi pi-star", label: "Premium Output" },
-          ].map((f, i) => (
-            <div key={i} className="feature-item">
-              <i className={f.icon} style={{ color: "#3B82F6", fontSize: "0.8rem" }} />
-              <span>{f.label}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Agreement Checkbox */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 10,
-          marginBottom: 24,
-          padding: '12px 16px',
-          background: agreed ? '#F0F9FF' : '#F8FAFC',
-          borderRadius: 16,
-          border: agreed ? '1px solid #DBEAFE' : '1px solid #E2E8F0',
-          transition: 'all 0.2s ease'
-        }}>
-          <Checkbox
-            inputId="agree"
-            checked={agreed}
-            onChange={e => setAgreed(e.checked)}
-            style={{ width: 18, height: 18 }}
-          />
-          <label htmlFor="agree" style={{
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            color: agreed ? '#0F172A' : '#64748B',
-            cursor: 'pointer'
-          }}>
-            I agree to the Terms and Privacy
-          </label>
-        </div>
-
-        {/* Google Button Container */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: 20,
-            minHeight: 48,
-            opacity: agreed ? 1 : 0.45,
-            pointerEvents: agreed ? 'auto' : 'none',
-            transition: 'opacity 0.3s ease',
-            position: 'relative'
-          }}
-        >
-          {!agreed && (
-            <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'not-allowed' }} title="Please agree to terms first" />
-          )}
-          <div id="googleBtn" />
-        </div>
-
-        {/* 🛡️ Public Verification Access */}
-        <div style={{ marginBottom: 28 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '16px 0' }}>
-                <div style={{ flex: 1, height: '1px', background: '#E2E8F0' }}></div>
-                <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Public Audit</span>
-                <div style={{ flex: 1, height: '1px', background: '#E2E8F0' }}></div>
-            </div>
-            <button 
-                onClick={() => window.location.href = '/verify'}
-                style={{
-                    width: '100%',
-                    padding: '14px',
-                    borderRadius: '16px',
-                    background: '#F8FAFC',
-                    border: '1px solid #E2E8F0',
-                    color: '#0F172A',
-                    fontWeight: 700,
-                    fontSize: '0.9rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
-                    transition: 'all 0.2s ease'
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.borderColor = '#CBD5E1'; }}
-                onMouseOut={(e) => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = '#E2E8F0'; }}
+        {step === "auth" ? (
+          <>
+            {/* App Icon */}
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                background: "linear-gradient(135deg, #3B82F6, #8B5CF6)",
+                borderRadius: 20,
+                margin: "0 auto 20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 12px 24px rgba(59,130,246,0.2)",
+              }}
             >
-                <i className="pi pi-shield" style={{ color: '#3B82F6' }}></i>
-                Verify a Certificate
-            </button>
-        </div>
+              <i className="pi pi-bolt" style={{ color: "#fff", fontSize: "1.8rem" }} />
+            </div>
 
-        {/* Footer Text */}
-        <p
-          style={{
-            color: "#94A3B8",
-            fontSize: "0.8rem",
-            lineHeight: "1.5",
-            marginTop: 12,
-            fontWeight: 500,
-          }}
-        >
-          Need to review? Check out our <br />
-          <span
-            onClick={() => setShowTerms(true)}
-            style={{ color: "#3B82F6", cursor: "pointer", fontWeight: 700 }}
-          >
-            Terms of Service
-          </span> & {" "}
-          <span
-            onClick={() => setShowPrivacy(true)}
-            style={{ color: "#3B82F6", cursor: "pointer", fontWeight: 700 }}
-          >
-            Privacy Policy
-          </span>
-        </p>
+            <div style={{
+              fontSize: '0.65rem',
+              fontWeight: 800,
+              color: '#3B82F6',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              marginBottom: 8
+            }}>
+              product of vsgrps
+            </div>
+
+            <h1
+              style={{
+                fontFamily: "Outfit",
+                fontWeight: 800,
+                fontSize: "2.25rem",
+                color: "var(--text)",
+                margin: "0 0 12px",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Launch Your Vision
+            </h1>
+
+            <p
+              style={{
+                color: "var(--text-secondary)",
+                fontSize: "1rem",
+                lineHeight: "1.6",
+                marginBottom: 36,
+                fontWeight: 500,
+                maxWidth: "320px",
+                marginInline: "auto",
+              }}
+            >
+              The fastest way to generate professional certificates in bulk. Welcome to the future of certification.
+            </p>
+
+            {/* Feature Pills (Responsive Layout) */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 10,
+                justifyContent: "center",
+                marginBottom: 40,
+              }}
+            >
+              {[
+                { icon: "pi pi-shield", label: "Private & Secure" },
+                { icon: "pi pi-bolt", label: "Instant Export" },
+                { icon: "pi pi-star", label: "Premium Output" },
+              ].map((f, i) => (
+                <div key={i} className="feature-item">
+                  <i className={f.icon} style={{ color: "#3B82F6", fontSize: "0.8rem" }} />
+                  <span>{f.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Agreement Checkbox */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+              marginBottom: 24,
+              padding: '12px 16px',
+              background: agreed ? 'rgba(59, 130, 246, 0.1)' : 'rgba(255,255,255,0.02)',
+              borderRadius: 16,
+              border: agreed ? '1px solid var(--accent)' : '1px solid var(--border)',
+              transition: 'all 0.2s ease'
+            }}>
+              <Checkbox
+                inputId="agree"
+                checked={agreed}
+                onChange={e => setAgreed(e.checked)}
+                style={{ width: 18, height: 18 }}
+              />
+              <label htmlFor="agree" style={{
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                color: agreed ? 'var(--text)' : 'var(--text-secondary)',
+                cursor: 'pointer'
+              }}>
+                I agree to the Terms and Privacy
+              </label>
+            </div>
+
+            {/* Google Button Container */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 20,
+                minHeight: 48,
+                opacity: agreed ? 1 : 0.45,
+                pointerEvents: agreed ? 'auto' : 'none',
+                transition: 'opacity 0.3s ease',
+                position: 'relative'
+              }}
+            >
+              {!agreed && (
+                <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'not-allowed' }} title="Please agree to terms first" />
+              )}
+              <div id="googleBtn" />
+            </div>
+
+            {/* 🛡️ Public Verification Access */}
+            <div style={{ marginBottom: 28 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '16px 0' }}>
+                    <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+                    <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Public Audit</span>
+                    <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+                </div>
+                <button 
+                    onClick={() => window.location.href = '/verify'}
+                    style={{
+                        width: '100%',
+                        padding: '14px',
+                        borderRadius: '16px',
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid var(--border)',
+                        color: 'var(--text)',
+                        fontWeight: 700,
+                        fontSize: '0.9rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 10,
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'var(--accent)'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+                >
+                    <i className="pi pi-shield" style={{ color: 'var(--accent)' }}></i>
+                    Verify a Certificate
+                </button>
+            </div>
+
+            {/* Footer Text */}
+            <p
+              style={{
+                color: "#94A3B8",
+                fontSize: "0.8rem",
+                lineHeight: "1.5",
+                marginTop: 12,
+                fontWeight: 500,
+              }}
+            >
+              Need to review? Check out our <br />
+              <span
+                onClick={() => setShowTerms(true)}
+                style={{ color: "#3B82F6", cursor: "pointer", fontWeight: 700 }}
+              >
+                Terms of Service
+              </span> & {" "}
+              <span
+                onClick={() => setShowPrivacy(true)}
+                style={{ color: "#3B82F6", cursor: "pointer", fontWeight: 700 }}
+              >
+                Privacy Policy
+              </span>
+            </p>
+          </>
+        ) : (
+          <div style={{ animation: 'fadeUp 0.6s ease both' }}>
+            <div style={{
+              width: 56, height: 56, background: 'rgba(59, 130, 246, 0.1)', borderRadius: '50%',
+              margin: '0 auto 24px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}>
+              <i className="pi pi-users" style={{ color: 'var(--accent)', fontSize: '1.5rem' }} />
+            </div>
+            <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', color: 'var(--text)', marginBottom: 8 }}>Select Your Role</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 32 }}>Tell us how you'll use CertifyPro</p>
+            
+            <div style={{ display: 'grid', gap: 12 }}>
+              {roles.map(r => (
+                <div 
+                  key={r.id} 
+                  onClick={() => finishSignup(r.id)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px',
+                    background: 'rgba(255,255,255,0.02)', border: '1.5px solid var(--border)', borderRadius: 20,
+                    textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(59, 130, 246, 0.05)'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                >
+                  <div style={{ width: 40, height: 40, background: 'rgba(255,255,255,0.05)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <i className={`pi ${r.icon}`} style={{ color: 'var(--text-secondary)' }} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text)' }}>{r.label}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{r.desc}</div>
+                  </div>
+                  <i className="pi pi-chevron-right" style={{ marginLeft: 'auto', fontSize: '0.7rem', color: 'var(--text-muted)' }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Support Link */}
         <div

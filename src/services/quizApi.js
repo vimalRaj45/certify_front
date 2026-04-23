@@ -76,6 +76,10 @@ const quizApi = {
     const res = await axios.get(`${API_BASE}/quiz/leaderboard/${quizId}?limit=${limit}`);
     return res.data;
   },
+  getQuizAnalytics: async (quizId) => {
+    const res = await axios.get(`${API_BASE}/quiz/quizzes/${quizId}/analytics`);
+    return res.data;
+  },
   exportQuizResults: async (quizId) => {
     const res = await axios.get(`${API_BASE}/quiz/quizzes/${quizId}/export`);
     return res.data;
