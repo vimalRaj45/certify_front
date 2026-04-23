@@ -170,31 +170,32 @@ function CertifyStudio() {
 
     const [isUploading, setIsUploading] = useState(false);
     const [showDownload, setShowDownload] = useState(false);
+    const [showSecurityGuide, setShowSecurityGuide] = useState(false);
     const [downloadUrl, setDownloadUrl] = useState('');
+
+    const handleFinalDownload = () => {
+        setShowSecurityGuide(false);
+        if (downloadUrl) {
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `certificates_batch.zip`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toast.success("Download started!", {
+                icon: '🚀',
+                style: { borderRadius: '12px', background: '#070D1F', color: '#fff' }
+            });
+        }
+    };
 
     useEffect(() => {
         if (showDownload && downloadUrl) {
-            toast("Generation Complete! Your ZIP will download in 1.5s...", {
-                icon: '⏳',
-                duration: 2000,
+            toast("Generation Complete! Read the sharing guide below.", {
+                icon: '✅',
+                duration: 3000,
                 style: { borderRadius: '12px', background: '#059669', color: '#fff', fontWeight: 700 }
             });
-
-            const timer = setTimeout(() => {
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = `certificates_batch.zip`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                toast.success("Download started!", {
-                    icon: '🚀',
-                    style: { borderRadius: '12px', background: '#070D1F', color: '#fff' }
-                });
-            }, 1500);
-
-            return () => clearTimeout(timer);
         }
     }, [showDownload, downloadUrl]);
 
@@ -427,6 +428,7 @@ function CertifyStudio() {
                         setDownloadUrl(fullUrl);
                         setShowDownload(true);
                         setIsGenerating(false);
+                        setShowSecurityGuide(true);
                         es.close();
                         setEventSource(null);
                     }
@@ -1371,6 +1373,69 @@ function CertifyStudio() {
                 `}</style>
             </Dialog>
 
+            {/* ═══ SECURITY & SHARING GUIDE MODAL ═══ */}
+            {showSecurityGuide && (
+                <div className="modal-overlay" style={{ zIndex: 3000 }}>
+                    <div className="card-premium" data-aos="zoom-in" style={{ maxWidth: 650, width: '90%', padding: 0, overflow: 'hidden' }}>
+                        {/* Header */}
+                        <div style={{ background: 'linear-gradient(135deg, #2563EB, #1D4ED8)', padding: '24px', color: '#fff', textAlign: 'center' }}>
+                            <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                                <i className="pi pi-shield" style={{ fontSize: '2rem' }}></i>
+                            </div>
+                            <h2 style={{ margin: 0, fontWeight: 900, fontSize: '1.5rem', fontFamily: 'Outfit' }}>Generation Successful!</h2>
+                            <p style={{ opacity: 0.9, margin: '8px 0 0', fontSize: '0.9rem' }}>Your secure certificates are ready for distribution.</p>
+                        </div>
+
+                        {/* Content */}
+                        <div style={{ padding: '32px', maxHeight: '70vh', overflowY: 'auto' }}>
+                            <div style={{ marginBottom: 24, borderBottom: '1px solid #E2E8F0', paddingBottom: 16 }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 12, color: '#1E293B', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <i className="pi pi-share-alt" style={{ color: '#2563EB' }}></i> 📢 IMPORTANT: How to Share
+                                </h3>
+                                <div style={{ background: '#F8FAFF', padding: '16px', borderRadius: '12px', borderLeft: '4px solid #3B82F6' }}>
+                                    <ol style={{ margin: 0, paddingLeft: '20px', color: '#475569', fontSize: '0.92rem', lineHeight: 1.8 }}>
+                                        <li><b>Upload ORIGINAL PDF</b> to Google Drive or OneDrive.</li>
+                                        <li><b>Do NOT rename or edit</b> the file name.</li>
+                                        <li><b>Do NOT compress</b> or take screenshots.</li>
+                                        <li>Set sharing to: <b>"Anyone with the link → Viewer"</b>.</li>
+                                        <li>Share the link along with the <b>Certificate ID</b>.</li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <div style={{ marginBottom: 24 }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 12, color: '#1E293B', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <i className="pi pi-lock" style={{ color: '#EF4444' }}></i> 🔐 Security Warning
+                                </h3>
+                                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6 }}>
+                                    Your certificates are protected by <b>cryptographic verification</b>. Any modification (even small pixel changes) will:
+                                </p>
+                                <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+                                    <div style={{ flex: 1, padding: '12px', background: '#FEF2F2', border: '1px solid #FEE2E2', borderRadius: '8px', color: '#B91C1C', fontSize: '0.85rem', textAlign: 'center' }}>
+                                        <i className="pi pi-times-circle"></i><br/>Break verification
+                                    </div>
+                                    <div style={{ flex: 1, padding: '12px', background: '#FEF2F2', border: '1px solid #FEE2E2', borderRadius: '8px', color: '#B91C1C', fontSize: '0.85rem', textAlign: 'center' }}>
+                                        <i className="pi pi-exclamation-triangle"></i><br/>Mark as Invalid
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ textAlign: 'center', borderTop: '1px solid #E2E8F0', paddingTop: 24 }}>
+                                <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginBottom: 20 }}>
+                                    Regards, <br/> <b>CertifyPro Security Team</b>
+                                </p>
+                                <button 
+                                    onClick={handleFinalDownload}
+                                    className="btn-primary"
+                                    style={{ width: '100%', padding: '14px', borderRadius: '12px', fontWeight: 800 }}
+                                >
+                                    I Understand, Proceed to Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
