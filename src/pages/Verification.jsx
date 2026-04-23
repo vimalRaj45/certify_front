@@ -256,9 +256,9 @@ const VerificationPage = ({ onBack }) => {
 
                 {/* Header card */}
                 <div style={{ background: 'var(--bg-card)', borderRadius: 28, padding: '40px 32px 32px', boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)', textAlign: 'center', marginBottom: 24 }} data-aos="fade-up">
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', padding: '6px 14px', borderRadius: 20, marginBottom: 18 }}>
-                        <i className="pi pi-shield" style={{ color: '#6366F1', fontSize: '0.8rem' }}></i>
-                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#4338CA', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Multi-Layer Security Engine</span>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(59, 130, 246, 0.1)', padding: '6px 14px', borderRadius: 20, marginBottom: 18, border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                        <i className="pi pi-shield" style={{ color: 'var(--accent)', fontSize: '0.8rem' }}></i>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Multi-Layer Security Engine</span>
                     </div>
                     <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.4rem', color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
                         Certificate Verification
@@ -270,23 +270,23 @@ const VerificationPage = ({ onBack }) => {
                     {/* How it Works / Help Section */}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', textAlign: 'left', marginBottom: '32px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid var(--border)' }}>
                         <div>
-                            <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <i className="pi pi-question-circle" style={{ color: '#3B82F6' }}></i> HOW TO USE
+                            <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <i className="pi pi-question-circle" style={{ color: 'var(--accent)' }}></i> HOW TO USE
                             </h4>
-                            <ul style={{ fontSize: '0.8rem', color: '#64748B', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
+                            <ul style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
                                 <li>Select the certificate PDF file you wish to validate.</li>
                                 <li>Wait for the 3-layer security engine to finish its audit.</li>
                                 <li>View the official recipient data directly from our registry.</li>
                             </ul>
                         </div>
                         <div>
-                            <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <i className="pi pi-share-alt" style={{ color: '#A855F7' }}></i> HOW WE SHARE
+                            <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <i className="pi pi-share-alt" style={{ color: 'var(--purple)' }}></i> HOW WE SHARE
                             </h4>
-                            <ul style={{ fontSize: '0.8rem', color: '#64748B', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
+                            <ul style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
                                 <li><strong>Direct Email:</strong> Auto-sent to participants via Brevo API.</li>
                                 <li><strong>Secure ZIP:</strong> Bulk download available after generation.</li>
-                                <li><strong>Public Links:</strong> We recommend uploading your certificate to Google Drive/One drive and sharing the link for easy public validation.</li>
+                                <li><strong>Public Links:</strong> We recommend uploading to Drive/Cloud and sharing the link.</li>
                             </ul>
                         </div>
                     </div>
@@ -362,43 +362,43 @@ const VerificationPage = ({ onBack }) => {
                             <i className={`pi ${result.verified ? 'pi-check' : (result.message?.includes('SECURITY ALERT') ? 'pi-shield' : 'pi-times')}`}
                                 style={{ color: '#fff', fontSize: '2rem' }}></i>
                         </div>
-                        <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 8px', color: result.verified ? '#064E3B' : '#991B1B' }}>
+                        <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 8px', color: result.verified ? 'var(--text)' : 'var(--red)' }}>
                             {result.verified ? '✅ Legitimate Certificate' : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered Document' : '❌ Verification Failed')}
                         </h2>
-                        <p style={{ color: result.verified ? '#065F46' : '#B91C1C', margin: '0 0 24px', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                        <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px', fontSize: '0.95rem', lineHeight: 1.6 }}>
                             {result.verified ? 'This certificate is authentic and on record in our secure registry.' : result.message}
                         </p>
 
                         {result.verified && result.data && (
                             <>
-                                <div style={{ background: '#fff', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid #D1FAE5' }}>
+                                <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid var(--border)' }}>
                                     {[
                                         { label: 'Recipient', value: result.data.name },
                                         { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' }) },
                                         { label: 'Certificate ID', value: result.data.id, mono: true },
                                     ].map(row => (
                                         <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
-                                            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
-                                            <span style={{ fontWeight: 700, color: row.mono ? '#6366F1' : '#0F172A', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
+                                            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
+                                            <span style={{ fontWeight: 700, color: row.mono ? 'var(--accent)' : 'var(--text)', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
                                         </div>
                                     ))}
                                 </div>
 
                                 {/* Dos and Don'ts Section */}
-                                <div style={{ marginTop: '24px', textAlign: 'left', borderTop: '1px solid #D1FAE5', paddingTop: '20px' }}>
-                                    <h4 style={{ fontSize: '0.9rem', fontWeight: 900, color: '#064E3B', marginBottom: '16px', letterSpacing: '0.02em' }}>CERTIFICATE USAGE GUIDELINES</h4>
+                                <div style={{ marginTop: '24px', textAlign: 'left', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+                                    <h4 style={{ fontSize: '0.9rem', fontWeight: 900, color: 'var(--text)', marginBottom: '16px', letterSpacing: '0.02em' }}>CERTIFICATE USAGE GUIDELINES</h4>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                                         <div>
-                                            <div style={{ color: '#059669', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>✅ THE DOS</div>
-                                            <ul style={{ fontSize: '0.8rem', color: '#065F46', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
+                                            <div style={{ color: 'var(--green)', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>✅ THE DOS</div>
+                                            <ul style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
                                                 <li>Share your ID on LinkedIn/CV.</li>
                                                 <li>Keep the original PDF file safe.</li>
                                                 <li>Use this page for official proof.</li>
                                             </ul>
                                         </div>
                                         <div>
-                                            <div style={{ color: '#DC2626', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>❌ THE DON'TS</div>
-                                            <ul style={{ fontSize: '0.8rem', color: '#991B1B', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
+                                            <div style={{ color: 'var(--red)', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>❌ THE DON'TS</div>
+                                            <ul style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
                                                 <li>Never edit the PDF text or images.</li>
                                                 <li>Don't compress/shrink the file.</li>
                                                 <li>Don't remove system watermarks.</li>

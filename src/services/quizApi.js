@@ -33,8 +33,10 @@ const quizApi = {
   },
 
 
-  deleteQuiz: async (id) => {
-    const res = await axios.delete(`${API_BASE}/quiz/quizzes/${id}`);
+  deleteQuiz: async (id, userId) => {
+    const res = await axios.delete(`${API_BASE}/quiz/quizzes/${id}`, {
+      params: { user_id: userId }
+    });
     return res.data;
   },
 

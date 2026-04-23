@@ -70,7 +70,7 @@ const QuizHub = () => {
     e.stopPropagation();
     if (!window.confirm("Are you sure you want to delete this quiz? All questions and results will be lost.")) return;
     try {
-      await quizApi.deleteQuiz(id);
+      await quizApi.deleteQuiz(id, user?.id);
       setQuizzes(quizzes.filter(q => q.id !== id));
       toast.success("Quiz deleted");
     } catch (err) {

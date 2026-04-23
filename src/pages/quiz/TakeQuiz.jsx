@@ -26,6 +26,7 @@ const TakeQuiz = () => {
   
   // Anti-cheating state
   const [violations, setViolations] = useState(0);
+  const [tabSwitches, setTabSwitches] = useState(0);
   const [timeLeft, setTimeLeft] = useState(null);
 
   // Entrance state
@@ -166,6 +167,48 @@ const TakeQuiz = () => {
     }
   }, [isStarted, isSubmitted, timeLeft]);
 
+  // Unified Tab Switching / Visibility Monitor
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && isStarted && !isSubmitted) {
+        setTabSwitches(prev => {
+          const newCount = prev + 1;
+          if (newCount >= 3) {
+            toast.error("SECURITY BREACH: Multiple tab switches detected. Auto-submitting assessment...", { 
+              duration: 5000,
+              icon: '🚨' 
+            });
+            submitQuiz();
+          } else {
+            toast.error(`SECURITY WARNING: Tab switch detected (${newCount}/3). Subsequent violations will trigger auto-submission!`, { 
+              duration: 4000,
+              icon: '⚠️'
+            });
+          }
+          return newCount;
+        });
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && isStarted && !isSubmitted) {
+        toast.error("SECURITY ALERT: Fullscreen exited! Please stay in fullscreen mode.", { 
+          duration: 4000,
+          icon: '🚫' 
+        });
+        setViolations(v => v + 1);
+      }
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, [isStarted, isSubmitted, attemptId, questions, answers]);
+
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -199,7 +242,7 @@ const TakeQuiz = () => {
                    <li style={{ color: 'var(--amber)', fontWeight: 700 }}><i className="pi pi-mobile mr-2"></i> Mobile Only: Access from Desktop/Laptop is strictly prohibited.</li>
                    <li><b>Fullscreen Required:</b> The browser will lock to fullscreen.</li>
                    <li><b>Face Monitoring:</b> Stay in front of your camera at all times.</li>
-                   <li><b>Tab Switching:</b> Switching tabs may result in automatic disqualification.</li>
+                   <li style={{ color: 'var(--red)', fontWeight: 700 }}><b>Anti-Cheat:</b> Switching tabs more than 3 times will trigger AUTO-SUBMISSION.</li>
                    <li><b>Duration:</b> You have {quiz.duration_minutes} minutes for {questions.length} questions.</li>
                 </ul>
               </div>

@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 
 // PrimeReact Styles
-import "primereact/resources/themes/lara-light-blue/theme.css";  // Light Blue Theme
+import "primereact/resources/themes/lara-dark-blue/theme.css";  // Dark Blue Theme (Aurora Compatible)
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";

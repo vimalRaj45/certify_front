@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputSwitch } from 'primereact/inputswitch';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Avatar } from 'primereact/avatar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Draggable from 'react-draggable';
@@ -210,9 +211,9 @@ function CertifyStudio() {
         if (exported) {
             try {
                 const data = JSON.parse(exported);
-                setCsvData({ 
-                    columns: ["Name", "Email", "Score", "Total"], 
-                    participants: data 
+                setCsvData({
+                    columns: ["Name", "Email", "Score", "Total"],
+                    participants: data
                 });
                 toast.success("Imported quiz results successfully!", { icon: '🎓' });
                 localStorage.removeItem('cert_participants');
@@ -544,11 +545,39 @@ function CertifyStudio() {
                     </div>
                 </Dialog>
 
-                <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 24px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <Button icon="pi pi-arrow-left" className="p-button-text p-button-secondary"
+                <div className="topbar" style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '0 24px',
+                    background: 'rgba(7, 13, 31, 0.75)',
+                    backdropFilter: 'blur(20px) saturate(180%)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    height: '72px',
+                    zIndex: 1000,
+                    position: 'sticky',
+                    top: 0
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <Button icon="pi pi-arrow-left" className="p-button-rounded p-button-text p-button-secondary"
                             onClick={() => setShowApp(false)} tooltip="Exit Console"
-                            style={{ borderRadius: 12, width: 38, height: 38 }} />
+                            style={{ borderRadius: 12, width: 40, height: 40, color: 'var(--text-secondary)' }} />
+
+                        <Button label="Quiz Console" icon="pi pi-th-large"
+                            className="p-button-rounded"
+                            onClick={() => navigate('/quiz')}
+                            style={{
+                                background: 'rgba(59, 130, 246, 0.12)',
+                                border: '1px solid rgba(59, 130, 246, 0.4)',
+                                color: 'var(--accent)',
+                                fontSize: '0.78rem',
+                                fontWeight: 800,
+                                padding: '8px 18px',
+                                borderRadius: 12,
+                                transition: 'all 0.3s',
+                                letterSpacing: '0.02em'
+                            }}
+                        />
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                             <div style={{
@@ -567,29 +596,31 @@ function CertifyStudio() {
                     </div>
 
                     <div className="topbar-center" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ display: 'flex', gap: 8, background: 'rgba(255,255,255,0.03)', padding: '4px', borderRadius: 50, border: '1px solid var(--border)' }}>
+                        <div style={{ display: 'flex', gap: 8, background: 'rgba(255,255,255,0.03)', padding: '5px', borderRadius: 50, border: '1px solid var(--border)' }}>
                             {[{ label: 'Import', step: 1, done: !!csvData && !!templateUrl }, { label: 'Configure', step: 2, done: fields.length > 0 }, { label: 'Generate', step: 3, done: false }].map((s, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{
-                                        display: 'flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 50,
-                                        background: s.done ? 'rgba(16,185,129,0.1)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'rgba(255,255,255,0.05)' : 'transparent'),
+                                        display: 'flex', alignItems: 'center', gap: 8, padding: '6px 18px', borderRadius: 50,
+                                        background: s.done ? 'rgba(16,185,129,0.12)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'rgba(59,130,246,0.1)' : 'transparent'),
                                         border: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '1.5px solid var(--accent)' : '1px solid transparent',
-                                        boxShadow: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '0 4px 10px rgba(59,130,246,0.1)' : 'none',
+                                        boxShadow: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '0 0 15px rgba(59,130,246,0.15)' : 'none',
                                         transition: 'all 0.3s ease'
                                     }}>
                                         <div style={{
-                                            width: 6, height: 6, borderRadius: '50%',
-                                            background: s.done ? 'var(--green)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'var(--accent)' : 'var(--text-muted)')
+                                            width: 7, height: 7, borderRadius: '50%',
+                                            background: s.done ? 'var(--green)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'var(--accent)' : 'var(--text-muted)'),
+                                            boxShadow: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '0 0 8px var(--accent)' : 'none'
                                         }}></div>
                                         <span style={{
-                                            fontSize: '0.72rem', fontWeight: 800,
+                                            fontSize: '0.75rem', fontWeight: 800,
                                             color: s.done ? 'var(--green)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'var(--text)' : 'var(--text-muted)'),
-                                            whiteSpace: 'nowrap'
+                                            whiteSpace: 'nowrap',
+                                            letterSpacing: '0.02em'
                                         }}>
                                             {s.label}
                                         </span>
                                     </div>
-                                    {i < 2 && <i className="pi pi-chevron-right" style={{ fontSize: '0.5rem', color: 'var(--border)', margin: '0 2px' }}></i>}
+                                    {i < 2 && <i className="pi pi-chevron-right" style={{ fontSize: '0.55rem', color: 'var(--border)', margin: '0 4px' }}></i>}
                                 </div>
                             ))}
                         </div>
@@ -794,16 +825,16 @@ function CertifyStudio() {
                         )}
 
                         {fields.length > 0 && (
-                                    <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid #F1F5F9' }}>
-                                        <DataTable value={fields} size="small" scrollable scrollHeight="200px" emptyMessage="No fields mapped">
-                                            <Column field="field" header="Field" body={(f) => <span style={{ background: 'rgba(59,130,246,0.06)', padding: '3px 10px', borderRadius: 6, fontSize: '0.78rem', fontWeight: 700, color: '#3B82F6', fontFamily: 'monospace' }}>{f.field}</span>} />
-                                            <Column header="Size" style={{ width: 80 }} body={(f) => <InputNumber value={f.size} onValueChange={(e) => setFields(fields.map(fi => fi.field === f.field ? { ...fi, size: e.value } : fi))} min={8} max={100} />} />
-                                            <Column header="Color" body={(f) => <ColorPicker value={f.color} onChange={(e) => setFields(fields.map(fi => fi.field === f.field ? { ...fi, color: `#${e.value}` } : fi))} />} />
-                                            <Column header="Edit" body={(f) => <Button icon="pi pi-pencil" className="p-button-text p-button-sm" onClick={() => setActiveFieldId(f.field)} />} />
-                                            <Column body={(f) => <Button icon="pi pi-trash" className="p-button-text p-button-danger p-button-sm" onClick={() => setFields(fields.filter(fi => fi.field !== f.field))} />} />
-                                        </DataTable>
-                                    </div>
-                                )}
+                            <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid #F1F5F9' }}>
+                                <DataTable value={fields} size="small" scrollable scrollHeight="200px" emptyMessage="No fields mapped">
+                                    <Column field="field" header="Field" body={(f) => <span style={{ background: 'rgba(59,130,246,0.06)', padding: '3px 10px', borderRadius: 6, fontSize: '0.78rem', fontWeight: 700, color: '#3B82F6', fontFamily: 'monospace' }}>{f.field}</span>} />
+                                    <Column header="Size" style={{ width: 80 }} body={(f) => <InputNumber value={f.size} onValueChange={(e) => setFields(fields.map(fi => fi.field === f.field ? { ...fi, size: e.value } : fi))} min={8} max={100} />} />
+                                    <Column header="Color" body={(f) => <ColorPicker value={f.color} onChange={(e) => setFields(fields.map(fi => fi.field === f.field ? { ...fi, color: `#${e.value}` } : fi))} />} />
+                                    <Column header="Edit" body={(f) => <Button icon="pi pi-pencil" className="p-button-text p-button-sm" onClick={() => setActiveFieldId(f.field)} />} />
+                                    <Column body={(f) => <Button icon="pi pi-trash" className="p-button-text p-button-danger p-button-sm" onClick={() => setFields(fields.filter(fi => fi.field !== f.field))} />} />
+                                </DataTable>
+                            </div>
+                        )}
 
                         {/* Step 3: Execute & Generate */}
                         {fields.length > 0 && (
@@ -843,36 +874,36 @@ function CertifyStudio() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                         {/* Canvas Area Container */}
                         <div className="canvas-container" data-aos="fade-left" onClick={() => setActiveFieldId(null)}
-                            style={{ background: '#fff', borderRadius: 24, border: '1px solid #F1F5F9', overflow: 'hidden' }}>
+                            style={{ background: 'var(--bg-card)', borderRadius: 24, border: '1px solid var(--border)', overflow: 'hidden' }}>
 
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #F8FAFC', background: 'rgba(248,250,252,0.8)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#EF4444' }}></div>
                                         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#F59E0B' }}></div>
                                         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#10B981' }}></div>
                                     </div>
-                                    <div style={{ height: 16, width: 1, background: '#E2E8F0' }}></div>
+                                    <div style={{ height: 16, width: 1, background: 'var(--border)' }}></div>
                                     <div>
-                                        <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0F172A', fontFamily: 'Outfit' }}>Live Designer</div>
-                                        <div style={{ fontSize: '0.62rem', color: '#94A3B8', fontWeight: 600 }}>{useCustomSize ? `${customWidth} × ${customHeight}` : '600 × 400'} px canvas · {fields.length} layer{fields.length !== 1 ? 's' : ''}</div>
+                                        <div style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-h)' }}>Live Designer</div>
+                                        <div style={{ fontSize: '0.62rem', color: 'var(--text-secondary)', fontWeight: 600 }}>{useCustomSize ? `${customWidth} × ${customHeight}` : '600 × 400'} px canvas · {fields.length} layer{fields.length !== 1 ? 's' : ''}</div>
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 10, padding: '3px 6px', gap: 2 }}>
-                                        <Button icon="pi pi-minus" className="p-button-text p-button-sm" onClick={() => setCanvasZoom(Math.max(0.5, canvasZoom - 0.1))} />
-                                        <span style={{ fontSize: '0.72rem', fontWeight: 800, minWidth: 38, textAlign: 'center' }}>{Math.round(canvasZoom * 100)}%</span>
-                                        <Button icon="pi pi-plus" className="p-button-text p-button-sm" onClick={() => setCanvasZoom(Math.min(3, canvasZoom + 0.1))} />
-                                        <div style={{ width: 1, height: 16, background: '#E2E8F0', margin: '0 2px' }}></div>
-                                        <Button icon="pi pi-refresh" className="p-button-text p-button-sm" onClick={() => setCanvasZoom(1)} />
+                                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 10, padding: '3px 6px', gap: 2 }}>
+                                        <Button icon="pi pi-minus" className="p-button-text p-button-sm" onClick={() => setCanvasZoom(Math.max(0.5, canvasZoom - 0.1))} style={{ color: 'var(--text)' }} />
+                                        <span style={{ fontSize: '0.72rem', fontWeight: 800, minWidth: 38, textAlign: 'center', color: 'var(--text)' }}>{Math.round(canvasZoom * 100)}%</span>
+                                        <Button icon="pi pi-plus" className="p-button-text p-button-sm" onClick={() => setCanvasZoom(Math.min(3, canvasZoom + 0.1))} style={{ color: 'var(--text)' }} />
+                                        <div style={{ width: 1, height: 16, background: 'var(--border)', margin: '0 2px' }}></div>
+                                        <Button icon="pi pi-refresh" className="p-button-text p-button-sm" onClick={() => setCanvasZoom(1)} style={{ color: 'var(--text)' }} />
                                     </div>
                                 </div>
                             </div>
 
                             <div className="canvas-viewport" style={{
                                 position: 'relative',
-                                background: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
-                                backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.04) 1px, transparent 1px)',
+                                background: 'var(--bg-primary)',
+                                backgroundImage: 'radial-gradient(circle, var(--border) 1px, transparent 1px)',
                                 backgroundSize: '20px 20px',
                                 overflow: 'hidden'
                             }}>
@@ -1135,13 +1166,13 @@ function CertifyStudio() {
                         {/* Completion Card */}
                         {showDownload && (
                             <div data-aos="zoom-in" style={{ borderRadius: 24, overflow: 'hidden' }}>
-                                <div style={{ background: 'linear-gradient(135deg, #064E3B 0%, #059669 100%)', padding: '32px 20px', textAlign: 'center', color: 'white' }}>
+                                <div style={{ background: 'var(--aurora-gradient)', padding: '32px 20px', textAlign: 'center', color: 'white' }}>
                                     <div style={{ width: 64, height: 64, background: 'rgba(255,255,255,0.15)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                                         <i className="pi pi-check-circle" style={{ fontSize: '1.8rem' }}></i>
                                     </div>
-                                    <h3 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.5rem', marginBottom: 8 }}>Batch Generated! 🎉</h3>
+                                    <h3 style={{ fontFamily: 'var(--font-h)', fontWeight: 900, fontSize: '1.5rem', marginBottom: 8 }}>Batch Generated! 🎉</h3>
                                     <p style={{ opacity: 0.7, marginBottom: 24 }}>Your batch of certificates is ready for delivery.</p>
-                                    <button onClick={handleDownload} style={{ background: 'rgba(255,255,255,0.95)', color: '#065F46', border: 'none', borderRadius: 16, padding: '14px 20px', fontWeight: 900, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+                                    <button onClick={startGeneration} style={{ background: 'rgba(255,255,255,0.95)', color: 'var(--bg-primary)', border: 'none', borderRadius: 16, padding: '14px 20px', fontWeight: 900, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
                                         <i className="pi pi-download"></i> Download ZIP Package
                                     </button>
                                 </div>
@@ -1149,136 +1180,137 @@ function CertifyStudio() {
                         )}
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
-                            <div className="security-card" style={{ background: '#fff', borderRadius: 20, padding: 20, border: '1px solid #F1F5F9', display: 'flex', alignItems: 'center', gap: 16 }}>
-                                <div style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, rgba(59,130,246,0.06), rgba(168,85,247,0.06))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="pi pi-shield" style={{ fontSize: '1.2rem', color: '#3B82F6' }}></i>
+                            <div className="security-card" style={{ background: 'var(--bg-card)', borderRadius: 20, padding: 20, border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 16 }}>
+                                <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(59,130,246,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-shield" style={{ fontSize: '1.2rem', color: 'var(--accent)' }}></i>
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <div style={{ fontSize: '0.7rem', fontWeight: 900, color: '#3B82F6', textTransform: 'uppercase' }}>Zero-Retention</div>
-                                    <p style={{ fontSize: '0.75rem', color: '#94A3B8', margin: 0 }}>Data is destroyed 60s after export or 15m of inactivity.</p>
+                                    <div style={{ fontSize: '0.7rem', fontWeight: 900, color: 'var(--accent)', textTransform: 'uppercase' }}>Zero-Retention</div>
+                                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0 }}>Data is destroyed 60s after export or 15m of inactivity.</p>
                                 </div>
                                 <div style={{ textAlign: 'right' }}>
-                                    <div style={{ fontSize: '0.55rem', fontWeight: 900, color: '#10B981', background: 'rgba(16,185,129,0.08)', padding: '2px 8px', borderRadius: 50 }}>✓ Active</div>
-                                    <div style={{ fontSize: '0.55rem', fontWeight: 700, color: '#CBD5E1' }}>SOC2 · AES</div>
+                                    <div style={{ fontSize: '0.55rem', fontWeight: 900, color: 'var(--green)', background: 'rgba(16,185,129,0.08)', padding: '2px 8px', borderRadius: 50 }}>✓ Active</div>
+                                    <div style={{ fontSize: '0.55rem', fontWeight: 700, color: 'var(--text-muted)' }}>SOC2 · AES</div>
                                 </div>
                             </div>
 
-                            {/* Verification Features Quick Look */}
-                            <div className="security-card" style={{ background: '#fff', borderRadius: 20, padding: 20, border: '1px solid #F1F5F9', display: 'flex', alignItems: 'center', gap: 16 }}>
+                            <div className="security-card" style={{ background: 'var(--bg-card)', borderRadius: 20, padding: 20, border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 16 }}>
                                 <div style={{
                                     width: 44, height: 44, borderRadius: 12,
-                                    background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(52,211,153,0.08))',
+                                    background: 'rgba(16,185,129,0.08)',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(16,185,129,0.2)', flexShrink: 0
                                 }} className="mobile-hide">
-                                    <i className="pi pi-verified" style={{ fontSize: '1.2rem', color: '#10B981' }}></i>
+                                    <i className="pi pi-verified" style={{ fontSize: '1.2rem', color: 'var(--green)' }}></i>
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <div style={{ fontSize: '0.7rem', fontWeight: 900, color: '#10B981', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Auto-Verification Enabled</div>
-                                    <p style={{ fontSize: '0.75rem', color: '#94A3B8', margin: 0, lineHeight: 1.5 }}>Files receive embedded invisible cryptography for authenticity checking.</p>
+                                    <div style={{ fontSize: '0.7rem', fontWeight: 900, color: 'var(--green)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Auto-Verification Enabled</div>
+                                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>Files receive embedded invisible cryptography for authenticity checking.</p>
                                     <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                                        <div style={{ background: '#F8FAFC', padding: '4px 8px', borderRadius: 6, border: '1px solid #E2E8F0', fontSize: '0.65rem', color: '#64748B', fontWeight: 800, fontFamily: 'monospace' }}>Hash: a8f7...</div>
-                                        <div style={{ background: '#F8FAFC', padding: '4px 8px', borderRadius: 6, border: '1px solid #E2E8F0', fontSize: '0.65rem', color: '#64748B', fontWeight: 800 }}>Metadata Signed</div>
+                                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border)', fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 800, fontFamily: 'monospace' }}>Hash: a8f7...</div>
+                                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border)', fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 800 }}>Metadata Signed</div>
                                     </div>
                                 </div>
                                 <div style={{ flexShrink: 0, textAlign: 'right' }}>
-                                    <div style={{ fontSize: '0.55rem', fontWeight: 900, color: '#10B981', background: 'rgba(16,185,129,0.08)', padding: '2px 8px', borderRadius: 50 }}>✓ Active</div>
+                                    <div style={{ fontSize: '0.55rem', fontWeight: 900, color: 'var(--green)', background: 'rgba(16,185,129,0.08)', padding: '2px 8px', borderRadius: 50 }}>✓ Active</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Global Loader Overlay */}
-                {/* Loader for CSV/Template Upload */}
-                {(isUploading) && (
-                    <div style={{
-                        position: 'fixed',
-                        inset: 0,
-                        zIndex: 9999,
-                        background: 'rgba(255,255,255,0.85)',
-                        backdropFilter: 'blur(10px)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '40px 60px',
-                            background: 'white',
-                            borderRadius: '24px',
-                            boxShadow: '0 25px 60px rgba(0,0,0,0.12)',
-                            maxWidth: '380px'
-                        }}>
-                            <ProgressSpinner
-                                style={{ width: '50px', height: '50px' }}
-                                strokeWidth="4"
-                            />
-                            <h3 style={{
-                                fontFamily: 'Outfit',
-                                fontWeight: 900,
-                                marginTop: 20,
-                                fontSize: '1.3rem'
-                            }}>
-                                Uploading...
-                            </h3>
-                            <p style={{
-                                color: 'var(--text-muted)',
-                                fontSize: '0.85rem',
-                                marginTop: 8,
-                                lineHeight: 1.5
-                            }}>
-                                Please wait while we process your file.
-                            </p>
-                        </div>
-                    </div>
-                )}
-
-                {/* Loader for Certificate Generation */}
-                {(isGenerating && (!progress || progress.stage === 'starting')) && (
-                    <div style={{
-                        position: 'fixed',
-                        inset: 0,
-                        zIndex: 9999,
-                        background: 'rgba(255,255,255,0.85)',
-                        backdropFilter: 'blur(10px)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '50px 70px',
-                            background: 'white',
-                            borderRadius: '24px',
-                            boxShadow: '0 25px 60px rgba(0,0,0,0.12)',
-                            maxWidth: '420px'
-                        }}>
-                            <ProgressSpinner
-                                style={{ width: '60px', height: '60px' }}
-                                strokeWidth="4"
-                            />
-                            <h3 style={{
-                                fontFamily: 'Outfit',
-                                fontWeight: 900,
-                                marginTop: 24,
-                                fontSize: '1.6rem'
-                            }}>
-                                Generating Certificates...
-                            </h3>
-                            <p style={{
-                                color: 'var(--text-muted)',
-                                fontSize: '0.95rem',
-                                marginTop: 12,
-                                lineHeight: 1.6
-                            }}>
-                                Your certificates are being generated. During peak usage, requests may be queued.
-                                Your batch will be processed automatically, and the ZIP file will be ready for download once complete.
-                                Please stay on this page.
-                            </p>
-                        </div>
-                    </div>
-                )}
             </div>
+
+            {/* Global Loader Overlay */}
+            {/* Loader for CSV/Template Upload */}
+            {(isUploading) && (
+                <div style={{
+                    position: 'fixed',
+                    inset: 0,
+                    zIndex: 9999,
+                    background: 'rgba(7,13,31,0.8)',
+                    backdropFilter: 'blur(12px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <div style={{
+                        textAlign: 'center',
+                        padding: '40px 60px',
+                        background: 'var(--bg-card)',
+                        borderRadius: '24px',
+                        border: '1px solid var(--border)',
+                        boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
+                        maxWidth: '380px'
+                    }}>
+                        <ProgressSpinner
+                            style={{ width: '50px', height: '50px' }}
+                            strokeWidth="4"
+                        />
+                        <h3 style={{
+                            fontFamily: 'Outfit',
+                            fontWeight: 900,
+                            marginTop: 20,
+                            fontSize: '1.3rem'
+                        }}>
+                            Uploading...
+                        </h3>
+                        <p style={{
+                            color: 'var(--text-muted)',
+                            fontSize: '0.85rem',
+                            marginTop: 8,
+                            lineHeight: 1.5
+                        }}>
+                            Please wait while we process your file.
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* Loader for Certificate Generation */}
+            {(isGenerating && (!progress || progress.stage === 'starting')) && (
+                <div style={{
+                    position: 'fixed',
+                    inset: 0,
+                    zIndex: 9999,
+                    background: 'rgba(7,13,31,0.8)',
+                    backdropFilter: 'blur(12px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <div style={{
+                        textAlign: 'center',
+                        padding: '50px 70px',
+                        background: 'var(--bg-card)',
+                        borderRadius: '24px',
+                        border: '1px solid var(--border)',
+                        boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
+                        maxWidth: '420px'
+                    }}>
+                        <ProgressSpinner
+                            style={{ width: '60px', height: '60px' }}
+                            strokeWidth="4"
+                        />
+                        <h3 style={{
+                            fontFamily: 'Outfit',
+                            fontWeight: 900,
+                            marginTop: 24,
+                            fontSize: '1.6rem'
+                        }}>
+                            Generating Certificates...
+                        </h3>
+                        <p style={{
+                            color: 'var(--text-muted)',
+                            fontSize: '0.95rem',
+                            marginTop: 12,
+                            lineHeight: 1.6
+                        }}>
+                            Your certificates are being generated. During peak usage, requests may be queued.
+                            Your batch will be processed automatically, and the ZIP file will be ready for download once complete.
+                            Please stay on this page.
+                        </p>
+                    </div>
+                </div>
+            )}
             <Dialog header="Import Quiz Results" visible={showQuizImport} onHide={() => setShowQuizImport(false)} style={{ width: '90vw', maxWidth: 500 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <p style={{ fontSize: '0.9rem', color: '#64748b' }}>Select a quiz to import all participants who have completed the assessment.</p>
@@ -1286,13 +1318,13 @@ function CertifyStudio() {
                         <div key={q.id} className="quiz-import-item"
                             onClick={() => handleQuizImport(q.id)}
                             style={{
-                                padding: '16px', borderRadius: 12, background: '#F8FAFC',
-                                border: '1px solid #E2E8F0', cursor: 'pointer', transition: 'all 0.2s',
+                                padding: '16px', borderRadius: 12, background: 'rgba(255,255,255,0.02)',
+                                border: '1px solid var(--border)', cursor: 'pointer', transition: 'all 0.2s',
                                 display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                             }}>
                             <div>
-                                <div style={{ fontWeight: 800, color: '#0F172A' }}>{q.title}</div>
-                                <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>By {q.creator_name}</div>
+                                <div style={{ fontWeight: 800, color: 'var(--text)' }}>{q.title}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>By {q.creator_name}</div>
                             </div>
                             <i className="pi pi-chevron-right" style={{ color: '#CBD5E1' }}></i>
                         </div>

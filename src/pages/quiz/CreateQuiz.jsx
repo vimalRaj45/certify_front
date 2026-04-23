@@ -294,8 +294,8 @@ const CreateQuiz = () => {
            <p style={{ color: '#94a3b8' }}>{editId ? 'Update your questions and settings.' : 'Build a professional quiz with AI assistance.'}</p>
         </header>
 
-        <div className="create-quiz-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: 30 }}>
-           <div className="main-content">
+        <div className="create-quiz-grid">
+           <div className="quiz-main-section">
               {!isCreated ? (
                 <Card style={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: '1px solid var(--border)', borderRadius: 24, padding: 30, boxShadow: 'var(--shadow-card)' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -313,7 +313,7 @@ const CreateQuiz = () => {
                                 style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 10, borderRadius: 12 }} />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
+                    <div className="quiz-form-row">
                         <div className="flex flex-column gap-1">
                             <label style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Duration (Minutes)</label>
                             <InputNumber value={metadata.duration_minutes} onValueChange={(e) => setMetadata({...metadata, duration_minutes: e.value})} min={1} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
@@ -326,7 +326,7 @@ const CreateQuiz = () => {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
+                    <div className="quiz-form-row">
                         <div className="flex flex-column gap-1">
                            <label style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Start Date & Time (Optional)</label>
                            <Calendar value={metadata.start_time} onChange={(e) => setMetadata({...metadata, start_time: e.value})} 
@@ -515,27 +515,28 @@ const CreateQuiz = () => {
               )}
            </div>
 
-           <div className="sidebar">
-              <Card title="Quick Stats" style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 20, marginBottom: 20 }}>
+           <div className="quiz-sidebar">
+              <Card title="Quick Stats" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20, marginBottom: 20 }}>
                  <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                       <span style={{ color: '#94a3b8' }}>Total Questions</span>
-                       <span style={{ fontWeight: 900 }}>{questions.length}</span>
+                       <span style={{ color: 'var(--text-secondary)' }}>Total Questions</span>
+                       <span style={{ fontWeight: 900, color: 'var(--text)' }}>{questions.length}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                       <span style={{ color: '#94a3b8' }}>Total Points</span>
-                       <span style={{ fontWeight: 900 }}>{questions.reduce((sum, q) => sum + (q.points || 0), 0)}</span>
+                       <span style={{ color: 'var(--text-secondary)' }}>Total Points</span>
+                       <span style={{ fontWeight: 900, color: 'var(--text)' }}>{questions.reduce((sum, q) => sum + (q.points || 0), 0)}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                       <span style={{ color: '#94a3b8' }}>Duration</span>
-                       <span style={{ fontWeight: 900 }}>{metadata.duration_minutes}m</span>
+                       <span style={{ color: 'var(--text-secondary)' }}>Duration</span>
+                       <span style={{ fontWeight: 900, color: 'var(--text)' }}>{metadata.duration_minutes}m</span>
                     </div>
                  </div>
               </Card>
 
-              <Card title="Shortcuts" style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 20 }}>
+              <Card title="Shortcuts" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20 }}>
                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <Button label="Discard and Exit" icon="pi pi-times" text severity="danger" onClick={() => navigate('/quiz')} />
+                    <Button label="Discard and Exit" icon="pi pi-times" text severity="danger" onClick={() => navigate('/quiz')} 
+                            style={{ fontWeight: 700 }} />
                  </div>
               </Card>
            </div>

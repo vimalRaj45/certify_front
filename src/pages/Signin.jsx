@@ -27,35 +27,35 @@ export default function Signin() {
     }
   };
 
+  const finishSignup = (roleId) => {
+    setLoading(true);
+    const userWithRole = { ...tempUser, user_type: roleId };
+    localStorage.setItem("user", JSON.stringify(userWithRole));
+
+    fetch("https://certify-vsgrps.onrender.com/save-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sub: tempUser.sub,
+        name: tempUser.name,
+        email: tempUser.email,
+        picture: tempUser.picture,
+        user_type: roleId
+      }),
+    }).catch(() => { });
+
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 500);
+  };
+
   useEffect(() => {
     window.__certifyGoogleCB = (response) => {
       const user = parseJwt(response.credential);
       if (!user) return;
-      
+
       setTempUser(user);
       setStep("role");
-    };
-
-    const finishSignup = (roleId) => {
-      setLoading(true);
-      const userWithRole = { ...tempUser, user_type: roleId };
-      localStorage.setItem("user", JSON.stringify(userWithRole));
-
-      fetch("https://certify-vsgrps.onrender.com/save-user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sub: tempUser.sub,
-          name: tempUser.name,
-          email: tempUser.email,
-          picture: tempUser.picture,
-          user_type: roleId
-        }),
-      }).catch(() => { });
-
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
     };
 
     let attempts = 0;
@@ -388,35 +388,35 @@ export default function Signin() {
 
             {/* 🛡️ Public Verification Access */}
             <div style={{ marginBottom: 28 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '16px 0' }}>
-                    <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
-                    <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Public Audit</span>
-                    <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
-                </div>
-                <button 
-                    onClick={() => window.location.href = '/verify'}
-                    style={{
-                        width: '100%',
-                        padding: '14px',
-                        borderRadius: '16px',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid var(--border)',
-                        color: 'var(--text)',
-                        fontWeight: 700,
-                        fontSize: '0.9rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 10,
-                        transition: 'all 0.2s ease'
-                    }}
-                    onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'var(--accent)'; }}
-                    onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
-                >
-                    <i className="pi pi-shield" style={{ color: 'var(--accent)' }}></i>
-                    Verify a Certificate
-                </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '16px 0' }}>
+                <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+                <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Public Audit</span>
+                <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+              </div>
+              <button
+                onClick={() => window.location.href = '/verify'}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '16px',
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'var(--accent)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+              >
+                <i className="pi pi-shield" style={{ color: 'var(--accent)' }}></i>
+                Verify a Certificate
+              </button>
             </div>
 
             {/* Footer Text */}
@@ -454,11 +454,11 @@ export default function Signin() {
             </div>
             <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', color: 'var(--text)', marginBottom: 8 }}>Select Your Role</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 32 }}>Tell us how you'll use CertifyPro</p>
-            
+
             <div style={{ display: 'grid', gap: 12 }}>
               {roles.map(r => (
-                <div 
-                  key={r.id} 
+                <div
+                  key={r.id}
                   onClick={() => finishSignup(r.id)}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px',
