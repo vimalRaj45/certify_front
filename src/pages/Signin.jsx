@@ -94,12 +94,14 @@ export default function Signin() {
     // Explicitly render Turnstile if it's already loaded
     if (window.turnstile) {
       try {
+        const siteKey = window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA");
         window.turnstile.render("#turnstile-signin", {
-          sitekey: window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"),
+          sitekey: String(siteKey),
           callback: window.onTurnstileSuccess,
         });
       } catch (e) { console.warn("Turnstile render error:", e); }
     }
+
 
     tryRender();
 

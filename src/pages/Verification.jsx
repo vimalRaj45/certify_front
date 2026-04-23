@@ -154,15 +154,18 @@ const VerificationPage = ({ onBack }) => {
         
         // Manual Turnstile Render for SPAs
         const renderTurnstile = () => {
-            if (window.turnstile) {
+            const container = document.getElementById('turnstile-verify');
+            if (window.turnstile && container && container.innerHTML === "") {
                 try {
+                    const siteKey = window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA");
                     window.turnstile.render('#turnstile-verify', {
-                        sitekey: window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"),
+                        sitekey: String(siteKey),
                         callback: (token) => setTurnstileToken(token),
                     });
-                } catch (e) { }
+                } catch (e) { console.warn("Turnstile render error:", e); }
             }
         };
+
 
         renderTurnstile();
         const interval = setInterval(() => { if (!turnstileToken) renderTurnstile(); }, 2000);
