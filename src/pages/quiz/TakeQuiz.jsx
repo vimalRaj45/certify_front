@@ -94,7 +94,13 @@ const TakeQuiz = () => {
         toast.success("Quiz started. Good luck!");
       }
     } catch (err) {
-      toast.error(err.response?.data?.error || "Access denied or initialization failed");
+      const errorData = err.response?.data;
+      if (errorData?.startTime) {
+        const localStartTime = new Date(errorData.startTime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+        toast.error(`This quiz hasn't started yet. It opens at ${localStartTime}`);
+      } else {
+        toast.error(errorData?.error || "Access denied or initialization failed");
+      }
     } finally {
       setLoading(false);
     }
