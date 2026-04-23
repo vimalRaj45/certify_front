@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import toast, { Toaster } from 'react-hot-toast';
 import AOS from 'aos';
 
-const API_BASE = 'https://certify-open.onrender.com';
+const API_BASE = 'https://certify-vsgrps.onrender.com';
 
 const STEP_META = {
     hashing: { label: 'Layer 1 · Cryptographic Integrity', icon: 'pi-key', color: '#6366F1', num: 1 },
@@ -181,7 +181,7 @@ const VerificationPage = ({ onBack }) => {
         setSteps([]);
 
         const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'https://certify-open.onrender.com' : API_BASE;
+            ? 'https://certify-vsgrps.onrender.com' : API_BASE;
 
         const es = new EventSource(`${currentApiBase}/progress?key=${verifyKey}`);
         esRef.current = es;

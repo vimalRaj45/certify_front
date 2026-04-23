@@ -21,7 +21,7 @@ import VerificationPage from './pages/Verification';
 import Loader from './components/Loader';
 import quizApi from './services/quizApi';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
 
 const DraggableField = ({ field, isSelected, onClick, handleDragStop, updateFieldSize, updateFieldColor, removeField }) => {
     const nodeRef = useRef(null);
