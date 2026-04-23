@@ -124,10 +124,9 @@ const QuizHub = () => {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 25 }} className="quiz-grid">
             {quizzes.map((quiz, i) => (
-              <Card key={quiz.id} data-aos="fade-up" data-aos-delay={i * 100} style={{ 
-                background: 'rgba(255, 255, 255, 0.03)', 
-                backdropFilter: 'blur(10px)', 
-                border: '1px solid rgba(255, 255, 255, 0.05)',
+              <Card key={quiz.id} style={{ 
+                background: 'rgba(30, 41, 59, 0.7)', 
+                border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: 24,
                 overflow: 'hidden',
                 transition: 'transform 0.3s ease, border 0.3s ease'
