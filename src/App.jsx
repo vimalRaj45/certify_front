@@ -12,6 +12,8 @@ import TakeQuiz from './pages/quiz/TakeQuiz';
 import Leaderboard from './pages/quiz/Leaderboard';
 import History from './pages/quiz/History';
 
+import Guide from './pages/Guide';
+
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +21,7 @@ function App() {
       <Routes>
         {/* Main CertifyPro Routes */}
         <Route path="/" element={<CertifyStudio />} />
+        <Route path="/guide" element={<Guide onBack={() => window.location.href = '/'} />} />
 
         {/* Quiz System Routes */}
         <Route path="/quiz" element={<QuizHub />} />
