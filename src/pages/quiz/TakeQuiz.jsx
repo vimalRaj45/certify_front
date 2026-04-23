@@ -260,9 +260,9 @@ const TakeQuiz = () => {
                 <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 15 }}>📋 Instructions & Security</h3>
                 <ul style={{ color: '#cbd5e1', lineHeight: 1.8, fontSize: '0.85rem' }}>
                   <li><b>Duration:</b> {quiz.duration_minutes} mins for {questions.length} questions.</li>
-                  {quiz.start_time && <li><b>Opens:</b> {new Date(quiz.start_time).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</li>}
-                  {quiz.end_time && <li><b>Closes:</b> {new Date(quiz.end_time).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</li>}
                   <li><b>Security:</b> Fullscreen and Tab monitoring is active.</li>
+                  {quiz.start_time && <li><b>Opens:</b> {new Date(quiz.start_time).toLocaleDateString()} {new Date(quiz.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</li>}
+                  {quiz.end_time && <li><b>Closes:</b> {new Date(quiz.end_time).toLocaleDateString()} {new Date(quiz.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</li>}
                 </ul>
               </div>
 

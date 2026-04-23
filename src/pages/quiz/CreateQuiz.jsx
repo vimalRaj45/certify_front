@@ -94,8 +94,8 @@ const CreateQuiz = () => {
         description: metadata.description,
         duration_minutes: metadata.duration_minutes,
         access_key: metadata.access_key,
-        start_time: metadata.start_time,
-        end_time: metadata.end_time
+        start_time: metadata.start_time ? metadata.start_time.toISOString() : null,
+        end_time: metadata.end_time ? metadata.end_time.toISOString() : null
       };
 
       if (editId) {
