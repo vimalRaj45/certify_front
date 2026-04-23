@@ -91,7 +91,18 @@ export default function Signin() {
       setTurnstileToken(token);
     };
 
+    // Explicitly render Turnstile if it's already loaded
+    if (window.turnstile) {
+      try {
+        window.turnstile.render("#turnstile-signin", {
+          sitekey: window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"),
+          callback: window.onTurnstileSuccess,
+        });
+      } catch (e) { console.warn("Turnstile render error:", e); }
+    }
+
     tryRender();
+
 
     return () => {
       delete window.__certifyGoogleCB;
@@ -359,13 +370,15 @@ export default function Signin() {
         </div>
 
         {/* Cloudflare Turnstile Widget */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-          <div 
-            className="cf-turnstile" 
-            data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-            data-callback="onTurnstileSuccess"
-          ></div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24, gap: 8 }}>
+          <div id="turnstile-signin" className="cf-turnstile"></div>
+          {!turnstileToken && (
+            <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 600 }}>
+              {window.location.hostname === 'localhost' ? "Using Test Key for Localhost" : "Verify you are human"}
+            </span>
+          )}
         </div>
+
 
         {/* Google Button Container */}
 

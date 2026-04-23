@@ -151,12 +151,28 @@ const VerificationPage = ({ onBack }) => {
 
     useEffect(() => {
         AOS.init({ duration: 600 });
-        window.onTurnstileVerify = (token) => setTurnstileToken(token);
+        
+        // Manual Turnstile Render for SPAs
+        const renderTurnstile = () => {
+            if (window.turnstile) {
+                try {
+                    window.turnstile.render('#turnstile-verify', {
+                        sitekey: window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"),
+                        callback: (token) => setTurnstileToken(token),
+                    });
+                } catch (e) { }
+            }
+        };
+
+        renderTurnstile();
+        const interval = setInterval(() => { if (!turnstileToken) renderTurnstile(); }, 2000);
+
         return () => { 
             if (esRef.current) esRef.current.close(); 
-            delete window.onTurnstileVerify;
+            clearInterval(interval);
         };
-    }, []);
+    }, [activeTab]);
+
 
 
     const handleBack = () => {
@@ -279,13 +295,15 @@ const VerificationPage = ({ onBack }) => {
                         <button className={`tab-btn ${activeTab === 'id' ? 'active' : 'inactive'}`} onClick={() => setActiveTab('id')}>Search by ID</button>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-                        <div 
-                            className="cf-turnstile" 
-                            data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-                            data-callback="onTurnstileVerify"
-                        ></div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24, gap: 8 }}>
+                        <div id="turnstile-verify" className="cf-turnstile"></div>
+                        {!turnstileToken && (
+                            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Security Check Required
+                            </span>
+                        )}
                     </div>
+
 
 
                     {!verifying && !result && (
