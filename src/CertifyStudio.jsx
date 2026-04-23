@@ -557,7 +557,9 @@ function CertifyStudio() {
                 </Dialog>
 
                 {/* Topbar */}
-                <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
+                <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9', position: 'relative' }}>
+                    
+                    {/* Left Section: Logo & Exit */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                         <Button icon="pi pi-arrow-left" className="p-button-text p-button-secondary"
                             onClick={() => setShowApp(false)} tooltip="Exit Console"
@@ -579,8 +581,9 @@ function CertifyStudio() {
                         </div>
                     </div>
 
-                    <div className="topbar-center" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ display: 'flex', gap: 8, background: '#F8FAFC', padding: '4px', borderRadius: 50, border: '1px solid #E2E8F0' }}>
+                    {/* Center Section: Progress or System Status */}
+                    <div className="topbar-center" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 24 }}>
+                        <div className="mobile-hide" style={{ display: 'flex', gap: 8, background: '#F8FAFC', padding: '4px', borderRadius: 50, border: '1px solid #E2E8F0' }}>
                             {[{ label: 'Import', step: 1, done: !!csvData && !!templateUrl }, { label: 'Configure', step: 2, done: fields.length > 0 }, { label: 'Generate', step: 3, done: false }].map((s, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{
@@ -605,39 +608,33 @@ function CertifyStudio() {
                                 </div>
                             ))}
                         </div>
-                     <div className="topbar-center" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981', boxShadow: '0 0 12px #10B98180' }}></div>
-                        <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#64748B', letterSpacing: '0.05em' }}>SYSTEM ONLINE</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981', boxShadow: '0 0 12px #10B98180' }}></div>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#64748B', letterSpacing: '0.05em' }} className="mobile-hide">SYSTEM ONLINE</span>
+                        </div>
                     </div>
-                </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, position: 'relative', zIndex: 999 }}>
-                    <Button label="Guide" icon="pi pi-book" size="small" className="p-button-text p-button-secondary mobile-hide"
-                        style={{ borderRadius: 50 }}
-                        onClick={() => navigate('/guide')} />
-                    <Button label="Quiz Hub" icon="pi pi-bolt" size="small" className="mobile-hide"
-                        style={{ borderRadius: 50, background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', border: 'none', cursor: 'pointer' }}
-                        onClick={() => navigate('/quiz')} />
-                    
-                    <div className="mobile-hide" style={{ width: 1, height: 24, background: '#E2E8F0', margin: '0 4px' }}></div>
-                    
-                    <div style={{ textAlign: 'right' }} className="mobile-hide">
-                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{user?.name}</div>
-                        <div style={{ fontSize: '0.55rem', color: '#64748B', fontWeight: 700 }}>Workspace Owner</div>
-                    </div>
+                    {/* Right Section: Actions & Profile */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <Button label="Guide" icon="pi pi-book" size="small" className="p-button-text p-button-secondary mobile-hide"
+                            style={{ borderRadius: 50 }}
+                            onClick={() => navigate('/guide')} />
+                        <Button label="Quiz Hub" icon="pi pi-bolt" size="small" className="mobile-hide"
+                            style={{ borderRadius: 50, background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', border: 'none' }}
+                            onClick={() => navigate('/quiz')} />
+
+                        <div className="mobile-hide" style={{ width: 1, height: 24, background: '#E2E8F0', margin: '0 4px' }}></div>
+
                         {isGenerating && (
                             <Button icon="pi pi-stop-circle" size="small" className="p-button-danger p-button-text" onClick={stopGeneration} style={{ borderRadius: 50 }} />
                         )}
-                        <Button icon="pi pi-undo" className="p-button-text p-button-secondary" onClick={() => window.location.reload()} tooltip="Hard Reset" style={{ borderRadius: 12, width: 38, height: 38 }} />
 
-                        <div style={{ height: 24, width: 1, background: '#E2E8F0', margin: '0 8px' }} className="mobile-hide"></div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={logout}>
                             <img src={user?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=0D8ABC&color=fff`}
                                 alt={user?.name} style={{ width: 32, height: 32, borderRadius: '50%', border: '2px solid #3B82F6' }} />
                             <div className="mobile-hide" style={{ textAlign: 'left' }}>
                                 <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{user?.name}</div>
-                                <div style={{ fontSize: '0.55rem', color: '#94A3B8', fontWeight: 700 }}>Logout</div>
+                                <div style={{ fontSize: '0.55rem', color: '#94A3B8', fontWeight: 700 }}>Workspace Owner</div>
                             </div>
                         </div>
                     </div>
@@ -1376,6 +1373,6 @@ function CertifyStudio() {
 
         </div>
     );
-}
+};
 
 export default CertifyStudio;

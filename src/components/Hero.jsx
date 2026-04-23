@@ -4,7 +4,7 @@ import gsap from 'gsap';
 
 const Hero = ({ onOpenApp }) => {
     const [typedText, setTypedText] = useState('');
-    const fullText = "Assessments & Recognition.";
+    const fullText = "Bulk Certificate Automation.";
     const [index, setIndex] = useState(0);
     const heroRef = useRef(null);
 

@@ -88,17 +88,53 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 }
             `}</style>
 
+            {/* ═══ MASTER YOUR WORKFLOW (Clarity Section) ═══ */}
+            <section id="how-it-works" style={{ padding: '100px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 64 }} data-aos="fade-up">
+                        <div className="badge badge-purple" style={{ marginBottom: 16 }}>
+                            <i className="pi pi-map"></i> The Workflow
+                        </div>
+                        <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>
+                            From Data to Award in 3 Steps
+                        </h2>
+                        <p style={{ color: '#64748B', maxWidth: 600, margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.6 }}>
+                            We've eliminated the tedious manual work. Here is how CertifyPro turns your spreadsheets into prestigious credentials.
+                        </p>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40 }}>
+                        {[
+                            { step: '01', title: 'Import Participants', desc: 'Upload your CSV or Excel list. We handle any column format, from names to specialized scores.', icon: 'pi-file-import', color: '#3B82F6' },
+                            { step: '02', title: 'Map Your Template', desc: 'Drag and drop dynamic fields onto your certificate image. See your data update in real-time.', icon: 'pi-pencil', color: '#A855F7' },
+                            { step: '03', title: 'Bulk Generate', desc: 'CertifyPro blasts through thousands of records, generating secure, signed PDFs and sending them via email.', icon: 'pi-send', color: '#10B981' },
+                        ].map((s, i) => (
+                            <div key={i} data-aos="fade-up" data-aos-delay={i * 150} style={{ position: 'relative' }}>
+                                <div style={{ fontSize: '5rem', fontWeight: 900, color: '#F1F5F9', position: 'absolute', top: -30, left: -10, zIndex: 1, fontFamily: 'Outfit' }}>{s.step}</div>
+                                <div style={{ position: 'relative', zIndex: 2 }}>
+                                    <div style={{ width: 56, height: 56, borderRadius: 16, background: s.color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, boxShadow: `0 10px 20px ${s.color}30` }}>
+                                        <i className={`pi ${s.icon}`} style={{ fontSize: '1.5rem' }}></i>
+                                    </div>
+                                    <h3 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: 12, fontFamily: 'Outfit' }}>{s.title}</h3>
+                                    <p style={{ color: '#64748B', lineHeight: 1.7, fontSize: '0.95rem' }}>{s.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* ═══ FEATURES ═══ */}
             <section id="features" style={{ padding: '100px 24px', maxWidth: 1200, margin: '0 auto' }}>
                 <div style={{ textAlign: 'center', marginBottom: 64 }} data-aos="fade-up">
                     <div className="badge badge-blue" style={{ marginBottom: 16 }}>
-                        <i className="pi pi-th-large"></i> Core Platform
+                        <i className="pi pi-th-large"></i> Why CertifyPro?
                     </div>
                     <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>
-                        Enterprise-Grade Tooling
+                        Built for Educational Integrity
                     </h2>
                     <p style={{ color: '#64748B', maxWidth: 550, margin: '0 auto', fontSize: '1rem' }}>
-                        Beyond simple generation — we provide an ecosystem that builds knowledge, validates skills, and rewards achievement.
+                        Everything you need to run a professional certification program, from assessment to tamper-proof distribution.
                     </p>
                 </div>
 
