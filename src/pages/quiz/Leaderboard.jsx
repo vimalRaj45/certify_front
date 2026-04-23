@@ -5,6 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import quizApi from '../../services/quizApi';
 import toast from 'react-hot-toast';
+import './quiz.css';
 
 const Leaderboard = () => {
   const { quizId } = useParams();
@@ -33,11 +34,10 @@ const Leaderboard = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      padding: '40px 20px',
       color: '#f8fafc'
-    }}>
+    }} className="quiz-container">
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <header style={{ marginBottom: 40, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <header style={{ marginBottom: 40, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} className="mobile-flex-column">
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Button icon="pi pi-arrow-left" rounded text style={{ color: '#f8fafc' }} onClick={() => navigate('/quiz')} />
             <h1 style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'Outfit' }}>Leaderboard</h1>

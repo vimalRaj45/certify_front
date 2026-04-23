@@ -7,6 +7,7 @@ import quizApi from '../../services/quizApi';
 import toast from 'react-hot-toast';
 import { InputText } from 'primereact/inputtext';
 import FaceMonitor from '../../components/FaceMonitor';
+import './quiz.css';
 
 const TakeQuiz = () => {
   const { quizId } = useParams();
@@ -247,9 +248,9 @@ const TakeQuiz = () => {
   // Instructions Page
   if (!isStarted && quiz && !isSubmitted) {
     return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '40px 20px', color: '#f8fafc' }}>
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#f8fafc' }} className="quiz-container">
         <div style={{ maxWidth: 700, margin: '60px auto' }}>
-           <Card style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, padding: 20 }}>
+           <Card style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, padding: 20 }} className="responsive-card">
               <div style={{ textAlign: 'center', marginBottom: 30 }}>
                 <h1 style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'Outfit' }}>{quiz.title}</h1>
                 <p style={{ color: '#94a3b8' }}>{quiz.description || "Official assessment examination."}</p>
@@ -268,7 +269,7 @@ const TakeQuiz = () => {
               {/* Identification Flow (Always mandatory as per requirement) */}
               <div style={{ background: 'rgba(255,255,255,0.02)', padding: 25, borderRadius: 20, border: '1px solid rgba(255,255,255,0.05)', marginBottom: 25 }}>
                  <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 20, color: '#3b82f6' }}>👤 Participant Identification</h3>
-                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
                     <div className="flex flex-column gap-2 text-left">
                        <label style={{ fontSize: '0.8rem', color: '#64748b' }}>Full Name</label>
                        <InputText value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="John Doe" 
@@ -307,7 +308,7 @@ const TakeQuiz = () => {
 
   if (isSubmitted && result) {
     return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '100px 20px', color: '#fff', textAlign: 'center' }}>
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#fff', textAlign: 'center' }} className="quiz-container">
         <div style={{ maxWidth: 600, margin: '0 auto' }}>
           <div style={{ width: 120, height: 120, background: 'rgba(16, 185, 129, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 30px', border: '2px solid #10b981' }}>
             <i className="pi pi-check" style={{ fontSize: '3rem', color: '#10b981' }}></i>
@@ -315,7 +316,7 @@ const TakeQuiz = () => {
           <h1 style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'Outfit', marginBottom: 10 }}>Quiz Completed!</h1>
           <p style={{ color: '#94a3b8', marginBottom: 40 }}>You've successfully finished <b>{quiz.title}</b></p>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40 }} className="quiz-result-grid">
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: 30, borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)' }}>
               <div style={{ fontSize: '3rem', fontWeight: 900, color: '#3b82f6' }}>{result.score}</div>
               <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Score / {result.max_possible}</div>
@@ -343,9 +344,8 @@ const TakeQuiz = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      padding: '40px 20px',
       color: '#f8fafc'
-    }}>
+    }} className="quiz-container">
       {/* AI Face Monitoring Component */}
       <FaceMonitor 
         isStarted={isStarted} 
@@ -355,18 +355,18 @@ const TakeQuiz = () => {
 
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <header style={{ marginBottom: 40 }}>
-           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
+           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }} className="take-quiz-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>{quiz?.title}</h2>
                 <span style={{ fontSize: '0.65rem', background: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6', padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase' }}>{currentQuestion.type || 'mcq'}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 20 }} className="take-quiz-stats">
                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: timeLeft < 60 ? '#ef4444' : '#10b981' }}>
                     <i className="pi pi-clock"></i>
                     <span style={{ fontWeight: 900, fontSize: '1.2rem', fontFamily: 'monospace' }}>{formatTime(timeLeft)}</span>
                  </div>
                  {violations > 0 && (
-                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#ef4444', animation: 'pulse 2s infinite' }}>
+                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#ef4444' }} className="strike-pulse">
                       <i className="pi pi-exclamation-triangle"></i>
                       <span style={{ fontWeight: 800, fontSize: '0.8rem' }}>Strikes: {violations}/3</span>
                    </div>
@@ -377,7 +377,7 @@ const TakeQuiz = () => {
            <ProgressBar value={progressPercent} showValue={false} style={{ height: 8, borderRadius: 50, background: 'rgba(255,255,255,0.1)' }} color="#3b82f6" />
         </header>
 
-        <Card style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, padding: 20 }}>
+        <Card style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, padding: 20 }} className="responsive-card">
           <h3 style={{ fontSize: '1.5rem', marginBottom: 30, lineHeight: 1.4 }}>{currentQuestion.question}</h3>
           
           {currentQuestion.type === 'fill_in_the_blanks' ? (

@@ -14,6 +14,7 @@ import { FileUpload } from 'primereact/fileupload';
 import axios from 'axios';
 import * as pdfjs from 'pdfjs-dist';
 import mammoth from 'mammoth';
+import './quiz.css';
 
 // Configure PDFJS worker
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -282,9 +283,8 @@ const CreateQuiz = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      padding: '40px 20px',
       color: '#f8fafc'
-    }}>
+    }} className="quiz-container">
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <header style={{ marginBottom: 40, display: 'flex', alignItems: 'center', gap: 20 }}>
           <Button icon="pi pi-arrow-left" rounded text style={{ color: '#f8fafc' }} onClick={() => navigate('/quiz')} />
@@ -310,7 +310,7 @@ const CreateQuiz = () => {
                            style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 10, borderRadius: 12 }} />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
                 <div className="flex flex-column gap-1">
                   <label style={{ fontWeight: 600, color: '#94a3b8' }}>Duration (Minutes)</label>
                   <InputNumber value={metadata.duration_minutes} onValueChange={(e) => setMetadata({...metadata, duration_minutes: e.value})} min={1} />
@@ -321,7 +321,7 @@ const CreateQuiz = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
                 <div className="flex flex-column gap-1">
                    <label style={{ fontWeight: 600, color: '#94a3b8' }}>Start Date & Time (Optional)</label>
                    <Calendar value={metadata.start_time} onChange={(e) => setMetadata({...metadata, start_time: e.value})} 
@@ -336,7 +336,7 @@ const CreateQuiz = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
                 <div className="flex flex-column gap-1">
                    <label style={{ fontWeight: 600, color: '#94a3b8' }}>Quiz Access Key (Optional)</label>
                    <InputText value={metadata.access_key} onChange={(e) => setMetadata({...metadata, access_key: e.target.value})} 
@@ -376,15 +376,17 @@ const CreateQuiz = () => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-            }}>
-                <div>
+            }} className="ai-banner">
+                <div className="mobile-full-width">
                     <h3 style={{ margin: 0, fontSize: '1.25rem', fontFamily: 'Outfit', fontWeight: 800 }}>AI Quiz Generator</h3>
                     <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.9rem' }}>Generate professional questions instantly from your notes (PDF/Doc/Text).</p>
                 </div>
                 <Button label="Launch AI Studio" icon="pi pi-sparkles" 
                         onClick={() => setAiDialogVisible(true)}
-                        style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', borderRadius: 12, fontWeight: 700 }} />
+                        style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', borderRadius: 12, fontWeight: 700 }} className="mobile-full-width" />
             </div>
+
+
 
             {/* AI Generation Dialog */}
             <Dialog 
@@ -508,7 +510,7 @@ const CreateQuiz = () => {
             <Card title={`Add Question ${questions.length + 1}`} style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
                   <div className="flex flex-column gap-2">
                     <label style={{ fontWeight: 600, color: '#94a3b8' }}>Question Type</label>
                     <select 
@@ -538,7 +540,7 @@ const CreateQuiz = () => {
                 {currentQuestion.type !== 'fill_in_the_blanks' && (
                   <>
                     <label style={{ fontWeight: 600, color: '#94a3b8' }}>Options & Correct Answer(s)</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
                       {currentQuestion.options.map((opt, idx) => (
                         <div key={idx} style={{ 
                           display: 'flex', 
@@ -612,7 +614,7 @@ const CreateQuiz = () => {
                     <span style={{ color: '#10b981', fontSize: '0.8rem' }}>{q.points} pts</span>
                   </div>
                   {q.type !== 'fill_in_the_blanks' && (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginTop: 15 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginTop: 15 }}>
                       {(q.options || []).map((opt, j) => {
                         const isCorrect = (q.correct_answer || '').split(',').map(a => a.trim()).includes(opt.trim());
                         return (

@@ -6,6 +6,7 @@ import { Card } from 'primereact/card';
 import { Dialog } from 'primereact/dialog';
 import quizApi from '../../services/quizApi';
 import toast from 'react-hot-toast';
+import './quiz.css';
 
 const QuizHub = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -80,16 +81,15 @@ const QuizHub = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      padding: '40px 20px',
       color: '#f8fafc'
-    }}>
+    }} className="quiz-container">
       <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-        <header style={{ textAlign: 'center', marginBottom: 60 }} data-aos="zoom-in">
-           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 15, marginBottom: 20 }}>
-              <div style={{ width: 50, height: 50, background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <header style={{ textAlign: 'center', marginBottom: 60 }} data-aos="zoom-in" className="quiz-header">
+           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 15, marginBottom: 20 }} className="mobile-flex-column">
+              <div style={{ width: 50, height: 50, background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                  <i className="pi pi-bolt" style={{ fontSize: '1.5rem', color: '#fff' }}></i>
               </div>
-              <h1 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Outfit' }}>Assessment Center</h1>
+              <h1 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Outfit', margin: 0 }}>Assessment Center</h1>
            </div>
            <p style={{ color: '#94a3b8', fontSize: '1.2rem', maxWidth: 600, margin: '0 auto' }}>Test your knowledge or create custom assessments for your team.</p>
            
@@ -99,11 +99,11 @@ const QuizHub = () => {
                         style={{ padding: '15px 30px', borderRadius: 50, background: '#3b82f6', border: 'none', fontWeight: 700 }} />
              </div>
            ) : (
-             <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center', gap: 15 }}>
+             <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center', gap: 15 }} className="mobile-flex-column">
                 <Button label="Create New Quiz" icon="pi pi-plus" onClick={() => navigate('/quiz/create')} 
-                        style={{ padding: '12px 25px', borderRadius: 12, background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', fontWeight: 700 }} />
+                        style={{ padding: '12px 25px', borderRadius: 12, background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', fontWeight: 700 }} className="mobile-full-width" />
                 <Button label="My Results" icon="pi pi-history" onClick={() => navigate('/quiz/history')} 
-                        style={{ padding: '12px 25px', borderRadius: 12, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} className="p-button-outlined" />
+                        style={{ padding: '12px 25px', borderRadius: 12, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} className="p-button-outlined mobile-full-width" />
              </div>
            )}
         </header>
@@ -114,7 +114,7 @@ const QuizHub = () => {
             <div style={{ width: 1, height: 2, background: 'rgba(255,255,255,0.1)', flex: 1, margin: '0 20px' }}></div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 25 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 25 }} className="quiz-grid">
             {quizzes.map((quiz, i) => (
               <Card key={quiz.id} data-aos="fade-up" data-aos-delay={i * 100} style={{ 
                 background: 'rgba(255, 255, 255, 0.03)', 

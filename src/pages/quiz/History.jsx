@@ -5,6 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import quizApi from '../../services/quizApi';
 import toast from 'react-hot-toast';
+import './quiz.css';
 
 const History = () => {
   const [history, setHistory] = useState([]);
@@ -37,11 +38,10 @@ const History = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      padding: '40px 20px',
       color: '#f8fafc'
-    }}>
+    }} className="quiz-container">
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <header style={{ marginBottom: 40, display: 'flex', alignItems: 'center', gap: 20 }}>
+        <header style={{ marginBottom: 40, display: 'flex', alignItems: 'center', gap: 20 }} className="quiz-header">
           <Button icon="pi pi-arrow-left" rounded text style={{ color: '#f8fafc' }} onClick={() => navigate('/quiz')} />
           <h1 style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'Outfit' }}>My Quiz History</h1>
         </header>
