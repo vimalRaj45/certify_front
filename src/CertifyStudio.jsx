@@ -605,15 +605,27 @@ function CertifyStudio() {
                                 </div>
                             ))}
                         </div>
+                     <div className="topbar-center" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 24 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981', boxShadow: '0 0 12px #10B98180' }}></div>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#64748B', letterSpacing: '0.05em' }}>SYSTEM ONLINE</span>
                     </div>
+                </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, position: 'relative', zIndex: 999 }}>
-                        <Button label="Guide" icon="pi pi-book" size="small" className="p-button-text p-button-secondary"
-                            style={{ borderRadius: 50 }}
-                            onClick={() => navigate('/guide')} />
-                        <Button label="Quiz Hub" icon="pi pi-bolt" size="small"
-                            style={{ borderRadius: 50, background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', border: 'none', cursor: 'pointer' }}
-                            onClick={() => navigate('/quiz')} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, position: 'relative', zIndex: 999 }}>
+                    <Button label="Guide" icon="pi pi-book" size="small" className="p-button-text p-button-secondary mobile-hide"
+                        style={{ borderRadius: 50 }}
+                        onClick={() => navigate('/guide')} />
+                    <Button label="Quiz Hub" icon="pi pi-bolt" size="small" className="mobile-hide"
+                        style={{ borderRadius: 50, background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', border: 'none', cursor: 'pointer' }}
+                        onClick={() => navigate('/quiz')} />
+                    
+                    <div className="mobile-hide" style={{ width: 1, height: 24, background: '#E2E8F0', margin: '0 4px' }}></div>
+                    
+                    <div style={{ textAlign: 'right' }} className="mobile-hide">
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{user?.name}</div>
+                        <div style={{ fontSize: '0.55rem', color: '#64748B', fontWeight: 700 }}>Workspace Owner</div>
+                    </div>
                         {isGenerating && (
                             <Button icon="pi pi-stop-circle" size="small" className="p-button-danger p-button-text" onClick={stopGeneration} style={{ borderRadius: 50 }} />
                         )}
@@ -649,7 +661,18 @@ function CertifyStudio() {
                         .action-btn-secondary:hover { border-color: #3B82F6; color: #3B82F6; }
                         .upload-zone-premium { border: 2px dashed #E2E8F0; border-radius: 16px; padding: 20px; transition: all 0.25s; cursor: pointer; background: linear-gradient(135deg, rgba(59,130,246,0.01), rgba(168,85,247,0.01)); }
                         .upload-zone-premium:hover { border-color: #3B82F6; background: rgba(59,130,246,0.03); }
-                        @media (max-width: 768px) { .mobile-hide { display: none !important; } }
+                        
+                        @media (max-width: 768px) { 
+                            .mobile-hide { display: none !important; } 
+                            .topbar-center { display: none !important; }
+                            .kpi-grid { grid-template-columns: 1fr 1fr !important; }
+                            .main-studio-grid { grid-template-columns: 1fr !important; }
+                            .step-wizard-card { padding: 18px !important; }
+                        }
+                        @media (max-width: 480px) {
+                            .kpi-grid { grid-template-columns: 1fr !important; }
+                        }
+                        
                         .canvas-viewport::-webkit-scrollbar { height: 6px; }
                         .canvas-viewport::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 10px; }
                         .canvas-viewport::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
@@ -713,7 +736,7 @@ function CertifyStudio() {
                 </div>
 
                 {/* Main Grid */}
-                <div style={{ padding: '0 16px 40px', display: 'grid', gridTemplateColumns: '1fr', gap: 24 }}>
+                <div className="main-studio-grid" style={{ padding: '0 24px 40px', display: 'grid', gridTemplateColumns: '400px 1fr', gap: 24, marginTop: 24 }}>
                     {/* Left: Controls */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                         {/* Step 1: Import Assets */}
@@ -859,7 +882,7 @@ function CertifyStudio() {
                                 </div>
 
                                 {csvData && (
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 20, background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', border: '1px solid #E2E8F0' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 12, marginBottom: 20, background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', border: '1px solid #E2E8F0' }}>
                                         <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Records</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A' }}>{csvData.participants.length}</div></div>
                                         <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Fields</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A' }}>{fields.length}</div></div>
                                         <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Est. Time</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#3B82F6' }}>~{Math.max(3, Math.ceil(csvData.participants.length * 0.3))}s</div></div>

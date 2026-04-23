@@ -237,10 +237,18 @@ const VerificationPage = ({ onBack }) => {
                     to   { opacity:1; transform:translateY(0); }
                 }
                 .step-enter { animation: fadeSlideIn 0.35s ease forwards; }
+                
+                @media (max-width: 768px) {
+                    .verify-header h1 { font-size: 1.8rem !important; }
+                    .compare-row { grid-template-columns: 1fr 30px !important; }
+                    .compare-row span:first-child { grid-column: 1 / -1; margin-bottom: 4px; }
+                    .guidelines-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+                    .step-status-pill { padding: 4px 8px !important; font-size: 0.6rem !important; }
+                }
             `}</style>
 
             {/* Nav */}
-            <nav style={{ maxWidth: 780, margin: '0 auto 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <nav style={{ maxWidth: 780, margin: '0 auto 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={onBack}>
                     <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#3B82F6,#A855F7)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <i className="pi pi-verified" style={{ color: '#fff', fontSize: '1rem' }}></i>
@@ -249,26 +257,26 @@ const VerificationPage = ({ onBack }) => {
                         CertifyPro <span style={{ color: '#3B82F6', fontWeight: 400 }}>Verify</span>
                     </span>
                 </div>
-                <Button label="Back to Home" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={onBack} />
+                <Button label="Back" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={onBack} />
             </nav>
 
             <div style={{ maxWidth: 780, margin: '0 auto' }}>
 
                 {/* Header card */}
-                <div style={{ background: '#fff', borderRadius: 28, padding: '40px 32px 32px', boxShadow: '0 4px 24px rgba(0,0,0,0.05)', border: '1px solid #E8EDF5', textAlign: 'center', marginBottom: 24 }} data-aos="fade-up">
+                <div className="verify-header" style={{ background: '#fff', borderRadius: 28, padding: 'clamp(24px, 5vw, 40px) clamp(20px, 4vw, 32px)', boxShadow: '0 4px 24px rgba(0,0,0,0.05)', border: '1px solid #E8EDF5', textAlign: 'center', marginBottom: 24 }} data-aos="fade-up">
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', padding: '6px 14px', borderRadius: 20, marginBottom: 18 }}>
                         <i className="pi pi-shield" style={{ color: '#6366F1', fontSize: '0.8rem' }}></i>
-                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#4338CA', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Multi-Layer Security Engine</span>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#4338CA', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Security Engine</span>
                     </div>
-                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.4rem', color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 'clamp(1.8rem, 5vw, 2.4rem)', color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
                         Certificate Verification
                     </h1>
-                    <p style={{ color: '#64748B', fontSize: '1rem', maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.7 }}>
-                        Upload a CertifyPro PDF. Each security layer computes, shows its full comparison, then passes control to the next.
+                    <p style={{ color: '#64748B', fontSize: '0.95rem', maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.6 }}>
+                        Upload a CertifyPro PDF. Our 3-layer security model will compute and show a full cryptographic audit.
                     </p>
 
                     {/* How it Works / Help Section */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', textAlign: 'left', marginBottom: '32px', padding: '20px', background: '#F8FAFC', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', textAlign: 'left', marginBottom: '32px', padding: '20px', background: '#F8FAFC', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
                         <div>
                             <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <i className="pi pi-question-circle" style={{ color: '#3B82F6' }}></i> HOW TO USE
@@ -284,25 +292,25 @@ const VerificationPage = ({ onBack }) => {
                                 <i className="pi pi-share-alt" style={{ color: '#A855F7' }}></i> HOW WE SHARE
                             </h4>
                             <ul style={{ fontSize: '0.8rem', color: '#64748B', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
-                                <li><strong>Direct Email:</strong> Auto-sent to participants via Brevo API.</li>
-                                <li><strong>Secure ZIP:</strong> Bulk download available after generation.</li>
-                                <li><strong>Public Links:</strong> We recommend uploading your certificate to Google Drive/One drive and sharing the link for easy public validation.</li>
+                                <li><strong>Direct Email:</strong> Sent via Brevo API.</li>
+                                <li><strong>Public Links:</strong> We recommend sharing via Google Drive.</li>
+                                <li><strong>Security:</strong> All files are purged after processing.</li>
                             </ul>
                         </div>
                     </div>
 
                     {!verifying && !result && (
-                        <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: '36px', background: 'rgba(99,102,241,0.02)' }}>
+                        <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: 'clamp(24px, 5vw, 36px)', background: 'rgba(99,102,241,0.02)' }}>
                             <FileUpload mode="basic" name="file" accept="application/pdf" maxFileSize={10000000}
-                                onSelect={onUpload} auto chooseLabel="Choose PDF Certificate to Verify"
-                                style={{ borderRadius: 14 }} />
-                            <p style={{ color: '#94A3B8', fontSize: '0.82rem', marginTop: 14 }}>Max 10MB · PDF only</p>
+                                onSelect={onUpload} auto chooseLabel="Select Certificate PDF"
+                                style={{ borderRadius: 14, width: '100%' }} />
+                            <p style={{ color: '#94A3B8', fontSize: '0.75rem', marginTop: 14 }}>Max 10MB · Official PDF only</p>
                         </div>
                     )}
 
                     {!verifying && result && (
-                        <Button label="Verify Another Certificate" icon="pi pi-refresh" onClick={handleReset}
-                            style={{ borderRadius: 12, fontWeight: 700, background: 'linear-gradient(135deg,#3B82F6,#6366F1)', border: 'none', padding: '12px 24px' }} />
+                        <Button label="Verify Another" icon="pi pi-refresh" onClick={handleReset}
+                            style={{ borderRadius: 12, fontWeight: 700, background: 'linear-gradient(135deg,#3B82F6,#6366F1)', border: 'none', padding: '12px 24px', width: '100%' }} />
                     )}
                 </div>
 
@@ -314,7 +322,7 @@ const VerificationPage = ({ onBack }) => {
                         {verifying && steps.length === 0 && (
                             <div className="step-enter" style={{ background: '#0F172A', border: '1.5px solid #1E293B', borderRadius: 20, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 14 }}>
                                 <div className="pi pi-spin pi-spinner" style={{ color: '#6366F1', fontSize: '1.2rem' }}></div>
-                                <span style={{ color: '#64748B', fontWeight: 600 }}>Connecting to security engine...</span>
+                                <span style={{ color: '#64748B', fontWeight: 600, fontSize: '0.9rem' }}>Initializing security engine...</span>
                             </div>
                         )}
 
@@ -331,13 +339,8 @@ const VerificationPage = ({ onBack }) => {
                                 <div style={{ width: 2, height: 24, background: 'linear-gradient(180deg,#6366F120,#6366F180)', borderRadius: 2, marginLeft: 18 }}></div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                     <div className="pi pi-spin pi-spinner" style={{ color: '#6366F1', fontSize: '0.85rem' }}></div>
-                                    <span style={{ color: '#6366F1', fontSize: '0.82rem', fontWeight: 700 }}>
-                                        Running{' '}
-                                        {(() => {
-                                            const doneIds = steps.map(s => s.id);
-                                            const next = STEP_ORDER.find(s => !doneIds.includes(s));
-                                            return next ? STEP_META[next]?.label : 'final checks';
-                                        })()}...
+                                    <span style={{ color: '#6366F1', fontSize: '0.8rem', fontWeight: 700 }}>
+                                        Running Layer{' '}{steps.length + 1}...
                                     </span>
                                 </div>
                             </div>
@@ -351,54 +354,54 @@ const VerificationPage = ({ onBack }) => {
                         marginTop: 20,
                         background: result.verified ? 'linear-gradient(135deg,#F0FDF4,#DCFCE7)' : 'linear-gradient(135deg,#FFF5F5,#FEE2E2)',
                         border: `1.5px solid ${result.verified ? '#86EFAC' : '#FCA5A5'}`,
-                        borderRadius: 24, padding: '32px', textAlign: 'center'
+                        borderRadius: 24, padding: 'clamp(24px, 5vw, 32px)', textAlign: 'center'
                     }}>
                         <div style={{
-                            width: 72, height: 72, borderRadius: '50%', margin: '0 auto 20px',
+                            width: 64, height: 64, borderRadius: '50%', margin: '0 auto 20px',
                             background: result.verified ? '#10B981' : '#EF4444',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             boxShadow: `0 12px 28px ${result.verified ? '#10B98140' : '#EF444440'}`
                         }}>
                             <i className={`pi ${result.verified ? 'pi-check' : (result.message?.includes('SECURITY ALERT') ? 'pi-shield' : 'pi-times')}`}
-                                style={{ color: '#fff', fontSize: '2rem' }}></i>
+                                style={{ color: '#fff', fontSize: '1.8rem' }}></i>
                         </div>
-                        <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 8px', color: result.verified ? '#064E3B' : '#991B1B' }}>
-                            {result.verified ? '✅ Legitimate Certificate' : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered Document' : '❌ Verification Failed')}
+                        <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', margin: '0 0 8px', color: result.verified ? '#064E3B' : '#991B1B' }}>
+                            {result.verified ? '✅ Authenticated' : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered' : '❌ Failed')}
                         </h2>
-                        <p style={{ color: result.verified ? '#065F46' : '#B91C1C', margin: '0 0 24px', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                        <p style={{ color: result.verified ? '#065F46' : '#B91C1C', margin: '0 0 24px', fontSize: '0.9rem', lineHeight: 1.6 }}>
                             {result.verified ? 'This certificate is authentic and on record in our secure registry.' : result.message}
                         </p>
 
                         {result.verified && result.data && (
                             <>
-                                <div style={{ background: '#fff', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid #D1FAE5' }}>
+                                <div style={{ background: '#fff', borderRadius: 18, padding: '20px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid #D1FAE5' }}>
                                     {[
                                         { label: 'Recipient', value: result.data.name },
-                                        { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' }) },
-                                        { label: 'Certificate ID', value: result.data.id, mono: true },
+                                        { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'medium' }) },
+                                        { label: 'Cert ID', value: result.data.id, mono: true },
                                     ].map(row => (
-                                        <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
-                                            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
-                                            <span style={{ fontWeight: 700, color: row.mono ? '#6366F1' : '#0F172A', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
+                                        <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: 8, alignItems: 'center' }}>
+                                            <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
+                                            <span style={{ fontWeight: 700, color: row.mono ? '#6366F1' : '#0F172A', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.75rem' : '0.9rem', wordBreak: 'break-all' }}>{row.value}</span>
                                         </div>
                                     ))}
                                 </div>
 
                                 {/* Dos and Don'ts Section */}
                                 <div style={{ marginTop: '24px', textAlign: 'left', borderTop: '1px solid #D1FAE5', paddingTop: '20px' }}>
-                                    <h4 style={{ fontSize: '0.9rem', fontWeight: 900, color: '#064E3B', marginBottom: '16px', letterSpacing: '0.02em' }}>CERTIFICATE USAGE GUIDELINES</h4>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                                    <h4 style={{ fontSize: '0.85rem', fontWeight: 900, color: '#064E3B', marginBottom: '16px', letterSpacing: '0.02em' }}>USAGE GUIDELINES</h4>
+                                    <div className="guidelines-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                                         <div>
-                                            <div style={{ color: '#059669', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>✅ THE DOS</div>
-                                            <ul style={{ fontSize: '0.8rem', color: '#065F46', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
+                                            <div style={{ color: '#059669', fontSize: '0.7rem', fontWeight: 900, marginBottom: '8px' }}>✅ THE DOS</div>
+                                            <ul style={{ fontSize: '0.75rem', color: '#065F46', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
                                                 <li>Share your ID on LinkedIn/CV.</li>
                                                 <li>Keep the original PDF file safe.</li>
                                                 <li>Use this page for official proof.</li>
                                             </ul>
                                         </div>
                                         <div>
-                                            <div style={{ color: '#DC2626', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>❌ THE DON'TS</div>
-                                            <ul style={{ fontSize: '0.8rem', color: '#991B1B', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
+                                            <div style={{ color: '#DC2626', fontSize: '0.7rem', fontWeight: 900, marginBottom: '8px' }}>❌ THE DON'TS</div>
+                                            <ul style={{ fontSize: '0.75rem', color: '#991B1B', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
                                                 <li>Never edit the PDF text or images.</li>
                                                 <li>Don't compress/shrink the file.</li>
                                                 <li>Don't remove system watermarks.</li>
