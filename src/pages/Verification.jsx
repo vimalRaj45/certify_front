@@ -145,12 +145,19 @@ const VerificationPage = ({ onBack }) => {
     const [steps, setSteps] = useState([]);
     const [activeTab, setActiveTab] = useState('pdf'); // 'pdf' or 'id'
     const [certId, setCertId] = useState('');
+    const [turnstileToken, setTurnstileToken] = useState(null);
     const esRef = useRef(null);
+
 
     useEffect(() => {
         AOS.init({ duration: 600 });
-        return () => { if (esRef.current) esRef.current.close(); };
+        window.onTurnstileVerify = (token) => setTurnstileToken(token);
+        return () => { 
+            if (esRef.current) esRef.current.close(); 
+            delete window.onTurnstileVerify;
+        };
     }, []);
+
 
     const handleBack = () => {
         if (onBack) onBack();
@@ -193,6 +200,8 @@ const VerificationPage = ({ onBack }) => {
         const formData = new FormData();
         formData.append('verifyKey', verifyKey);
         formData.append('file', file);
+        formData.append('turnstileToken', turnstileToken); // Send token
+
 
         try {
             const resp = await axios.post(`${API_BASE}/verify-pdf`, formData, {
@@ -213,12 +222,13 @@ const VerificationPage = ({ onBack }) => {
 
     const handleVerifyById = async () => {
         if (!certId.trim()) return toast.error('Please enter a Certificate ID');
+        if (!turnstileToken) return toast.error('Please complete the security check');
         setVerifying(true);
         setResult(null);
         setSteps([]);
 
         try {
-            const resp = await axios.get(`${API_BASE}/verify-id/${certId.trim()}`);
+            const resp = await axios.get(`${API_BASE}/verify-id/${certId.trim()}?turnstileToken=${turnstileToken}`);
             setResult(resp.data);
             if (resp.data.verified) toast.success('Certificate Found!');
             else toast.error('Certificate Not Found');
@@ -228,6 +238,7 @@ const VerificationPage = ({ onBack }) => {
             setVerifying(false);
         }
     };
+
 
     const handleReset = () => { setResult(null); setSteps([]); setCertId(''); };
 
@@ -268,15 +279,25 @@ const VerificationPage = ({ onBack }) => {
                         <button className={`tab-btn ${activeTab === 'id' ? 'active' : 'inactive'}`} onClick={() => setActiveTab('id')}>Search by ID</button>
                     </div>
 
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+                        <div 
+                            className="cf-turnstile" 
+                            data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                            data-callback="onTurnstileVerify"
+                        ></div>
+                    </div>
+
+
                     {!verifying && !result && (
                         <>
                             {activeTab === 'pdf' ? (
-                                <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: '36px', background: 'rgba(99,102,241,0.02)' }}>
+                                <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: '36px', background: 'rgba(99,102,241,0.02)', opacity: turnstileToken ? 1 : 0.5, pointerEvents: turnstileToken ? 'auto' : 'none' }}>
                                     <FileUpload mode="basic" name="file" accept="application/pdf" maxFileSize={10000000}
                                         onSelect={onUpload} auto chooseLabel="Upload PDF to Verify"
                                         style={{ borderRadius: 14 }} />
-                                    <p style={{ color: '#94A3B8', fontSize: '0.82rem', marginTop: 14 }}>Max 10MB · Secure PDF only</p>
+                                    <p style={{ color: '#94A3B8', fontSize: '0.82rem', marginTop: 14 }}>{turnstileToken ? 'Max 10MB · Secure PDF only' : 'Please complete security check first'}</p>
                                 </div>
+
                             ) : (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                     <div style={{ position: 'relative' }}>

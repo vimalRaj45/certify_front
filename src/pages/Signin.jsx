@@ -9,6 +9,8 @@ export default function Signin() {
   const [agreed, setAgreed] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState(null);
+
 
   const parseJwt = (token) => {
     try {
@@ -28,7 +30,7 @@ export default function Signin() {
       }
       localStorage.setItem("user", JSON.stringify(user));
 
-      fetch(" https://certify-open.onrender.com /save-user", {
+      fetch(`${import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com'}/save-user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -36,8 +38,10 @@ export default function Signin() {
           name: user.name,
           email: user.email,
           picture: user.picture,
+          turnstileToken: turnstileToken, // Send token for backend verification
         }),
       }).catch(() => { });
+
 
       setTimeout(() => {
         window.location.href = "/";
@@ -83,11 +87,17 @@ export default function Signin() {
       }, 150);
     };
 
+    window.onTurnstileSuccess = (token) => {
+      setTurnstileToken(token);
+    };
+
     tryRender();
 
     return () => {
       delete window.__certifyGoogleCB;
+      delete window.onTurnstileSuccess;
     };
+
   }, []);
 
   /* ── Loading overlay (Light Theme) ── */
@@ -348,24 +358,35 @@ export default function Signin() {
           </label>
         </div>
 
+        {/* Cloudflare Turnstile Widget */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+          <div 
+            className="cf-turnstile" 
+            data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+            data-callback="onTurnstileSuccess"
+          ></div>
+        </div>
+
         {/* Google Button Container */}
+
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             marginBottom: 28,
             minHeight: 48,
-            opacity: agreed ? 1 : 0.45,
-            pointerEvents: agreed ? 'auto' : 'none',
+            opacity: (agreed && turnstileToken) ? 1 : 0.45,
+            pointerEvents: (agreed && turnstileToken) ? 'auto' : 'none',
             transition: 'opacity 0.3s ease',
             position: 'relative'
           }}
         >
-          {!agreed && (
-            <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'not-allowed' }} title="Please agree to terms first" />
+          {(!agreed || !turnstileToken) && (
+            <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'not-allowed' }} title={!agreed ? "Please agree to terms first" : "Please complete the security check"} />
           )}
           <div id="googleBtn" />
         </div>
+
 
         {/* Footer Text */}
         <p
