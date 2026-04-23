@@ -10,6 +10,8 @@ export default function Signin() {
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState(null);
+  const turnstileWidgetId = useRef(null);
+
 
 
   const parseJwt = (token) => {
@@ -91,15 +93,36 @@ export default function Signin() {
       setTurnstileToken(token);
     };
 
-    // Explicitly render Turnstile if it's already loaded
+    // Explicitly render Turnstile based on Cloudflare docs
+    const renderTurnstile = () => {
+      if (window.turnstile && !turnstileWidgetId.current) {
+        try {
+          const siteKey = window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA");
+          turnstileWidgetId.current = window.turnstile.render("#turnstile-signin", {
+            sitekey: String(siteKey),
+            callback: window.onTurnstileSuccess,
+            'expired-callback': () => {
+              setTurnstileToken(null);
+              turnstileWidgetId.current = null;
+              renderTurnstile(); // Re-render if expired
+            },
+            'error-callback': () => {
+              turnstileWidgetId.current = null;
+            }
+          });
+        } catch (e) { console.warn("Turnstile render error:", e); }
+      }
+    };
+
     if (window.turnstile) {
-      try {
-        const siteKey = window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA");
-        window.turnstile.render("#turnstile-signin", {
-          sitekey: String(siteKey),
-          callback: window.onTurnstileSuccess,
-        });
-      } catch (e) { console.warn("Turnstile render error:", e); }
+        renderTurnstile();
+    } else {
+        const check = setInterval(() => {
+            if (window.turnstile) {
+                renderTurnstile();
+                clearInterval(check);
+            }
+        }, 500);
     }
 
 
@@ -109,6 +132,12 @@ export default function Signin() {
     return () => {
       delete window.__certifyGoogleCB;
       delete window.onTurnstileSuccess;
+      if (window.turnstile && turnstileWidgetId.current) {
+          try {
+              window.turnstile.remove(turnstileWidgetId.current);
+          } catch (e) {}
+          turnstileWidgetId.current = null;
+      }
     };
 
   }, []);

@@ -149,32 +149,60 @@ const VerificationPage = ({ onBack }) => {
     const esRef = useRef(null);
 
 
+    const turnstileWidgetId = useRef(null);
+
     useEffect(() => {
         AOS.init({ duration: 600 });
         
-        // Manual Turnstile Render for SPAs
+        // Manual Turnstile Render based on official Cloudflare docs
         const renderTurnstile = () => {
-            const container = document.getElementById('turnstile-verify');
-            if (window.turnstile && container && container.innerHTML === "") {
-                try {
-                    const siteKey = window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA");
-                    window.turnstile.render('#turnstile-verify', {
-                        sitekey: String(siteKey),
-                        callback: (token) => setTurnstileToken(token),
-                    });
-                } catch (e) { console.warn("Turnstile render error:", e); }
+            if (window.turnstile && !turnstileWidgetId.current) {
+                const container = document.getElementById('turnstile-verify');
+                if (container) {
+                    try {
+                        const siteKey = window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA");
+                        turnstileWidgetId.current = window.turnstile.render('#turnstile-verify', {
+                            sitekey: String(siteKey),
+                            callback: (token) => {
+                                setTurnstileToken(token);
+                            },
+                            'error-callback': () => {
+                                turnstileWidgetId.current = null;
+                            },
+                            'expired-callback': () => {
+                                setTurnstileToken(null);
+                                turnstileWidgetId.current = null;
+                            }
+                        });
+                    } catch (e) { console.warn("Turnstile render error:", e); }
+                }
             }
         };
 
-
-        renderTurnstile();
-        const interval = setInterval(() => { if (!turnstileToken) renderTurnstile(); }, 2000);
+        // Wait for turnstile to be ready
+        if (window.turnstile) {
+            renderTurnstile();
+        } else {
+            const check = setInterval(() => {
+                if (window.turnstile) {
+                    renderTurnstile();
+                    clearInterval(check);
+                }
+            }, 500);
+            return () => clearInterval(check);
+        }
 
         return () => { 
             if (esRef.current) esRef.current.close(); 
-            clearInterval(interval);
+            if (window.turnstile && turnstileWidgetId.current) {
+                try {
+                    window.turnstile.remove(turnstileWidgetId.current);
+                } catch (e) {}
+                turnstileWidgetId.current = null;
+            }
         };
     }, [activeTab]);
+
 
 
 
