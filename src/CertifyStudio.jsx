@@ -114,7 +114,7 @@ function CertifyStudio() {
     const [progress, setProgress] = useState(null);
     const [queueState, setQueueState] = useState({ activeJob: null, queue: [] });
     const [showApp, setShowApp] = useState(false);
-    const [showVerify, setShowVerify] = useState(false);
+
     const [genKey, setGenKey] = useState(null);
     const [isPreviewing, setIsPreviewing] = useState(false);
     const [activeFieldId, setActiveFieldId] = useState(null);
@@ -512,9 +512,8 @@ function CertifyStudio() {
         }, 5000);
     };
 
-    if (showVerify) return <VerificationPage onBack={() => setShowVerify(false)} />;
     if (!user) return <Signin onLogin={setUser} />;
-    if (!showApp) return <LandingPage onStartApp={() => setShowApp(true)} onVerify={() => setShowVerify(true)} user={user} />;
+    if (!showApp) return <LandingPage onStartApp={() => setShowApp(true)} user={user} />;
 
     return (
         <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>

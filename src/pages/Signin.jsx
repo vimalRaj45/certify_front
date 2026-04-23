@@ -353,7 +353,7 @@ export default function Signin() {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginBottom: 28,
+            marginBottom: 20,
             minHeight: 48,
             opacity: agreed ? 1 : 0.45,
             pointerEvents: agreed ? 'auto' : 'none',
@@ -365,6 +365,39 @@ export default function Signin() {
             <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'not-allowed' }} title="Please agree to terms first" />
           )}
           <div id="googleBtn" />
+        </div>
+
+        {/* 🛡️ Public Verification Access */}
+        <div style={{ marginBottom: 28 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '16px 0' }}>
+                <div style={{ flex: 1, height: '1px', background: '#E2E8F0' }}></div>
+                <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Public Audit</span>
+                <div style={{ flex: 1, height: '1px', background: '#E2E8F0' }}></div>
+            </div>
+            <button 
+                onClick={() => window.location.href = '/verify'}
+                style={{
+                    width: '100%',
+                    padding: '14px',
+                    borderRadius: '16px',
+                    background: '#F8FAFC',
+                    border: '1px solid #E2E8F0',
+                    color: '#0F172A',
+                    fontWeight: 700,
+                    fontSize: '0.9rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 10,
+                    transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.borderColor = '#CBD5E1'; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = '#E2E8F0'; }}
+            >
+                <i className="pi pi-shield" style={{ color: '#3B82F6' }}></i>
+                Verify a Certificate
+            </button>
         </div>
 
         {/* Footer Text */}

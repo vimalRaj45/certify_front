@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Existing App Components (renamed to CertifyStudio)
 import CertifyStudio from './CertifyStudio';
+import VerificationPage from './pages/Verification';
 
 // New Quiz Components
 import QuizHub from './pages/quiz/QuizHub';
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         {/* Main CertifyPro Routes */}
         <Route path="/" element={<CertifyStudio />} />
+        <Route path="/verify" element={<VerificationPage onBack={() => window.location.href = '/'} />} />
 
         {/* Quiz System Routes */}
         <Route path="/quiz" element={<QuizHub />} />
@@ -31,4 +33,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;

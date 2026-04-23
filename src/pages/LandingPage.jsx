@@ -7,8 +7,10 @@ import { TermsModal, PrivacyModal, SecurityModal } from '../components/LegalModa
 import HowItWorks from '../components/HowItWorks';
 import BenefitsSection from '../components/BenefitsSection';
 import PerformanceSection from '../components/PerformanceSection';
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage = ({ onStartApp, onVerify, user }) => {
+    const navigate = useNavigate();
     const [showTerms, setShowTerms] = React.useState(false);
     const [showPrivacy, setShowPrivacy] = React.useState(false);
     const [showSecurity, setShowSecurity] = React.useState(false);
@@ -61,7 +63,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                         <a href="#features" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Features</a>
                         <a href="#how-it-works" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>How It Works</a>
                         <a href="#benefits" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Benefits</a>
-                        <span onClick={onVerify} style={{ fontSize: '0.8rem', fontWeight: 700, color: '#2563EB', cursor: 'pointer' }}>Verify</span>
+                        <span onClick={() => navigate('/verify')} style={{ fontSize: '0.8rem', fontWeight: 700, color: '#2563EB', cursor: 'pointer' }}>Verify</span>
                     </div>
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderLeft: '1px solid #E2E8F0', paddingLeft: 12 }}>
@@ -185,7 +187,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                             </div>
                         </div>
                         <div style={{ textAlign: 'left' }}>
-                            <button className="btn btn-blue" onClick={onVerify}>
+                            <button className="btn btn-blue" onClick={() => navigate('/verify')}>
                                 Try Verification Portal <i className="pi pi-arrow-right" style={{ marginLeft: 8 }}></i>
                             </button>
                         </div>
@@ -397,7 +399,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                     <div style={{ display: 'flex', gap: 32, fontSize: '0.9rem', color: '#64748B', fontWeight: 600 }}>
                         <span onClick={() => setShowPrivacy(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Privacy Policy</span>
                         <span onClick={() => setShowTerms(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Terms of Use</span>
-                        <span onClick={onVerify} style={{ transition: 'color 0.2s', color: '#2563EB', cursor: 'pointer' }}>Verify Certificate</span>
+                        <span onClick={() => navigate('/verify')} style={{ transition: 'color 0.2s', color: '#2563EB', cursor: 'pointer' }}>Verify Certificate</span>
                         <span onClick={() => setShowSecurity(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Security</span>
                     </div>
                     <div style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 500 }}>
