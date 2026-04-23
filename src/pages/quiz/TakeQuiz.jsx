@@ -55,6 +55,13 @@ const TakeQuiz = () => {
   };
 
   const startQuizFlow = async () => {
+    // MOBILE ONLY CHECK
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    if (!isMobile) {
+      toast.error("This assessment can only be taken on a mobile device for security reasons.", { duration: 6000 });
+      return;
+    }
+
     try {
       setLoading(true);
       
@@ -181,6 +188,7 @@ const TakeQuiz = () => {
               <div style={{ background: 'rgba(15, 23, 42, 0.5)', padding: 20, borderRadius: 15, marginBottom: 25, border: '1px solid rgba(255,255,255,0.05)' }}>
                 <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 15 }}>📋 Instructions & Security</h3>
                 <ul style={{ color: '#94a3b8', paddingLeft: 20, lineHeight: 1.8 }}>
+                   <li style={{ color: '#fbbf24', fontWeight: 700 }}><i className="pi pi-mobile mr-2"></i> Mobile Only: Access from Desktop/Laptop is strictly prohibited.</li>
                    <li><b>Fullscreen Required:</b> The browser will lock to fullscreen.</li>
                    <li><b>Face Monitoring:</b> Stay in front of your camera at all times.</li>
                    <li><b>Tab Switching:</b> Switching tabs may result in automatic disqualification.</li>
