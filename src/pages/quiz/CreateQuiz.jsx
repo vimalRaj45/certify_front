@@ -9,11 +9,11 @@ import { Calendar } from 'primereact/calendar';
 import quizApi from '../../services/quizApi';
 import toast from 'react-hot-toast';
 import { Dialog } from 'primereact/dialog';
-import { ProgressBar } from 'primereact/progressbar';
 import { FileUpload } from 'primereact/fileupload';
 import axios from 'axios';
 import * as pdfjs from 'pdfjs-dist';
 import mammoth from 'mammoth';
+import Breadcrumbs from '../../components/quiz/Breadcrumbs';
 import './quiz.css';
 
 // Configure PDFJS worker
@@ -218,13 +218,11 @@ const CreateQuiz = () => {
       });
 
       let aiResponse = res.data.choices[0].message.content;
-      // Handle cases where AI wraps json in a key
       let parsed;
       try {
         parsed = JSON.parse(aiResponse);
         if (parsed.questions) parsed = parsed.questions;
         if (!Array.isArray(parsed)) {
-            // some models return { "questions": [...] }
             parsed = Object.values(parsed).find(v => Array.isArray(v)) || [];
         }
       } catch (e) {
@@ -234,7 +232,7 @@ const CreateQuiz = () => {
 
       setGeneratedQuestions(parsed);
       setSelectedAiQuestions(parsed.map((_, i) => i)); // Select all by default
-      toast.success("AI generated 5 questions!");
+      toast.success(`AI generated ${parsed.length} questions!`);
     } catch (err) {
       console.error(err);
       toast.error(err.message || "AI Generation failed.");
@@ -283,371 +281,316 @@ const CreateQuiz = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      color: '#f8fafc'
+      color: '#f8fafc',
+      paddingTop: 40
     }} className="quiz-container">
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <header style={{ marginBottom: 40, display: 'flex', alignItems: 'center', gap: 20 }}>
-          <Button icon="pi pi-arrow-left" rounded text style={{ color: '#f8fafc' }} onClick={() => navigate('/quiz')} />
-          <h1 style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'Outfit' }}>
-            {editId ? `Edit: ${title}` : "Create New Quiz"}
-          </h1>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <Breadcrumbs items={[{ label: editId ? 'Edit Quiz' : 'Create Quiz' }]} />
+
+        <header style={{ marginBottom: 40 }}>
+           <h1 style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'Outfit' }}>
+              {editId ? 'Refine Assessment' : 'New Assessment'}
+           </h1>
+           <p style={{ color: '#94a3b8' }}>{editId ? 'Update your questions and settings.' : 'Build a professional quiz with AI assistance.'}</p>
         </header>
 
-        {!isCreated ? (
-          <Card style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div className="flex flex-column gap-2">
-                <label style={{ fontWeight: 600, color: '#94a3b8' }}>Quiz Title</label>
-                <InputText value={title} onChange={(e) => setTitle(e.target.value)} 
-                           placeholder="e.g. Modern Web Development Trivia" 
-                           style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 15, borderRadius: 12 }} />
-              </div>
-
-              <div className="flex flex-column gap-1">
-                <label style={{ fontWeight: 600, color: '#94a3b8' }}>Description</label>
-                <InputText value={metadata.description} onChange={(e) => setMetadata({...metadata, description: e.target.value})} 
-                           placeholder="Briefly describe the quiz goals or rules..." 
-                           style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 10, borderRadius: 12 }} />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
-                <div className="flex flex-column gap-1">
-                  <label style={{ fontWeight: 600, color: '#94a3b8' }}>Duration (Minutes)</label>
-                  <InputNumber value={metadata.duration_minutes} onValueChange={(e) => setMetadata({...metadata, duration_minutes: e.value})} min={1} />
-                </div>
-                <div className="flex flex-column gap-1">
-                  <label style={{ fontWeight: 600, color: '#94a3b8' }}>Access Restrictions</label>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>Leave whitelist empty for public access</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
-                <div className="flex flex-column gap-1">
-                   <label style={{ fontWeight: 600, color: '#94a3b8' }}>Start Date & Time (Optional)</label>
-                   <Calendar value={metadata.start_time} onChange={(e) => setMetadata({...metadata, start_time: e.value})} 
-                             showTime hourFormat="12" placeholder="When should quiz start?"
-                             style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155' }} />
-                </div>
-                <div className="flex flex-column gap-1">
-                   <label style={{ fontWeight: 600, color: '#94a3b8' }}>End Date & Time (Optional)</label>
-                   <Calendar value={metadata.end_time} onChange={(e) => setMetadata({...metadata, end_time: e.value})} 
-                             showTime hourFormat="12" placeholder="When should quiz end?"
-                             style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155' }} />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
-                <div className="flex flex-column gap-1">
-                   <label style={{ fontWeight: 600, color: '#94a3b8' }}>Quiz Access Key (Optional)</label>
-                   <InputText value={metadata.access_key} onChange={(e) => setMetadata({...metadata, access_key: e.target.value})} 
-                              placeholder="e.g. EXAM2024"
-                              style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff' }} />
-                </div>
-                <div className="flex flex-column gap-1">
-                  <label style={{ fontWeight: 600, color: '#94a3b8' }}>Hint</label>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>Shared users must enter this key to start.</div>
-                </div>
-              </div>
-
-              <div className="flex flex-column gap-1">
-                <label style={{ fontWeight: 600, color: '#94a3b8' }}>Allowed Student Emails (One per line)</label>
-                <textarea 
-                  value={metadata.whitelist} 
-                  onChange={(e) => setMetadata({...metadata, whitelist: e.target.value})}
-                  placeholder="student1@college.edu&#10;student2@college.edu"
-                  style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 12, borderRadius: 12, height: 100, resize: 'none', fontFamily: 'monospace' }}
-                />
-              </div>
-
-              <Button label={editId ? "Update Quiz Configuration" : "Save Configuration & Start Adding Questions"} onClick={handleCreateQuiz} 
-                      style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', padding: 15, borderRadius: 12, fontWeight: 700 }} />
-            </div>
-          </Card>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
-            
-            {/* AI Generator Banner */}
-            <div style={{
-                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%)',
-                padding: '24px',
-                borderRadius: 24,
-                border: '1px solid rgba(139, 92, 246, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-            }} className="ai-banner">
-                <div className="mobile-full-width">
-                    <h3 style={{ margin: 0, fontSize: '1.25rem', fontFamily: 'Outfit', fontWeight: 800 }}>AI Quiz Generator</h3>
-                    <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.9rem' }}>Generate professional questions instantly from your notes (PDF/Doc/Text).</p>
-                </div>
-                <Button label="Launch AI Studio" icon="pi pi-sparkles" 
-                        onClick={() => setAiDialogVisible(true)}
-                        style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', borderRadius: 12, fontWeight: 700 }} className="mobile-full-width" />
-            </div>
-
-
-
-            {/* AI Generation Dialog */}
-            <Dialog 
-                header={<div style={{ fontFamily: 'Outfit', fontWeight: 900 }}><i className="pi pi-sparkles mr-2" style={{color: '#8b5cf6'}}></i> AI Question Studio</div>} 
-                visible={aiDialogVisible} 
-                onHide={() => !aiStatus.loading && setAiDialogVisible(false)}
-                style={{ width: '90vw', maxWidth: 800 }}
-                footer={generatedQuestions.length > 0 && (
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, padding: 15 }}>
-                        <Button label="Cancel" text onClick={() => setAiDialogVisible(false)} />
-                        <Button label={`Add ${selectedAiQuestions.length} Selected Questions`} 
-                                icon="pi pi-plus" 
-                                disabled={aiStatus.loading}
-                                onClick={addSelectedAiQuestions}
-                                style={{ background: '#10b981', border: 'none', borderRadius: 10 }} />
+        <div className="create-quiz-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: 30 }}>
+           <div className="main-content">
+              {!isCreated ? (
+                <Card style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, padding: 30 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    <div className="flex flex-column gap-2">
+                        <label style={{ fontWeight: 600, color: '#94a3b8' }}>Quiz Title</label>
+                        <InputText value={title} onChange={(e) => setTitle(e.target.value)} 
+                                placeholder="e.g. Modern Web Development Trivia" 
+                                style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 15, borderRadius: 12 }} />
                     </div>
-                )}
-                contentStyle={{ background: '#0f172a', color: '#fff', position: 'relative' }}
-                headerStyle={{ background: '#0f172a', color: '#fff', borderBottom: '1px solid #1e293b' }}
-            >
-                {aiStatus.loading && (
+
+                    <div className="flex flex-column gap-1">
+                        <label style={{ fontWeight: 600, color: '#94a3b8' }}>Description</label>
+                        <InputText value={metadata.description} onChange={(e) => setMetadata({...metadata, description: e.target.value})} 
+                                placeholder="Briefly describe the quiz goals or rules..." 
+                                style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 10, borderRadius: 12 }} />
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
+                        <div className="flex flex-column gap-1">
+                            <label style={{ fontWeight: 600, color: '#94a3b8' }}>Duration (Minutes)</label>
+                            <InputNumber value={metadata.duration_minutes} onValueChange={(e) => setMetadata({...metadata, duration_minutes: e.value})} min={1} />
+                        </div>
+                        <div className="flex flex-column gap-1">
+                           <label style={{ fontWeight: 600, color: '#94a3b8' }}>Quiz Access Key (Optional)</label>
+                           <InputText value={metadata.access_key} onChange={(e) => setMetadata({...metadata, access_key: e.target.value})} 
+                                      placeholder="e.g. EXAM2024"
+                                      style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff' }} />
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
+                        <div className="flex flex-column gap-1">
+                           <label style={{ fontWeight: 600, color: '#94a3b8' }}>Start Date & Time (Optional)</label>
+                           <Calendar value={metadata.start_time} onChange={(e) => setMetadata({...metadata, start_time: e.value})} 
+                                     showTime hourFormat="12" placeholder="When should quiz start?"
+                                     style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155' }} />
+                        </div>
+                        <div className="flex flex-column gap-1">
+                           <label style={{ fontWeight: 600, color: '#94a3b8' }}>End Date & Time (Optional)</label>
+                           <Calendar value={metadata.end_time} onChange={(e) => setMetadata({...metadata, end_time: e.value})} 
+                                     showTime hourFormat="12" placeholder="When should quiz end?"
+                                     style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155' }} />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-column gap-1">
+                        <label style={{ fontWeight: 600, color: '#94a3b8' }}>Allowed Student Emails (One per line)</label>
+                        <textarea 
+                        value={metadata.whitelist} 
+                        onChange={(e) => setMetadata({...metadata, whitelist: e.target.value})}
+                        placeholder="student1@college.edu&#10;student2@college.edu"
+                        style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 12, borderRadius: 12, height: 100, resize: 'none', fontFamily: 'monospace' }}
+                        />
+                    </div>
+
+                    <Button label={editId ? "Update Configuration" : "Initialize Assessment"} onClick={handleCreateQuiz} 
+                            style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', padding: 15, borderRadius: 12, fontWeight: 700 }} />
+                    </div>
+                </Card>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
+                    {/* AI Generator Banner */}
                     <div style={{
-                        position: 'absolute',
-                        top: 0, left: 0, right: 0, bottom: 0,
-                        background: 'rgba(15, 23, 42, 0.8)',
-                        backdropFilter: 'blur(4px)',
-                        zIndex: 10,
+                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%)',
+                        padding: '24px',
+                        borderRadius: 24,
+                        border: '1px solid rgba(139, 92, 246, 0.3)',
                         display: 'flex',
-                        flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '0 0 20px 20px'
-                    }}>
-                        <i className="pi pi-spin pi-sparkles" style={{ fontSize: '3rem', color: '#8b5cf6', marginBottom: 20 }}></i>
-                        <h3 style={{ fontFamily: 'Outfit', fontWeight: 800 }}>{aiStatus.stage}</h3>
-                        <p style={{ color: '#94a3b8' }}>Please wait while we finalize your questions...</p>
+                        justifyContent: 'space-between',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+                    }} className="ai-banner">
+                        <div className="mobile-full-width">
+                            <h3 style={{ margin: 0, fontSize: '1.25rem', fontFamily: 'Outfit', fontWeight: 800 }}>AI Quiz Generator</h3>
+                            <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.9rem' }}>Generate professional questions instantly from your notes (PDF/Doc/Text).</p>
+                        </div>
+                        <Button label="Launch AI Studio" icon="pi pi-sparkles" 
+                                onClick={() => setAiDialogVisible(true)}
+                                style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', borderRadius: 12, fontWeight: 700 }} className="mobile-full-width" />
                     </div>
-                )}
-                
-                {generatedQuestions.length === 0 ? (
-                    <div style={{ padding: '20px 0', textAlign: 'center' }}>
-                        {aiStatus.loading ? (
-                            <div style={{ padding: 40 }}>
-                                <i className="pi pi-cog pi-spin mb-4" style={{ fontSize: '3rem', color: '#3b82f6' }}></i>
-                                <h3 style={{ fontFamily: 'Outfit' }}>{aiStatus.stage}</h3>
-                                <p style={{ color: '#64748b' }}>Our AI is processing your document and preparing high-quality questions...</p>
-                            </div>
-                        ) : (
-                            <div style={{ 
-                                border: '2px dashed #334155', 
-                                borderRadius: 20, 
-                                padding: 60,
-                                background: 'rgba(30, 41, 59, 0.4)'
-                            }}>
-                                <i className="pi pi-cloud-upload mb-4" style={{ fontSize: '4rem', color: '#3b82f6', opacity: 0.5 }}></i>
-                                <h2 style={{ fontFamily: 'Outfit', fontWeight: 800 }}>Upload Study Notes</h2>
-                                <p style={{ color: '#94a3b8', marginBottom: 20 }}>Support for PDF, DOCX, and TXT files. AI works best with structured text.</p>
-                                
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 15, marginBottom: 30 }}>
-                                    <label style={{ fontWeight: 600, color: '#94a3b8' }}>Questions to generate:</label>
-                                    <InputNumber value={numQuestions} onValueChange={(e) => setNumQuestions(e.value)} min={1} max={20} 
-                                                 showButtons buttonLayout="horizontal" style={{ width: '120px' }}
-                                                 decrementButtonClassName="p-button-secondary" incrementButtonClassName="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" />
-                                </div>
 
-                                <FileUpload mode="basic" auto chooseLabel="Generate Now" customUpload uploadHandler={handleAiGeneration} 
-                                            accept=".pdf,.docx,.txt" maxFileSize={5000000} />
+                    {/* Question Entry Form */}
+                    <Card title={`Add Question ${questions.length + 1}`} style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
+                        <div className="flex flex-column gap-2">
+                            <label style={{ fontWeight: 600, color: '#94a3b8' }}>Question Type</label>
+                            <select 
+                            value={currentQuestion.type} 
+                            onChange={(e) => setCurrentQuestion({...currentQuestion, type: e.target.value, options: (e.target.value === 'fill_in_the_blanks' ? [] : ['', '', '', '']), correct_answer: ''})}
+                            style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 10, borderRadius: 10 }}
+                            >
+                            <option value="mcq">MCQ (Single Select)</option>
+                            <option value="multiple">Multiple Choice (Multi Select)</option>
+                            <option value="fill_in_the_blanks">Fill in the Blanks</option>
+                            </select>
+                        </div>
+                        <div className="flex flex-column gap-2">
+                            <label style={{ fontWeight: 600, color: '#94a3b8' }}>Points</label>
+                            <InputNumber value={currentQuestion.points} onValueChange={(e) => setCurrentQuestion({...currentQuestion, points: e.value})} min={1} />
+                        </div>
+                        </div>
+
+                        <div className="flex flex-column gap-2">
+                        <label style={{ fontWeight: 600, color: '#94a3b8' }}>Question Text</label>
+                        <InputText value={currentQuestion.question} 
+                                    onChange={(e) => setCurrentQuestion({...currentQuestion, question: e.target.value})}
+                                    placeholder="Type your question here..."
+                                    style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 12, borderRadius: 10 }} />
+                        </div>
+
+                        {currentQuestion.type !== 'fill_in_the_blanks' && (
+                        <>
+                            <label style={{ fontWeight: 600, color: '#94a3b8' }}>Options & Correct Answer(s)</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
+                            {currentQuestion.options.map((opt, idx) => (
+                                <div key={idx} style={{ 
+                                display: 'flex', 
+                                gap: 10, 
+                                alignItems: 'center', 
+                                background: 'rgba(15, 23, 42, 0.3)', 
+                                padding: 10, 
+                                borderRadius: 10,
+                                border: `1.5px solid ${currentQuestion.correct_answer.split(',').includes(opt) && opt ? '#10b981' : 'transparent'}`
+                                }}>
+                                <div 
+                                    onClick={() => {
+                                    if (!opt) return;
+                                    if (currentQuestion.type === 'mcq') {
+                                        setCurrentQuestion({...currentQuestion, correct_answer: opt});
+                                    } else {
+                                        handleMultipleChoiceToggle(opt);
+                                    }
+                                    }}
+                                    style={{ 
+                                    width: 20, height: 20, borderRadius: currentQuestion.type === 'mcq' ? '50%' : '4px', 
+                                    border: `2px solid ${currentQuestion.correct_answer.split(',').includes(opt) && opt ? '#10b981' : '#334155'}`,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+                                    }}
+                                >
+                                    {currentQuestion.correct_answer.split(',').includes(opt) && opt && <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#10b981' }}></div>}
+                                </div>
+                                <InputText value={opt} 
+                                            onChange={(e) => {
+                                            const newOpts = [...currentQuestion.options];
+                                            newOpts[idx] = e.target.value;
+                                            setCurrentQuestion({...currentQuestion, options: newOpts});
+                                            }}
+                                            placeholder={`Choice ${idx + 1}`}
+                                            style={{ background: 'transparent', border: 'none', color: '#fff', flex: 1, padding: 0 }} />
+                                </div>
+                            ))}
+                            </div>
+                        </>
+                        )}
+
+                        {currentQuestion.type === 'fill_in_the_blanks' && (
+                        <div className="flex flex-column gap-2">
+                            <label style={{ fontWeight: 600, color: '#94a3b8' }}>Correct Answer</label>
+                            <InputText value={currentQuestion.correct_answer} 
+                                    onChange={(e) => setCurrentQuestion({...currentQuestion, correct_answer: e.target.value})}
+                                    placeholder="Type the exact expected answer"
+                                    style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #10b981', color: '#fff' }} />
+                        </div>
+                        )}
+
+                        <Button label={isAdding ? "Adding..." : "Save Question"} 
+                                icon={isAdding ? "pi pi-spin pi-spinner" : "pi pi-check"} 
+                                disabled={isAdding}
+                                onClick={handleAddQuestion}
+                                style={{ background: '#10b981', border: 'none', padding: 12, borderRadius: 10, marginTop: 10 }} />
+                    </div>
+                    </Card>
+
+                    <Divider align="center"><span style={{ color: '#64748b' }}>Curated Questions ({questions.length})</span></Divider>
+
+                    {/* List of added questions */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+                    {questions.map((q, i) => (
+                        <div key={q.id} style={{ background: 'rgba(30, 41, 59, 0.4)', padding: 20, borderRadius: 15, border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.7rem', background: '#3b82f6', color: '#fff', padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase' }}>{q.type || 'mcq'}</span>
+                            <span style={{ fontWeight: 700 }}>Q{i+1}: {q.question}</span>
+                            </div>
+                            <span style={{ color: '#10b981', fontSize: '0.8rem' }}>{q.points} pts</span>
+                        </div>
+                        {q.type !== 'fill_in_the_blanks' && (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginTop: 15 }}>
+                            {(q.options || []).map((opt, j) => {
+                                const isCorrect = (q.correct_answer || '').split(',').map(a => a.trim()).includes(opt.trim());
+                                return (
+                                <div key={j} style={{ 
+                                    fontSize: '0.75rem', 
+                                    color: isCorrect ? '#10b981' : '#64748b', 
+                                    background: 'rgba(0,0,0,0.2)', 
+                                    padding: '6px 10px', 
+                                    borderRadius: 6,
+                                    border: `1px solid ${isCorrect ? '#10b981' : 'transparent'}`
+                                }}>
+                                    {opt}
+                                </div>
+                                );
+                            })}
                             </div>
                         )}
-                    </div>
-                ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 15, padding: '10px 0' }}>
-                        <p style={{ color: '#94a3b8' }}>Review the questions generated by AI. Uncheck any you wish to discard.</p>
-                        {generatedQuestions.map((q, i) => (
-                            <div key={i} style={{ 
-                                background: 'rgba(30, 41, 59, 1)', 
-                                padding: 20, 
-                                borderRadius: 16, 
-                                border: `2px solid ${selectedAiQuestions.includes(i) ? '#3b82f6' : 'rgba(255,255,255,0.05)'}`,
-                                cursor: 'pointer'
-                            }} onClick={() => {
-                                if (selectedAiQuestions.includes(i)) {
-                                    setSelectedAiQuestions(selectedAiQuestions.filter(idx => idx !== i));
-                                } else {
-                                    setSelectedAiQuestions([...selectedAiQuestions, i]);
-                                }
-                            }}>
-                                <div style={{ display: 'flex', gap: 15 }}>
-                                    <div style={{ 
-                                        width: 24, height: 24, borderRadius: 6, 
-                                        background: selectedAiQuestions.includes(i) ? '#3b82f6' : 'transparent',
-                                        border: '2px solid #334155',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                    }}>
-                                        {selectedAiQuestions.includes(i) && <i className="pi pi-check" style={{ fontSize: '0.8rem' }}></i>}
-                                    </div>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: 800, marginBottom: 10, fontSize: '1.1rem' }}>{q.question}</div>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                                            {q.options.map((opt, j) => (
-                                                <div key={j} style={{ 
-                                                    fontSize: '0.8rem', 
-                                                    color: opt === q.correct_answer ? '#10b981' : '#64748b',
-                                                    padding: '4px 8px',
-                                                    background: 'rgba(0,0,0,0.2)',
-                                                    borderRadius: 6
-                                                }}>
-                                                    {opt} {opt === q.correct_answer && <i className="pi pi-check-circle ml-1"></i>}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </Dialog>
-
-            {/* Question Entry Form */}
-            <Card title={`Add Question ${questions.length + 1}`} style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
-                  <div className="flex flex-column gap-2">
-                    <label style={{ fontWeight: 600, color: '#94a3b8' }}>Question Type</label>
-                    <select 
-                      value={currentQuestion.type} 
-                      onChange={(e) => setCurrentQuestion({...currentQuestion, type: e.target.value, options: (e.target.value === 'fill_in_the_blanks' ? [] : ['', '', '', '']), correct_answer: ''})}
-                      style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 10, borderRadius: 10 }}
-                    >
-                      <option value="mcq">MCQ (Single Select)</option>
-                      <option value="multiple">Multiple Choice (Multi Select)</option>
-                      <option value="fill_in_the_blanks">Fill in the Blanks</option>
-                    </select>
-                  </div>
-                  <div className="flex flex-column gap-2">
-                    <label style={{ fontWeight: 600, color: '#94a3b8' }}>Points</label>
-                    <InputNumber value={currentQuestion.points} onValueChange={(e) => setCurrentQuestion({...currentQuestion, points: e.value})} min={1} />
-                  </div>
-                </div>
-
-                <div className="flex flex-column gap-2">
-                   <label style={{ fontWeight: 600, color: '#94a3b8' }}>Question Text</label>
-                   <InputText value={currentQuestion.question} 
-                              onChange={(e) => setCurrentQuestion({...currentQuestion, question: e.target.value})}
-                              placeholder="Type your question here..."
-                              style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 12, borderRadius: 10 }} />
-                </div>
-
-                {currentQuestion.type !== 'fill_in_the_blanks' && (
-                  <>
-                    <label style={{ fontWeight: 600, color: '#94a3b8' }}>Options & Correct Answer(s)</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
-                      {currentQuestion.options.map((opt, idx) => (
-                        <div key={idx} style={{ 
-                          display: 'flex', 
-                          gap: 10, 
-                          alignItems: 'center', 
-                          background: 'rgba(15, 23, 42, 0.3)', 
-                          padding: 10, 
-                          borderRadius: 10,
-                          border: `1.5px solid ${currentQuestion.correct_answer.split(',').includes(opt) && opt ? '#10b981' : 'transparent'}`
-                        }}>
-                          <div 
-                            onClick={() => {
-                              if (!opt) return;
-                              if (currentQuestion.type === 'mcq') {
-                                setCurrentQuestion({...currentQuestion, correct_answer: opt});
-                              } else {
-                                handleMultipleChoiceToggle(opt);
-                              }
-                            }}
-                            style={{ 
-                              width: 20, height: 20, borderRadius: currentQuestion.type === 'mcq' ? '50%' : '4px', 
-                              border: `2px solid ${currentQuestion.correct_answer.split(',').includes(opt) && opt ? '#10b981' : '#334155'}`,
-                              display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
-                            }}
-                          >
-                            {currentQuestion.correct_answer.split(',').includes(opt) && opt && <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#10b981' }}></div>}
-                          </div>
-                          <InputText value={opt} 
-                                     onChange={(e) => {
-                                       const newOpts = [...currentQuestion.options];
-                                       newOpts[idx] = e.target.value;
-                                       setCurrentQuestion({...currentQuestion, options: newOpts});
-                                     }}
-                                     placeholder={`Choice ${idx + 1}`}
-                                     style={{ background: 'transparent', border: 'none', color: '#fff', flex: 1, padding: 0 }} />
                         </div>
-                      ))}
+                    ))}
+                    
+                    {questions.length > 0 && (
+                        <Button label="Finalize and Publish" icon="pi pi-rocket" onClick={() => navigate('/quiz')} 
+                                style={{ marginTop: 20, background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', padding: 15, borderRadius: 12 }} />
+                    )}
                     </div>
-                  </>
-                )}
-
-                {currentQuestion.type === 'fill_in_the_blanks' && (
-                  <div className="flex flex-column gap-2">
-                    <label style={{ fontWeight: 600, color: '#94a3b8' }}>Correct Answer</label>
-                    <InputText value={currentQuestion.correct_answer} 
-                               onChange={(e) => setCurrentQuestion({...currentQuestion, correct_answer: e.target.value})}
-                               placeholder="Type the exact expected answer"
-                               style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #10b981', color: '#fff' }} />
-                  </div>
-                )}
-
-                <Button label={isAdding ? "Adding..." : "Save Question"} 
-                        icon={isAdding ? "pi pi-spin pi-spinner" : "pi pi-check"} 
-                        disabled={isAdding}
-                        onClick={handleAddQuestion}
-                        style={{ background: '#10b981', border: 'none', padding: 12, borderRadius: 10, marginTop: 10 }} />
-              </div>
-            </Card>
-
-            <Divider align="center"><span style={{ color: '#64748b' }}>Questions Added</span></Divider>
-
-            {/* List of added questions */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-              {questions.map((q, i) => (
-                <div key={q.id} style={{ background: 'rgba(30, 41, 59, 0.4)', padding: 20, borderRadius: 15, border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.7rem', background: '#3b82f6', color: '#fff', padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase' }}>{q.type || 'mcq'}</span>
-                      <span style={{ fontWeight: 700 }}>Q{i+1}: {q.question}</span>
-                    </div>
-                    <span style={{ color: '#10b981', fontSize: '0.8rem' }}>{q.points} pts</span>
-                  </div>
-                  {q.type !== 'fill_in_the_blanks' && (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginTop: 15 }}>
-                      {(q.options || []).map((opt, j) => {
-                        const isCorrect = (q.correct_answer || '').split(',').map(a => a.trim()).includes(opt.trim());
-                        return (
-                          <div key={j} style={{ 
-                            fontSize: '0.75rem', 
-                            color: isCorrect ? '#10b981' : '#64748b', 
-                            background: 'rgba(0,0,0,0.2)', 
-                            padding: '6px 10px', 
-                            borderRadius: 6,
-                            border: `1px solid ${isCorrect ? '#10b981' : 'transparent'}`
-                          }}>
-                            {opt}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {q.type === 'fill_in_the_blanks' && (
-                    <div style={{ marginTop: 10, fontSize: '0.8rem', color: '#10b981' }}>
-                      Correct: <b>{q.correct_answer}</b>
-                    </div>
-                  )}
                 </div>
-              ))}
-              
-              {questions.length > 0 && (
-                <Button label="Finish and Publish" icon="pi pi-rocket" onClick={() => navigate('/quiz')} 
-                        style={{ marginTop: 20, background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', padding: 15, borderRadius: 12 }} />
               )}
-            </div>
-          </div>
-        )}
+           </div>
+
+           <div className="sidebar">
+              <Card title="Quick Stats" style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 20, marginBottom: 20 }}>
+                 <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                       <span style={{ color: '#94a3b8' }}>Total Questions</span>
+                       <span style={{ fontWeight: 900 }}>{questions.length}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                       <span style={{ color: '#94a3b8' }}>Total Points</span>
+                       <span style={{ fontWeight: 900 }}>{questions.reduce((sum, q) => sum + (q.points || 0), 0)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                       <span style={{ color: '#94a3b8' }}>Duration</span>
+                       <span style={{ fontWeight: 900 }}>{metadata.duration_minutes}m</span>
+                    </div>
+                 </div>
+              </Card>
+
+              <Card title="Shortcuts" style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 20 }}>
+                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <Button label="Discard and Exit" icon="pi pi-times" text severity="danger" onClick={() => navigate('/quiz')} />
+                 </div>
+              </Card>
+           </div>
+        </div>
       </div>
+
+      {/* AI Studio Dialog */}
+      <Dialog 
+          header={<div style={{ fontFamily: 'Outfit', fontWeight: 900 }}><i className="pi pi-sparkles mr-2" style={{color: '#8b5cf6'}}></i> AI Question Studio</div>} 
+          visible={aiDialogVisible} 
+          onHide={() => !aiStatus.loading && setAiDialogVisible(false)}
+          style={{ width: '90vw', maxWidth: 800 }}
+          footer={generatedQuestions.length > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, padding: 15 }}>
+                  <Button label="Cancel" text onClick={() => setAiDialogVisible(false)} />
+                  <Button label={`Add ${selectedAiQuestions.length} Selected`} 
+                          icon="pi pi-plus" 
+                          disabled={aiStatus.loading}
+                          onClick={addSelectedAiQuestions}
+                          style={{ background: '#10b981', border: 'none', borderRadius: 10 }} />
+              </div>
+          )}
+          contentStyle={{ background: '#0f172a', color: '#fff' }}
+          headerStyle={{ background: '#0f172a', color: '#fff', borderBottom: '1px solid #1e293b' }}
+      >
+          {generatedQuestions.length === 0 ? (
+              <div style={{ padding: '40px', textAlign: 'center' }}>
+                  <i className="pi pi-cloud-upload mb-4" style={{ fontSize: '3rem', color: '#3b82f6', opacity: 0.5 }}></i>
+                  <h2 style={{ fontFamily: 'Outfit', fontWeight: 800 }}>Upload Material</h2>
+                  <p style={{ color: '#94a3b8', marginBottom: 20 }}>PDF, DOCX, or TXT notes supported.</p>
+                  <FileUpload mode="basic" auto chooseLabel="Scan and Generate" customUpload uploadHandler={handleAiGeneration} 
+                              accept=".pdf,.docx,.txt" maxFileSize={5000000} />
+              </div>
+          ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 15, padding: '10px 0' }}>
+                  {generatedQuestions.map((q, i) => (
+                      <div key={i} style={{ 
+                          background: 'rgba(30, 41, 59, 1)', 
+                          padding: 15, 
+                          borderRadius: 12, 
+                          border: `2px solid ${selectedAiQuestions.includes(i) ? '#3b82f6' : 'transparent'}`,
+                          cursor: 'pointer'
+                      }} onClick={() => {
+                          if (selectedAiQuestions.includes(i)) {
+                              setSelectedAiQuestions(selectedAiQuestions.filter(idx => idx !== i));
+                          } else {
+                              setSelectedAiQuestions([...selectedAiQuestions, i]);
+                          }
+                      }}>
+                          <div style={{ fontWeight: 800 }}>{q.question}</div>
+                      </div>
+                  ))}
+              </div>
+          )}
+      </Dialog>
     </div>
   );
 };

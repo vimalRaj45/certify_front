@@ -6,6 +6,7 @@ import { Card } from 'primereact/card';
 import { Dialog } from 'primereact/dialog';
 import quizApi from '../../services/quizApi';
 import toast from 'react-hot-toast';
+import Breadcrumbs from '../../components/quiz/Breadcrumbs';
 import './quiz.css';
 
 const QuizHub = () => {
@@ -89,30 +90,48 @@ const QuizHub = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      color: '#f8fafc'
+      color: '#f8fafc',
+      paddingTop: 40
     }} className="quiz-container">
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-        <header style={{ textAlign: 'center', marginBottom: 60 }} data-aos="zoom-in" className="quiz-header">
-           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 15, marginBottom: 20 }} className="mobile-flex-column">
-              <div style={{ width: 50, height: 50, background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                 <i className="pi pi-bolt" style={{ fontSize: '1.5rem', color: '#fff' }}></i>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <Breadcrumbs items={[]} />
+        
+        <header style={{ marginBottom: 60 }} className="quiz-header">
+           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 30 }}>
+              <div style={{ flex: 1, minWidth: 300 }}>
+                 <div style={{ display: 'flex', alignItems: 'center', gap: 15, marginBottom: 15 }}>
+                    <div style={{ width: 40, height: 40, background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                       <i className="pi pi-bolt" style={{ fontSize: '1.2rem', color: '#fff' }}></i>
+                    </div>
+                    <h1 style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'Outfit', margin: 0 }}>Assessment Center</h1>
+                 </div>
+                 <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: 500 }}>Create, manage, and take professional assessments with real-time analytics.</p>
               </div>
-              <h1 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Outfit', margin: 0 }}>Assessment Center</h1>
+
+              {user ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 15, background: 'rgba(30, 41, 59, 0.5)', padding: '10px 20px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.05)' }}>
+                   <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, color: '#fff' }}>
+                      {user.name.charAt(0).toUpperCase()}
+                   </div>
+                   <div>
+                      <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>{user.name}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Explorer</div>
+                   </div>
+                   <Button icon="pi pi-sign-out" rounded text severity="secondary" size="small" onClick={() => { localStorage.removeItem('quiz_user'); setUser(null); setShowLogin(true); }} />
+                </div>
+              ) : (
+                <Button label="Identify Yourself" icon="pi pi-user-plus" onClick={() => setShowLogin(true)} 
+                        style={{ padding: '12px 25px', borderRadius: 12, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
+              )}
            </div>
-           <p style={{ color: '#94a3b8', fontSize: '1.2rem', maxWidth: 600, margin: '0 auto' }}>Test your knowledge or create custom assessments for your team.</p>
-           
-           {!user ? (
-             <div style={{ marginTop: 40 }}>
-                <Button label="Identify Yourself to Continue" icon="pi pi-user" onClick={() => setShowLogin(true)} 
-                        style={{ padding: '15px 30px', borderRadius: 50, background: '#3b82f6', border: 'none', fontWeight: 700 }} />
-             </div>
-           ) : (
-             <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center', gap: 15 }} className="mobile-flex-column">
-                <Button label="Create New Quiz" icon="pi pi-plus" onClick={() => navigate('/quiz/create')} 
-                        style={{ padding: '12px 25px', borderRadius: 12, background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', fontWeight: 700 }} className="mobile-full-width" />
-                <Button label="My Results" icon="pi pi-history" onClick={() => navigate('/quiz/history')} 
-                        style={{ padding: '12px 25px', borderRadius: 12, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} className="p-button-outlined mobile-full-width" />
-             </div>
+
+           {user && (
+              <div style={{ marginTop: 40, display: 'flex', justifyContent: 'flex-start', gap: 15 }} className="mobile-flex-column">
+                 <Button label="Create New Quiz" icon="pi pi-plus" onClick={() => navigate('/quiz/create')} 
+                         style={{ padding: '15px 30px', borderRadius: 12, background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', fontWeight: 700 }} className="mobile-full-width" />
+                 <Button label="My Performance" icon="pi pi-history" onClick={() => navigate('/quiz/history')} 
+                         style={{ padding: '15px 30px', borderRadius: 12, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} className="p-button-outlined mobile-full-width" />
+              </div>
            )}
         </header>
 
@@ -120,7 +139,7 @@ const QuizHub = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }} className="mobile-flex-column">
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Available Quizzes ({quizzes.length})</h2>
             <div style={{ display: 'flex', gap: 10 }}>
-               <Button label="Create Quiz" icon="pi pi-plus" size="small" onClick={() => navigate('/quiz/create')} 
+               <Button label="Quick Create" icon="pi pi-plus" size="small" onClick={() => navigate('/quiz/create')} 
                        style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', borderRadius: 10 }} />
                <div className="mobile-hide" style={{ height: 1, background: 'rgba(255,255,255,0.1)', width: 100 }}></div>
             </div>
@@ -156,31 +175,31 @@ const QuizHub = () => {
                     </div>
 
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 20 }}>
-                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748b' }}>
-                          <i className="pi pi-user" style={{ fontSize: '0.8rem' }}></i>
-                          <span style={{ fontSize: '0.85rem' }}>{quiz.creator_name || 'Anonymous'}</span>
-                       </div>
-                       {quiz.start_time && (
-                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: new Date() < new Date(quiz.start_time) ? '#f59e0b' : '#10b981' }}>
-                            <i className="pi pi-calendar-plus" style={{ fontSize: '0.8rem' }}></i>
-                            <span style={{ fontSize: '0.72rem', fontWeight: 700 }}>Starts: {new Date(quiz.start_time).toLocaleDateString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</span>
-                         </div>
-                       )}
-                       {quiz.end_time && (
-                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: new Date() > new Date(quiz.end_time) ? '#ef4444' : '#64748b' }}>
-                            <i className="pi pi-calendar-minus" style={{ fontSize: '0.8rem' }}></i>
-                            <span style={{ fontSize: '0.72rem', fontWeight: 700 }}>Ends: {new Date(quiz.end_time).toLocaleDateString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</span>
-                         </div>
-                       )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748b' }}>
+                           <i className="pi pi-user" style={{ fontSize: '0.8rem' }}></i>
+                           <span style={{ fontSize: '0.85rem' }}>{quiz.creator_name || 'Anonymous'}</span>
+                        </div>
+                        {quiz.start_time && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: new Date() < new Date(quiz.start_time) ? '#f59e0b' : '#10b981' }}>
+                             <i className="pi pi-calendar-plus" style={{ fontSize: '0.8rem' }}></i>
+                             <span style={{ fontSize: '0.72rem', fontWeight: 700 }}>Starts: {new Date(quiz.start_time).toLocaleDateString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</span>
+                          </div>
+                        )}
+                        {quiz.end_time && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: new Date() > new Date(quiz.end_time) ? '#ef4444' : '#64748b' }}>
+                             <i className="pi pi-calendar-minus" style={{ fontSize: '0.8rem' }}></i>
+                             <span style={{ fontSize: '0.72rem', fontWeight: 700 }}>Ends: {new Date(quiz.end_time).toLocaleDateString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</span>
+                          </div>
+                        )}
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                       <div style={{ color: '#475569', fontSize: '0.8rem' }}>
-                          Created {new Date(quiz.created_at).toLocaleDateString()}
-                       </div>
-                       <Button label="Take Quiz" icon="pi pi-play" 
-                               onClick={() => startQuiz(quiz.id)}
-                               style={{ borderRadius: 12, padding: '10px 18px', background: '#3b82f6', border: 'none' }} />
+                        <div style={{ color: '#475569', fontSize: '0.8rem' }}>
+                           Created {new Date(quiz.created_at).toLocaleDateString()}
+                        </div>
+                        <Button label="Take Quiz" icon="pi pi-play" 
+                                onClick={() => startQuiz(quiz.id)}
+                                style={{ borderRadius: 12, padding: '10px 18px', background: '#3b82f6', border: 'none' }} />
                     </div>
                  </div>
               </Card>
