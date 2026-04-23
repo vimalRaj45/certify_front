@@ -118,8 +118,8 @@ const QuizHub = () => {
 
         <section>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Available Quizzes</h2>
-            <div style={{ width: 1, height: 2, background: 'rgba(255,255,255,0.1)', flex: 1, margin: '0 20px' }}></div>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Available Quizzes ({quizzes.length})</h2>
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', flex: 1, margin: '0 20px' }}></div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 25 }} className="quiz-grid">
