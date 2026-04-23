@@ -233,6 +233,82 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
             {/* ═══ HOW IT WORKS ═══ */}
             <HowItWorks />
 
+            {/* ═══ TRUST & SECURITY (From Guide) ═══ */}
+            <section id="trust" style={{ padding: '80px 24px', background: 'linear-gradient(180deg, #fff, #F8FAFF)' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 50 }} data-aos="fade-up">
+                        <div className="badge badge-blue" style={{ marginBottom: 16 }}>
+                            <i className="pi pi-shield"></i> Security & Privacy
+                        </div>
+                        <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>
+                            The Gold Standard of Integrity
+                        </h2>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
+                        {/* Security Layer Card */}
+                        <div className="card-premium" data-aos="fade-right" style={{ background: '#fff', border: '1px solid #E2E8F0' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(59,130,246,0.1)', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-verified" style={{ fontSize: '1.2rem' }}></i>
+                                </div>
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>3-Layer Verification</h3>
+                            </div>
+                            <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
+                                Our proprietary 3-layer audit (Hash + Steganography + Registry) ensures every certificate is authentic and impossible to forge.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {['Cryptographic Fingerprint', 'Invisible Binary Metadata', 'Secure Registry Consensus'].map((t, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>
+                                        <i className="pi pi-check-circle" style={{ color: '#10B981' }}></i> {t}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Privacy Card */}
+                        <div className="card-premium" data-aos="fade-up" style={{ background: '#fff', border: '1px solid #E2E8F0' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(16,185,129,0.1)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-trash" style={{ fontSize: '1.2rem' }}></i>
+                                </div>
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>60-Second Purge</h3>
+                            </div>
+                            <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
+                                Your privacy is our priority. We don't harvest data. Everything is purged from our servers 60 seconds after processing.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {['Zero Permanent Storage', 'Auto-Delete Triggers', 'End-to-End Encryption'].map((t, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>
+                                        <i className="pi pi-check-circle" style={{ color: '#10B981' }}></i> {t}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Mobile Studio Card */}
+                        <div className="card-premium" data-aos="fade-left" style={{ background: '#fff', border: '1px solid #E2E8F0' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(168,85,247,0.1)', color: '#A855F7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-mobile" style={{ fontSize: '1.2rem' }}></i>
+                                </div>
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>Mobile Precision</h3>
+                            </div>
+                            <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
+                                Manage your entire certification ecosystem from your phone. Pixel-perfect mapping, even on small screens.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {['Touch-Optimized Mapping', 'Real-time Mobile Preview', 'One-Tap Generation'].map((t, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>
+                                        <i className="pi pi-check-circle" style={{ color: '#10B981' }}></i> {t}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* ═══ BENEFITS ═══ */}
             <BenefitsSection />
 
