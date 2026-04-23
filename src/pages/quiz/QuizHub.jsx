@@ -117,20 +117,24 @@ const QuizHub = () => {
         </header>
 
         <section>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }} className="mobile-flex-column">
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Available Quizzes ({quizzes.length})</h2>
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', flex: 1, margin: '0 20px' }}></div>
+            <div style={{ display: 'flex', gap: 10 }}>
+               <Button label="Create Quiz" icon="pi pi-plus" size="small" onClick={() => navigate('/quiz/create')} 
+                       style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', borderRadius: 10 }} />
+               <div className="mobile-hide" style={{ height: 1, background: 'rgba(255,255,255,0.1)', width: 100 }}></div>
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 25 }} className="quiz-grid">
             {quizzes.map((quiz, i) => (
-              <Card key={quiz.id} style={{ 
-                background: 'rgba(30, 41, 59, 0.7)', 
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: 24,
+              <Card key={quiz.id} className="quiz-card-hover" style={{ 
+                background: '#1e293b', 
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                borderRadius: 20,
                 overflow: 'hidden',
-                transition: 'transform 0.3s ease, border 0.3s ease'
-              }} className="quiz-card-hover">
+                color: '#fff'
+              }}>
                  <div style={{ padding: 25 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 15 }}>
                        <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0 }}>{quiz.title}</h3>
