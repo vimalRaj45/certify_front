@@ -2,11 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { FileUpload } from 'primereact/fileupload';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
 import toast, { Toaster } from 'react-hot-toast';
 import AOS from 'aos';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com';
+const API_BASE = 'https://certify-open.onrender.com';
 
 const STEP_META = {
     hashing: { label: 'Layer 1 · Cryptographic Integrity', icon: 'pi-key', color: '#6366F1', num: 1 },
@@ -36,10 +35,12 @@ const CompareRow = ({ row, index }) => {
             transform: visible ? 'translateX(0)' : 'translateX(-8px)',
             transition: 'opacity 0.3s ease, transform 0.3s ease',
         }}>
+            {/* Label */}
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', paddingTop: 2 }}>
                 {row.label}
             </span>
 
+            {/* Values */}
             <div style={{ fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 1.5, wordBreak: 'break-all' }}>
                 {row.expected !== undefined && (
                     <div style={{ marginBottom: 4 }}>
@@ -57,6 +58,8 @@ const CompareRow = ({ row, index }) => {
                 </div>
             </div>
 
+
+            {/* Match badge */}
             <div style={{
                 width: 22, height: 22, borderRadius: '50%',
                 background: row.match ? '#10B981' : '#EF4444',
@@ -90,15 +93,18 @@ const StepCard = ({ step }) => {
                 : '0 2px 12px rgba(0,0,0,0.12)',
             transition: 'box-shadow 0.4s ease, border-color 0.4s ease',
         }}>
+            {/* ── Header ── */}
             <div style={{
                 display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px',
                 borderBottom: step.comparisons?.length ? '1px solid rgba(255,255,255,0.06)' : 'none'
             }}>
+                {/* Step number + icon */}
                 <div style={{
                     width: 40, height: 40, borderRadius: 13, flexShrink: 0,
                     background: `linear-gradient(135deg, ${accentColor}CC, ${accentColor}88)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     boxShadow: `0 4px 14px ${accentColor}50`,
+                    transition: 'background 0.4s',
                 }}>
                     {isWorking
                         ? <i className="pi pi-spin pi-spinner" style={{ color: '#fff', fontSize: '1rem' }}></i>
@@ -116,6 +122,7 @@ const StepCard = ({ step }) => {
                     </div>
                 </div>
 
+                {/* Status pill */}
                 <div style={{
                     padding: '5px 13px', borderRadius: 20, fontSize: '0.7rem', fontWeight: 800,
                     whiteSpace: 'nowrap', flexShrink: 0,
@@ -127,6 +134,7 @@ const StepCard = ({ step }) => {
                 </div>
             </div>
 
+            {/* ── Comparison table (drops in row by row) ── */}
             {step.comparisons?.length > 0 && (
                 <div style={{ padding: '10px 20px 14px' }}>
                     {step.comparisons.map((row, i) => (
@@ -143,73 +151,12 @@ const VerificationPage = ({ onBack }) => {
     const [verifying, setVerifying] = useState(false);
     const [result, setResult] = useState(null);
     const [steps, setSteps] = useState([]);
-    const [activeTab, setActiveTab] = useState('pdf'); // 'pdf' or 'id'
-    const [certId, setCertId] = useState('');
-    const [turnstileToken, setTurnstileToken] = useState(null);
     const esRef = useRef(null);
-
-
-    const turnstileWidgetId = useRef(null);
 
     useEffect(() => {
         AOS.init({ duration: 600 });
-        
-        // Manual Turnstile Render based on official Cloudflare docs
-        const renderTurnstile = () => {
-            if (window.turnstile && !turnstileWidgetId.current) {
-                const container = document.getElementById('turnstile-verify');
-                if (container) {
-                    try {
-                        const siteKey = window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA");
-                        turnstileWidgetId.current = window.turnstile.render('#turnstile-verify', {
-                            sitekey: String(siteKey),
-                            callback: (token) => {
-                                setTurnstileToken(token);
-                            },
-                            'error-callback': () => {
-                                turnstileWidgetId.current = null;
-                            },
-                            'expired-callback': () => {
-                                setTurnstileToken(null);
-                                turnstileWidgetId.current = null;
-                            }
-                        });
-                    } catch (e) { console.warn("Turnstile render error:", e); }
-                }
-            }
-        };
-
-        // Wait for turnstile to be ready
-        if (window.turnstile) {
-            renderTurnstile();
-        } else {
-            const check = setInterval(() => {
-                if (window.turnstile) {
-                    renderTurnstile();
-                    clearInterval(check);
-                }
-            }, 500);
-            return () => clearInterval(check);
-        }
-
-        return () => { 
-            if (esRef.current) esRef.current.close(); 
-            if (window.turnstile && turnstileWidgetId.current) {
-                try {
-                    window.turnstile.remove(turnstileWidgetId.current);
-                } catch (e) {}
-                turnstileWidgetId.current = null;
-            }
-        };
-    }, [activeTab]);
-
-
-
-
-    const handleBack = () => {
-        if (onBack) onBack();
-        else window.location.href = '/';
-    };
+        return () => { if (esRef.current) esRef.current.close(); };
+    }, []);
 
     const pushStep = (id, status, message, comparisons) => {
         setSteps(prev => {
@@ -233,9 +180,22 @@ const VerificationPage = ({ onBack }) => {
         setResult(null);
         setSteps([]);
 
-        const es = new EventSource(`${API_BASE}/progress?key=${verifyKey}`);
+        const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'https://certify-open.onrender.com' : API_BASE;
+
+        const es = new EventSource(`${currentApiBase}/progress?key=${verifyKey}`);
         esRef.current = es;
 
+        // Wait for SSE handshake 'connected'
+        await new Promise(resolve => {
+            const onConnected = (ev) => {
+                if (ev.data === 'connected') { es.removeEventListener('message', onConnected); resolve(); }
+            };
+            es.addEventListener('message', onConnected);
+            es.onerror = () => resolve();
+        });
+
+        // Live listener — each SSE event updates or adds a step card
         es.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
@@ -247,11 +207,9 @@ const VerificationPage = ({ onBack }) => {
         const formData = new FormData();
         formData.append('verifyKey', verifyKey);
         formData.append('file', file);
-        formData.append('turnstileToken', turnstileToken); // Send token
-
 
         try {
-            const resp = await axios.post(`${API_BASE}/verify-pdf`, formData, {
+            const resp = await axios.post(`${currentApiBase}/verify-pdf`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             await new Promise(r => setTimeout(r, 600));
@@ -259,6 +217,7 @@ const VerificationPage = ({ onBack }) => {
             if (resp.data.verified) toast.success('Certificate Verified!');
             else toast.error('Verification Failed');
         } catch (err) {
+            console.error(err);
             toast.error('Could not reach the verification server.');
         } finally {
             setVerifying(false);
@@ -267,41 +226,22 @@ const VerificationPage = ({ onBack }) => {
         }
     };
 
-    const handleVerifyById = async () => {
-        if (!certId.trim()) return toast.error('Please enter a Certificate ID');
-        if (!turnstileToken) return toast.error('Please complete the security check');
-        setVerifying(true);
-        setResult(null);
-        setSteps([]);
-
-        try {
-            const resp = await axios.get(`${API_BASE}/verify-id/${certId.trim()}?turnstileToken=${turnstileToken}`);
-            setResult(resp.data);
-            if (resp.data.verified) toast.success('Certificate Found!');
-            else toast.error('Certificate Not Found');
-        } catch (err) {
-            toast.error('Verification failed. Check your ID.');
-        } finally {
-            setVerifying(false);
-        }
-    };
-
-
-    const handleReset = () => { setResult(null); setSteps([]); setCertId(''); };
+    const handleReset = () => { setResult(null); setSteps([]); };
 
     return (
         <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #F0F4FF 0%, #FAF5FF 100%)', padding: '40px 24px', fontFamily: 'Inter, sans-serif' }}>
             <Toaster position="top-center" />
             <style>{`
-                @keyframes fadeSlideIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+                @keyframes fadeSlideIn {
+                    from { opacity:0; transform:translateY(12px); }
+                    to   { opacity:1; transform:translateY(0); }
+                }
                 .step-enter { animation: fadeSlideIn 0.35s ease forwards; }
-                .tab-btn { padding: 12px 24px; font-weight: 800; font-size: 0.85rem; border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s; }
-                .tab-btn.active { background: #3B82F6; color: white; box-shadow: 0 4px 12px rgba(59,130,246,0.25); }
-                .tab-btn.inactive { background: #F1F5F9; color: #64748B; }
             `}</style>
 
+            {/* Nav */}
             <nav style={{ maxWidth: 780, margin: '0 auto 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={handleBack}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={onBack}>
                     <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#3B82F6,#A855F7)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <i className="pi pi-verified" style={{ color: '#fff', fontSize: '1rem' }}></i>
                     </div>
@@ -309,82 +249,106 @@ const VerificationPage = ({ onBack }) => {
                         CertifyPro <span style={{ color: '#3B82F6', fontWeight: 400 }}>Verify</span>
                     </span>
                 </div>
-                <Button label="Back" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={handleBack} />
+                <Button label="Back to Home" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={onBack} />
             </nav>
 
             <div style={{ maxWidth: 780, margin: '0 auto' }}>
+
+                {/* Header card */}
                 <div style={{ background: '#fff', borderRadius: 28, padding: '40px 32px 32px', boxShadow: '0 4px 24px rgba(0,0,0,0.05)', border: '1px solid #E8EDF5', textAlign: 'center', marginBottom: 24 }} data-aos="fade-up">
-                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.4rem', color: '#0F172A', margin: '0 0 12px' }}>
-                        Verification Portal
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', padding: '6px 14px', borderRadius: 20, marginBottom: 18 }}>
+                        <i className="pi pi-shield" style={{ color: '#6366F1', fontSize: '0.8rem' }}></i>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#4338CA', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Multi-Layer Security Engine</span>
+                    </div>
+                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.4rem', color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+                        Certificate Verification
                     </h1>
                     <p style={{ color: '#64748B', fontSize: '1rem', maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.7 }}>
-                        Validate certificates instantly via PDF analysis or Registry ID search.
+                        Upload a CertifyPro PDF. Each security layer computes, shows its full comparison, then passes control to the next.
                     </p>
 
-                    <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 32, background: '#F8FAFC', padding: 6, borderRadius: 16, width: 'fit-content', marginInline: 'auto' }}>
-                        <button className={`tab-btn ${activeTab === 'pdf' ? 'active' : 'inactive'}`} onClick={() => setActiveTab('pdf')}>PDF Upload</button>
-                        <button className={`tab-btn ${activeTab === 'id' ? 'active' : 'inactive'}`} onClick={() => setActiveTab('id')}>Search by ID</button>
+                    {/* How it Works / Help Section */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', textAlign: 'left', marginBottom: '32px', padding: '20px', background: '#F8FAFC', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+                        <div>
+                            <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <i className="pi pi-question-circle" style={{ color: '#3B82F6' }}></i> HOW TO USE
+                            </h4>
+                            <ul style={{ fontSize: '0.8rem', color: '#64748B', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
+                                <li>Select the certificate PDF file you wish to validate.</li>
+                                <li>Wait for the 3-layer security engine to finish its audit.</li>
+                                <li>View the official recipient data directly from our registry.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <i className="pi pi-share-alt" style={{ color: '#A855F7' }}></i> HOW WE SHARE
+                            </h4>
+                            <ul style={{ fontSize: '0.8rem', color: '#64748B', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
+                                <li><strong>Direct Email:</strong> Auto-sent to participants via Brevo API.</li>
+                                <li><strong>Secure ZIP:</strong> Bulk download available after generation.</li>
+                                <li><strong>Public Links:</strong> We recommend uploading your certificate to Google Drive/One drive and sharing the link for easy public validation.</li>
+                            </ul>
+                        </div>
                     </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24, gap: 8 }}>
-                        <div id="turnstile-verify" className="cf-turnstile"></div>
-                        {!turnstileToken && (
-                            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                Security Check Required
-                            </span>
-                        )}
-                    </div>
-
-
 
                     {!verifying && !result && (
-                        <>
-                            {activeTab === 'pdf' ? (
-                                <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: '36px', background: 'rgba(99,102,241,0.02)', opacity: turnstileToken ? 1 : 0.5, pointerEvents: turnstileToken ? 'auto' : 'none' }}>
-                                    <FileUpload mode="basic" name="file" accept="application/pdf" maxFileSize={10000000}
-                                        onSelect={onUpload} auto chooseLabel="Upload PDF to Verify"
-                                        style={{ borderRadius: 14 }} />
-                                    <p style={{ color: '#94A3B8', fontSize: '0.82rem', marginTop: 14 }}>{turnstileToken ? 'Max 10MB · Secure PDF only' : 'Please complete security check first'}</p>
-                                </div>
-
-                            ) : (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                                    <div style={{ position: 'relative' }}>
-                                        <InputText value={certId} onChange={(e) => setCertId(e.target.value)} placeholder="Enter Certificate ID (e.g. SEC-XXXX-XXXX)" 
-                                            style={{ width: '100%', padding: '16px 20px', borderRadius: 14, border: '1px solid #E2E8F0', fontSize: '1rem', fontWeight: 600 }}
-                                            onKeyDown={(e) => e.key === 'Enter' && handleVerifyById()} />
-                                    </div>
-                                    <Button label="Search Registry" icon="pi pi-search" onClick={handleVerifyById} 
-                                        style={{ width: '100%', borderRadius: 14, padding: '14px', background: '#3B82F6', border: 'none', fontWeight: 800 }} />
-                                </div>
-                            )}
-                        </>
+                        <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: '36px', background: 'rgba(99,102,241,0.02)' }}>
+                            <FileUpload mode="basic" name="file" accept="application/pdf" maxFileSize={10000000}
+                                onSelect={onUpload} auto chooseLabel="Choose PDF Certificate to Verify"
+                                style={{ borderRadius: 14 }} />
+                            <p style={{ color: '#94A3B8', fontSize: '0.82rem', marginTop: 14 }}>Max 10MB · PDF only</p>
+                        </div>
                     )}
 
                     {!verifying && result && (
-                        <Button label="Verify Another" icon="pi pi-refresh" onClick={handleReset}
-                            className="p-button-outlined" style={{ borderRadius: 12, fontWeight: 700 }} />
+                        <Button label="Verify Another Certificate" icon="pi pi-refresh" onClick={handleReset}
+                            style={{ borderRadius: 12, fontWeight: 700, background: 'linear-gradient(135deg,#3B82F6,#6366F1)', border: 'none', padding: '12px 24px' }} />
                     )}
                 </div>
 
-                {(verifying || steps.length > 0) && activeTab === 'pdf' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 24 }}>
+                {/* Sequential step feed */}
+                {(verifying || steps.length > 0) && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+                        {/* Connecting placeholder when no steps yet */}
                         {verifying && steps.length === 0 && (
                             <div className="step-enter" style={{ background: '#0F172A', border: '1.5px solid #1E293B', borderRadius: 20, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 14 }}>
                                 <div className="pi pi-spin pi-spinner" style={{ color: '#6366F1', fontSize: '1.2rem' }}></div>
-                                <span style={{ color: '#64748B', fontWeight: 600 }}>Analyzing cryptographic layers...</span>
+                                <span style={{ color: '#64748B', fontWeight: 600 }}>Connecting to security engine...</span>
                             </div>
                         )}
-                        {steps.map((step) => (
+
+                        {/* Render each step card with entrance animation */}
+                        {steps.map((step, idx) => (
                             <div key={step.id} className="step-enter">
                                 <StepCard step={step} />
                             </div>
                         ))}
+
+                        {/* Connector line + "next layer" loading dot when current layer passed and next hasn't started */}
+                        {verifying && steps.length > 0 && steps[steps.length - 1]?.status === 'pass' && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 8px' }}>
+                                <div style={{ width: 2, height: 24, background: 'linear-gradient(180deg,#6366F120,#6366F180)', borderRadius: 2, marginLeft: 18 }}></div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <div className="pi pi-spin pi-spinner" style={{ color: '#6366F1', fontSize: '0.85rem' }}></div>
+                                    <span style={{ color: '#6366F1', fontSize: '0.82rem', fontWeight: 700 }}>
+                                        Running{' '}
+                                        {(() => {
+                                            const doneIds = steps.map(s => s.id);
+                                            const next = STEP_ORDER.find(s => !doneIds.includes(s));
+                                            return next ? STEP_META[next]?.label : 'final checks';
+                                        })()}...
+                                    </span>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
+                {/* Final result card */}
                 {result && (
                     <div data-aos="zoom-in" style={{
+                        marginTop: 20,
                         background: result.verified ? 'linear-gradient(135deg,#F0FDF4,#DCFCE7)' : 'linear-gradient(135deg,#FFF5F5,#FEE2E2)',
                         border: `1.5px solid ${result.verified ? '#86EFAC' : '#FCA5A5'}`,
                         borderRadius: 24, padding: '32px', textAlign: 'center'
@@ -395,35 +359,62 @@ const VerificationPage = ({ onBack }) => {
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             boxShadow: `0 12px 28px ${result.verified ? '#10B98140' : '#EF444440'}`
                         }}>
-                            <i className={`pi ${result.verified ? 'pi-check' : 'pi-times'}`} style={{ color: '#fff', fontSize: '2rem' }}></i>
+                            <i className={`pi ${result.verified ? 'pi-check' : (result.message?.includes('SECURITY ALERT') ? 'pi-shield' : 'pi-times')}`}
+                                style={{ color: '#fff', fontSize: '2rem' }}></i>
                         </div>
                         <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 8px', color: result.verified ? '#064E3B' : '#991B1B' }}>
-                            {result.verified ? 'Legitimate Certificate' : 'Verification Failed'}
+                            {result.verified ? '✅ Legitimate Certificate' : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered Document' : '❌ Verification Failed')}
                         </h2>
-                        <p style={{ color: result.verified ? '#065F46' : '#B91C1C', margin: '0 0 24px', fontSize: '0.95rem' }}>
+                        <p style={{ color: result.verified ? '#065F46' : '#B91C1C', margin: '0 0 24px', fontSize: '0.95rem', lineHeight: 1.6 }}>
                             {result.verified ? 'This certificate is authentic and on record in our secure registry.' : result.message}
                         </p>
 
                         {result.verified && result.data && (
-                            <div style={{ background: '#fff', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid #D1FAE5' }}>
-                                {[
-                                    { label: 'Recipient', value: result.data.name },
-                                    { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' }) },
-                                    { label: 'Registry ID', value: result.data.id, mono: true },
-                                ].map(row => (
-                                    <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
-                                        <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
-                                        <span style={{ fontWeight: 700, color: row.mono ? '#6366F1' : '#0F172A', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem' }}>{row.value}</span>
+                            <>
+                                <div style={{ background: '#fff', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid #D1FAE5' }}>
+                                    {[
+                                        { label: 'Recipient', value: result.data.name },
+                                        { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' }) },
+                                        { label: 'Certificate ID', value: result.data.id, mono: true },
+                                    ].map(row => (
+                                        <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
+                                            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
+                                            <span style={{ fontWeight: 700, color: row.mono ? '#6366F1' : '#0F172A', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Dos and Don'ts Section */}
+                                <div style={{ marginTop: '24px', textAlign: 'left', borderTop: '1px solid #D1FAE5', paddingTop: '20px' }}>
+                                    <h4 style={{ fontSize: '0.9rem', fontWeight: 900, color: '#064E3B', marginBottom: '16px', letterSpacing: '0.02em' }}>CERTIFICATE USAGE GUIDELINES</h4>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                                        <div>
+                                            <div style={{ color: '#059669', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>✅ THE DOS</div>
+                                            <ul style={{ fontSize: '0.8rem', color: '#065F46', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
+                                                <li>Share your ID on LinkedIn/CV.</li>
+                                                <li>Keep the original PDF file safe.</li>
+                                                <li>Use this page for official proof.</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <div style={{ color: '#DC2626', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>❌ THE DON'TS</div>
+                                            <ul style={{ fontSize: '0.8rem', color: '#991B1B', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
+                                                <li>Never edit the PDF text or images.</li>
+                                                <li>Don't compress/shrink the file.</li>
+                                                <li>Don't remove system watermarks.</li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            </>
                         )}
                     </div>
                 )}
 
+                {/* Footer */}
                 <div style={{ marginTop: 32, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                     <i className="pi pi-lock" style={{ color: '#10B981', fontSize: '0.75rem' }}></i>
-                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' }}>Enterprise Registry Protection · Certify-SSE v2</span>
+                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' }}>Enterprise Bank-Grade Security · Certify-SSE v2</span>
                 </div>
             </div>
         </div>
@@ -431,4 +422,3 @@ const VerificationPage = ({ onBack }) => {
 };
 
 export default VerificationPage;
-

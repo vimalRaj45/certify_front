@@ -61,7 +61,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                         <a href="#features" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Features</a>
                         <a href="#how-it-works" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>How It Works</a>
                         <a href="#benefits" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Benefits</a>
-                        <span onClick={() => window.location.href = '/verify'} style={{ fontSize: '0.8rem', fontWeight: 700, color: '#2563EB', cursor: 'pointer' }}>Verify</span>
+                        <span onClick={onVerify} style={{ fontSize: '0.8rem', fontWeight: 700, color: '#2563EB', cursor: 'pointer' }}>Verify</span>
                     </div>
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderLeft: '1px solid #E2E8F0', paddingLeft: 12 }}>
@@ -185,7 +185,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                             </div>
                         </div>
                         <div style={{ textAlign: 'left' }}>
-                            <button className="btn btn-blue" onClick={() => window.location.href = '/verify'}>
+                            <button className="btn btn-blue" onClick={onVerify}>
                                 Try Verification Portal <i className="pi pi-arrow-right" style={{ marginLeft: 8 }}></i>
                             </button>
                         </div>
@@ -397,7 +397,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                     <div style={{ display: 'flex', gap: 32, fontSize: '0.9rem', color: '#64748B', fontWeight: 600 }}>
                         <span onClick={() => setShowPrivacy(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Privacy Policy</span>
                         <span onClick={() => setShowTerms(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Terms of Use</span>
-                        <span onClick={() => window.location.href = '/verify'} style={{ transition: 'color 0.2s', color: '#2563EB', cursor: 'pointer' }}>Verify Certificate</span>
+                        <span onClick={onVerify} style={{ transition: 'color 0.2s', color: '#2563EB', cursor: 'pointer' }}>Verify Certificate</span>
                         <span onClick={() => setShowSecurity(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Security</span>
                     </div>
                     <div style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 500 }}>

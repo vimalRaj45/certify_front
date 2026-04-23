@@ -21,7 +21,7 @@ import Login from './pages/Login';
 import Loader from './components/Loader';
 import { useUser } from "@stackframe/stack";
 
-const API_BASE = import.meta.env.VITE_API_URL || '  https://certify-vsgrps.onrender.com ';
+const API_BASE = import.meta.env.VITE_API_URL || '  https://certify-open.onrender.com ';
 
 const DraggableField = ({ field, isSelected, onClick, handleDragStop, updateFieldSize, updateFieldColor, removeField }) => {
     const nodeRef = useRef(null);

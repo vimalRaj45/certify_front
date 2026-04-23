@@ -22,7 +22,7 @@ import Login from './Login';
 import Loader from '../components/Loader';
 import { authClient } from '../lib/auth';
 
-const API_BASE = (import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com').trim();
+const API_BASE = (import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com').trim();
 
 const DraggableField = ({ field, isSelected, onClick, handleDragStop, updateFieldSize, updateFieldColor, removeField }) => {
     const nodeRef = useRef(null);

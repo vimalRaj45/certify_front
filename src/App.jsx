@@ -12,10 +12,6 @@ import TakeQuiz from './pages/quiz/TakeQuiz';
 import Leaderboard from './pages/quiz/Leaderboard';
 import History from './pages/quiz/History';
 
-// Public Verification Page
-import VerificationPage from './pages/Verification';
-import Signin from './pages/Signin';
-
 function App() {
   return (
     <BrowserRouter>
@@ -23,11 +19,6 @@ function App() {
       <Routes>
         {/* Main CertifyPro Routes */}
         <Route path="/" element={<CertifyStudio />} />
-        <Route path="/verify" element={<VerificationPage onBack={() => window.location.href = '/'} />} />
-        <Route path="/signin" element={<Signin onLogin={(user) => {
-          localStorage.setItem('user', JSON.stringify(user));
-          window.location.href = '/';
-        }} />} />
 
         {/* Quiz System Routes */}
         <Route path="/quiz" element={<QuizHub />} />
@@ -40,4 +31,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;

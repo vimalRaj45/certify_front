@@ -9,10 +9,6 @@ export default function Signin() {
   const [agreed, setAgreed] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState(null);
-  const turnstileWidgetId = useRef(null);
-
-
 
   const parseJwt = (token) => {
     try {
@@ -32,7 +28,7 @@ export default function Signin() {
       }
       localStorage.setItem("user", JSON.stringify(user));
 
-      fetch(`${import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com'}/save-user`, {
+      fetch(" https://certify-open.onrender.com /save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -40,10 +36,8 @@ export default function Signin() {
           name: user.name,
           email: user.email,
           picture: user.picture,
-          turnstileToken: turnstileToken, // Send token for backend verification
         }),
       }).catch(() => { });
-
 
       setTimeout(() => {
         window.location.href = "/";
@@ -89,57 +83,11 @@ export default function Signin() {
       }, 150);
     };
 
-    window.onTurnstileSuccess = (token) => {
-      setTurnstileToken(token);
-    };
-
-    // Explicitly render Turnstile based on Cloudflare docs
-    const renderTurnstile = () => {
-      if (window.turnstile && !turnstileWidgetId.current) {
-        try {
-          const siteKey = window.location.hostname === 'localhost' ? "1x00000000000000000000AA" : (import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA");
-          turnstileWidgetId.current = window.turnstile.render("#turnstile-signin", {
-            sitekey: String(siteKey),
-            callback: window.onTurnstileSuccess,
-            'expired-callback': () => {
-              setTurnstileToken(null);
-              turnstileWidgetId.current = null;
-              renderTurnstile(); // Re-render if expired
-            },
-            'error-callback': () => {
-              turnstileWidgetId.current = null;
-            }
-          });
-        } catch (e) { console.warn("Turnstile render error:", e); }
-      }
-    };
-
-    if (window.turnstile) {
-        renderTurnstile();
-    } else {
-        const check = setInterval(() => {
-            if (window.turnstile) {
-                renderTurnstile();
-                clearInterval(check);
-            }
-        }, 500);
-    }
-
-
     tryRender();
-
 
     return () => {
       delete window.__certifyGoogleCB;
-      delete window.onTurnstileSuccess;
-      if (window.turnstile && turnstileWidgetId.current) {
-          try {
-              window.turnstile.remove(turnstileWidgetId.current);
-          } catch (e) {}
-          turnstileWidgetId.current = null;
-      }
     };
-
   }, []);
 
   /* ── Loading overlay (Light Theme) ── */
@@ -400,37 +348,24 @@ export default function Signin() {
           </label>
         </div>
 
-        {/* Cloudflare Turnstile Widget */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24, gap: 8 }}>
-          <div id="turnstile-signin" className="cf-turnstile"></div>
-          {!turnstileToken && (
-            <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 600 }}>
-              {window.location.hostname === 'localhost' ? "Using Test Key for Localhost" : "Verify you are human"}
-            </span>
-          )}
-        </div>
-
-
         {/* Google Button Container */}
-
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             marginBottom: 28,
             minHeight: 48,
-            opacity: (agreed && turnstileToken) ? 1 : 0.45,
-            pointerEvents: (agreed && turnstileToken) ? 'auto' : 'none',
+            opacity: agreed ? 1 : 0.45,
+            pointerEvents: agreed ? 'auto' : 'none',
             transition: 'opacity 0.3s ease',
             position: 'relative'
           }}
         >
-          {(!agreed || !turnstileToken) && (
-            <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'not-allowed' }} title={!agreed ? "Please agree to terms first" : "Please complete the security check"} />
+          {!agreed && (
+            <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'not-allowed' }} title="Please agree to terms first" />
           )}
           <div id="googleBtn" />
         </div>
-
 
         {/* Footer Text */}
         <p
@@ -457,49 +392,24 @@ export default function Signin() {
           </span>
         </p>
 
-        {/* Support & Public Verification Links */}
+        {/* Support Link */}
         <div
           style={{
             marginTop: 40,
             paddingTop: 24,
             borderTop: "1px solid #F1F5F9",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 16,
+            gap: 6,
+            color: "#64748B",
+            fontSize: "0.85rem",
+            fontWeight: 600,
           }}
         >
-          <button 
-            onClick={() => window.location.href = '/verify'}
-            style={{
-              background: 'rgba(59, 130, 246, 0.08)',
-              color: '#3B82F6',
-              border: '1px solid rgba(59, 130, 246, 0.2)',
-              borderRadius: 14,
-              padding: '10px 24px',
-              fontSize: '0.85rem',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              transition: 'all 0.2s ease',
-              width: '100%'
-            }}
-            onMouseOver={e => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.12)'; }}
-            onMouseOut={e => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.08)'; }}
-          >
-            <i className="pi pi-verified" style={{ fontSize: '1rem' }} />
-            Verify an Existing Certificate
-          </button>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#64748B", fontSize: "0.85rem", fontWeight: 600 }}>
-            <i className="pi pi-question-circle" style={{ fontSize: "0.9rem" }} />
-            <span>Need help? Contact support</span>
-          </div>
+          <i className="pi pi-question-circle" style={{ fontSize: "0.9rem" }} />
+          <span>Need help? Contact support</span>
         </div>
-
       </div>
 
       <TermsModal visible={showTerms} onHide={() => setShowTerms(false)} />

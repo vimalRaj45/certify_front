@@ -21,7 +21,7 @@ import VerificationPage from './pages/Verification';
 import Loader from './components/Loader';
 import quizApi from './services/quizApi';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com';
 
 const DraggableField = ({ field, isSelected, onClick, handleDragStop, updateFieldSize, updateFieldColor, removeField }) => {
     const nodeRef = useRef(null);
@@ -557,9 +557,7 @@ function CertifyStudio() {
                 </Dialog>
 
                 {/* Topbar */}
-                <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9', position: 'relative' }}>
-
-                    {/* Left Section: Logo & Exit */}
+                <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                         <Button icon="pi pi-arrow-left" className="p-button-text p-button-secondary"
                             onClick={() => setShowApp(false)} tooltip="Exit Console"
@@ -581,9 +579,8 @@ function CertifyStudio() {
                         </div>
                     </div>
 
-                    {/* Center Section: Progress or System Status */}
-                    <div className="topbar-center" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 24 }}>
-                        <div className="mobile-hide" style={{ display: 'flex', gap: 8, background: '#F8FAFC', padding: '4px', borderRadius: 50, border: '1px solid #E2E8F0' }}>
+                    <div className="topbar-center" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', gap: 8, background: '#F8FAFC', padding: '4px', borderRadius: 50, border: '1px solid #E2E8F0' }}>
                             {[{ label: 'Import', step: 1, done: !!csvData && !!templateUrl }, { label: 'Configure', step: 2, done: fields.length > 0 }, { label: 'Generate', step: 3, done: false }].map((s, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{
@@ -608,33 +605,24 @@ function CertifyStudio() {
                                 </div>
                             ))}
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981', boxShadow: '0 0 12px #10B98180' }}></div>
-                            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#64748B', letterSpacing: '0.05em' }} className="mobile-hide">SYSTEM ONLINE</span>
-                        </div>
                     </div>
 
-                    {/* Right Section: Actions & Profile */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <Button label="Guide" icon="pi pi-book" size="small" className="p-button-text p-button-secondary mobile-hide"
-                            style={{ borderRadius: 50 }}
-                            onClick={() => navigate('/guide')} />
-                        <Button label="Quiz Hub" icon="pi pi-bolt" size="small" className="mobile-hide"
-                            style={{ borderRadius: 50, background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', border: 'none' }}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, position: 'relative', zIndex: 999 }}>
+                        <Button label="Quiz Hub" icon="pi pi-bolt" size="small"
+                            style={{ borderRadius: 50, background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', border: 'none', cursor: 'pointer' }}
                             onClick={() => navigate('/quiz')} />
-
-                        <div className="mobile-hide" style={{ width: 1, height: 24, background: '#E2E8F0', margin: '0 4px' }}></div>
-
                         {isGenerating && (
                             <Button icon="pi pi-stop-circle" size="small" className="p-button-danger p-button-text" onClick={stopGeneration} style={{ borderRadius: 50 }} />
                         )}
+                        <Button icon="pi pi-undo" className="p-button-text p-button-secondary" onClick={() => window.location.reload()} tooltip="Hard Reset" style={{ borderRadius: 12, width: 38, height: 38 }} />
 
+                        <div style={{ height: 24, width: 1, background: '#E2E8F0', margin: '0 8px' }} className="mobile-hide"></div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={logout}>
                             <img src={user?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=0D8ABC&color=fff`}
                                 alt={user?.name} style={{ width: 32, height: 32, borderRadius: '50%', border: '2px solid #3B82F6' }} />
                             <div className="mobile-hide" style={{ textAlign: 'left' }}>
                                 <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{user?.name}</div>
-                                <div style={{ fontSize: '0.55rem', color: '#94A3B8', fontWeight: 700 }}>Workspace Owner</div>
+                                <div style={{ fontSize: '0.55rem', color: '#94A3B8', fontWeight: 700 }}>Logout</div>
                             </div>
                         </div>
                     </div>
@@ -658,18 +646,7 @@ function CertifyStudio() {
                         .action-btn-secondary:hover { border-color: #3B82F6; color: #3B82F6; }
                         .upload-zone-premium { border: 2px dashed #E2E8F0; border-radius: 16px; padding: 20px; transition: all 0.25s; cursor: pointer; background: linear-gradient(135deg, rgba(59,130,246,0.01), rgba(168,85,247,0.01)); }
                         .upload-zone-premium:hover { border-color: #3B82F6; background: rgba(59,130,246,0.03); }
-                        
-                        @media (max-width: 768px) { 
-                            .mobile-hide { display: none !important; } 
-                            .topbar-center { display: none !important; }
-                            .kpi-grid { grid-template-columns: 1fr 1fr !important; }
-                            .main-studio-grid { grid-template-columns: 1fr !important; }
-                            .step-wizard-card { padding: 18px !important; }
-                        }
-                        @media (max-width: 480px) {
-                            .kpi-grid { grid-template-columns: 1fr !important; }
-                        }
-                        
+                        @media (max-width: 768px) { .mobile-hide { display: none !important; } }
                         .canvas-viewport::-webkit-scrollbar { height: 6px; }
                         .canvas-viewport::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 10px; }
                         .canvas-viewport::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
@@ -733,7 +710,7 @@ function CertifyStudio() {
                 </div>
 
                 {/* Main Grid */}
-                <div className="main-studio-grid" style={{ padding: '0 24px 40px', display: 'grid', gridTemplateColumns: '400px 1fr', gap: 24, marginTop: 24 }}>
+                <div style={{ padding: '0 16px 40px', display: 'grid', gridTemplateColumns: '1fr', gap: 24 }}>
                     {/* Left: Controls */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                         {/* Step 1: Import Assets */}
@@ -879,7 +856,7 @@ function CertifyStudio() {
                                 </div>
 
                                 {csvData && (
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 12, marginBottom: 20, background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', border: '1px solid #E2E8F0' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 20, background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', border: '1px solid #E2E8F0' }}>
                                         <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Records</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A' }}>{csvData.participants.length}</div></div>
                                         <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Fields</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A' }}>{fields.length}</div></div>
                                         <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Est. Time</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#3B82F6' }}>~{Math.max(3, Math.ceil(csvData.participants.length * 0.3))}s</div></div>
@@ -988,12 +965,12 @@ function CertifyStudio() {
                                             ))}
                                             <div style={{
                                                 position: 'absolute', bottom: 12, right: 12,
-                                                fontSize: '0.5rem', fontWeight: 800, color: 'rgba(0,0,0,0.25)',
+                                                fontSize: '0.65rem', fontWeight: 800, color: 'rgba(0,0,0,0.25)',
                                                 textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Outfit',
                                                 pointerEvents: 'none', zIndex: 30, background: 'rgba(255,255,255,0.4)',
                                                 padding: '2px 8px', borderRadius: '4px', backdropFilter: 'blur(4px)'
                                             }}>
-                                                Generated and Secured by CertifyPro
+                                                Generated by CertifyPro
                                             </div>
                                         </div>
                                     </div>
@@ -1207,27 +1184,6 @@ function CertifyStudio() {
                                         <i className="pi pi-download"></i> Download ZIP Package
                                     </button>
                                 </div>
-
-                                {/* Sharing Instructions */}
-                                <div style={{ background: '#F0FDF4', padding: '24px', border: '1px solid #DCFCE7', borderTop: 'none' }}>
-                                    <h4 style={{ color: '#166534', fontWeight: 800, fontSize: '0.95rem', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                        <i className="pi pi-info-circle"></i> IMPORTANT: How to Share Your Certificate
-                                    </h4>
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
-                                        {[
-                                            "Upload the ORIGINAL PDF to Google Drive",
-                                            "Do NOT rename or edit the file",
-                                            "Do NOT compress or screenshot the certificate",
-                                            "Set sharing to: 'Anyone with the link → Viewer'",
-                                            "Share the Google Drive link along with your Certificate ID"
-                                        ].map((step, idx) => (
-                                            <div key={idx} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                                                <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#166534', color: 'white', fontSize: '0.65rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>{idx + 1}</div>
-                                                <p style={{ fontSize: '0.8rem', color: '#374151', margin: 0, lineHeight: 1.4 }}>{step}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
                             </div>
                         )}
 
@@ -1394,6 +1350,6 @@ function CertifyStudio() {
 
         </div>
     );
-};
+}
 
 export default CertifyStudio;
