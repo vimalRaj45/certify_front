@@ -175,6 +175,13 @@ const QuizHub = () => {
               </Card>
             ))}
             
+            {loading && (
+              <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: 50 }}>
+                <i className="pi pi-spin pi-spinner" style={{ fontSize: '3rem', color: '#3b82f6' }}></i>
+                <p style={{ marginTop: 20, color: '#94a3b8' }}>Fetching your assessments...</p>
+              </div>
+            )}
+            
             {!loading && quizzes.length === 0 && (
               <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: 50, color: '#64748b' }}>
                 <i className="pi pi-inbox" style={{ fontSize: '3rem', marginBottom: 20 }}></i>
