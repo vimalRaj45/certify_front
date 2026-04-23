@@ -5,7 +5,19 @@ const Breadcrumbs = ({ items = [] }) => {
   const navigate = useNavigate();
 
   return (
-    <nav style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 30, fontSize: '0.85rem', color: '#64748b', fontWeight: 500 }}>
+    <nav style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      gap: 10, 
+      marginBottom: 30, 
+      fontSize: '0.85rem', 
+      color: '#64748b', 
+      fontWeight: 500,
+      overflowX: 'auto',
+      whiteSpace: 'nowrap',
+      paddingBottom: 5,
+      scrollbarWidth: 'none' // Hide scrollbar for clean look
+    }} className="no-scrollbar">
       <span onClick={() => navigate('/')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#3b82f6'} onMouseOut={(e) => e.target.style.color = '#64748b'}>
         <i className="pi pi-verified" style={{ fontSize: '0.8rem' }}></i>
         Generator
