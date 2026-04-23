@@ -608,6 +608,9 @@ function CertifyStudio() {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, position: 'relative', zIndex: 999 }}>
+                        <Button label="Guide" icon="pi pi-book" size="small" className="p-button-text p-button-secondary"
+                            style={{ borderRadius: 50 }}
+                            onClick={() => navigate('/guide')} />
                         <Button label="Quiz Hub" icon="pi pi-bolt" size="small"
                             style={{ borderRadius: 50, background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', border: 'none', cursor: 'pointer' }}
                             onClick={() => navigate('/quiz')} />
