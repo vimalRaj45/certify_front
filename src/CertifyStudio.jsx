@@ -233,7 +233,6 @@ function CertifyStudio() {
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
     }, [isGenerating]);
 
-    // Cleanup EventSource on unmount
     useEffect(() => {
         return () => {
             if (eventSource) {
@@ -379,7 +378,6 @@ function CertifyStudio() {
             const key = res.data.key;
             setGenKey(key);
 
-            // Close existing connection if any
             if (eventSource) {
                 eventSource.close();
             }
@@ -395,11 +393,9 @@ function CertifyStudio() {
 
                     if (data.type === 'ping') return;
 
-                    // Handle queue updates
                     if (data.type === 'queue_update') {
                         setQueueState(data.data);
 
-                        // Find current user's position in queue
                         const userQueueItem = data.data.queue.find(item => item.key === key);
                         const userPosition = userQueueItem ? userQueueItem.position : null;
 
@@ -422,7 +418,6 @@ function CertifyStudio() {
                         return;
                     }
 
-                    // Handle regular progress updates
                     setProgress(prev => {
                         const newProgress = { ...prev, ...data };
 
@@ -519,16 +514,6 @@ function CertifyStudio() {
         setProgress(null);
     };
 
-    const handleDownload = () => {
-        window.open(downloadUrl);
-        toast('All files being purged from cloud.', { icon: 'ℹ️', duration: 4000 });
-        setTimeout(async () => {
-            try {
-                await axios.post(`${API_BASE}/cleanup`, { key: genKey, publicId });
-            } catch { }
-        }, 5000);
-    };
-
     if (!user) return <Signin onLogin={setUser} />;
     if (!showApp) return <LandingPage onStartApp={() => setShowApp(true)} user={user} />;
 
@@ -537,7 +522,6 @@ function CertifyStudio() {
             <Toaster position="top-center" />
 
             <div className="main-content" style={{ marginLeft: 0 }}>
-                {/* Mobile Viewmode Dialog */}
                 <Dialog
                     header="Experience Optimization"
                     visible={isMobile && !viewModeSelected && showApp}
@@ -547,32 +531,19 @@ function CertifyStudio() {
                     footer={(
                         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 12 }}>
                             <Button label="Stay in Mobile" className="p-button-text p-button-secondary" size="small" onClick={() => setViewModeSelected(true)} />
-                            <Button label="Switch to Desktop" icon="pi pi-desktop" size="small" style={{ background: '#2563EB', borderRadius: 50, padding: '8px 16px' }}
+                            <Button label="Switch to Desktop" icon="pi pi-desktop" size="small" style={{ background: 'var(--accent)', borderRadius: 50, padding: '8px 16px' }}
                                 onClick={() => { setForceDesktop(true); setViewModeSelected(true); }} />
                         </div>
                     )}
                 >
                     <div style={{ textAlign: 'center', padding: '10px 0' }}>
-                        <div style={{
-                            width: 60, height: 60, background: 'rgba(37,99,235,0.1)',
-                            borderRadius: '50%', display: 'flex', alignItems: 'center',
-                            justifyContent: 'center', margin: '0 auto 20px'
-                        }}>
-                            <i className="pi pi-desktop" style={{ fontSize: '1.8rem', color: '#2563EB' }}></i>
+                        <div style={{ width: 60, height: 60, background: 'rgba(37,99,235,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                            <i className="pi pi-desktop" style={{ fontSize: '1.8rem', color: 'var(--accent)' }}></i>
                         </div>
-                        <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, marginBottom: 12 }}>Precision Design Awaits</h3>
-                        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                            For the most accurate certificate mapping and industrial-grade precision, we recommend using <strong>Desktop Mode</strong>.
-                        </p>
-                        <ul style={{ textAlign: 'left', fontSize: '0.85rem', color: '#475569', marginTop: 16, paddingLeft: 20 }}>
-                            <li>Full-scale canvas view (no zooming needed)</li>
-                            <li>Advanced toolbar positioning</li>
-                            <li>Pixel-perfect field snapping</li>
-                        </ul>
+                        <h3 style={{ fontFamily: 'var(--font-h)', fontWeight: 800, marginBottom: 12 }}>Precision Design Awaits</h3>
                     </div>
                 </Dialog>
 
-                {/* Topbar */}
                 <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 24px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                         <Button icon="pi pi-arrow-left" className="p-button-text p-button-secondary"
@@ -582,15 +553,15 @@ function CertifyStudio() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                             <div style={{
                                 width: 34, height: 34,
-                                background: 'linear-gradient(135deg, #3B82F6, #A855F7)',
+                                background: 'linear-gradient(135deg, var(--aurora-1), var(--aurora-2))',
                                 borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 boxShadow: '0 4px 12px rgba(59,130,246,0.2)'
                             }} className="mobile-hide">
                                 <i className="pi pi-bolt" style={{ fontSize: '1rem', color: '#fff' }}></i>
                             </div>
                             <div style={{ lineHeight: 1.1 }}>
-                                <h2 style={{ fontSize: '0.92rem', fontWeight: 900, fontFamily: 'Outfit', margin: 0, color: '#0F172A', letterSpacing: '-0.01em' }}>CertifyPro</h2>
-                                <div style={{ fontSize: '0.55rem', color: '#94A3B8', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }} className="mobile-hide">Generation Studio</div>
+                                <h2 style={{ fontSize: '0.92rem', fontWeight: 900, fontFamily: 'var(--font-h)', margin: 0, color: 'var(--text)', letterSpacing: '-0.01em' }}>CertifyPro</h2>
+                                <div style={{ fontSize: '0.55rem', color: 'var(--text-secondary)', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }} className="mobile-hide">Generation Studio</div>
                             </div>
                         </div>
                     </div>
@@ -604,249 +575,225 @@ function CertifyStudio() {
                                         background: s.done ? 'rgba(16,185,129,0.1)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'rgba(255,255,255,0.05)' : 'transparent'),
                                         border: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '1.5px solid var(--accent)' : '1px solid transparent',
                                         boxShadow: s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '0 4px 10px rgba(59,130,246,0.1)' : 'none',
+                                        transition: 'all 0.3s ease'
                                     }}>
                                         <div style={{
                                             width: 6, height: 6, borderRadius: '50%',
-                                            background: s.done ? '#10B981' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '#2563EB' : '#94A3B8')
+                                            background: s.done ? 'var(--green)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'var(--accent)' : 'var(--text-muted)')
                                         }}></div>
                                         <span style={{
                                             fontSize: '0.72rem', fontWeight: 800,
-                                            color: s.done ? '#10B981' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? '#2563EB' : '#94A3B8'),
+                                            color: s.done ? 'var(--green)' : (s.step === (fields.length > 0 ? 3 : (csvData ? 2 : 1)) ? 'var(--text)' : 'var(--text-muted)'),
                                             whiteSpace: 'nowrap'
                                         }}>
                                             {s.label}
                                         </span>
                                     </div>
-                                    {i < 2 && <i className="pi pi-chevron-right" style={{ fontSize: '0.5rem', color: '#CBD5E1', margin: '0 2px' }}></i>}
+                                    {i < 2 && <i className="pi pi-chevron-right" style={{ fontSize: '0.5rem', color: 'var(--border)', margin: '0 2px' }}></i>}
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, position: 'relative', zIndex: 999 }}>
-                        <Button label="Quiz Hub" icon="pi pi-bolt" size="small"
-                            style={{ borderRadius: 50, background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', border: 'none', cursor: 'pointer' }}
-                            onClick={() => navigate('/quiz')} />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10 }}>
                         {isGenerating && (
                             <Button icon="pi pi-stop-circle" size="small" className="p-button-danger p-button-text" onClick={stopGeneration} style={{ borderRadius: 50 }} />
                         )}
-                        <Button icon="pi pi-undo" className="p-button-text p-button-secondary" onClick={() => window.location.reload()} tooltip="Hard Reset" style={{ borderRadius: 12, width: 38, height: 38 }} />
 
-                        <div style={{ height: 24, width: 1, background: '#E2E8F0', margin: '0 8px' }} className="mobile-hide"></div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={logout}>
-                            <img src={user?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=0D8ABC&color=fff`}
-                                alt={user?.name} style={{ width: 32, height: 32, borderRadius: '50%', border: '2px solid #3B82F6' }} />
-                            <div className="mobile-hide" style={{ textAlign: 'left' }}>
-                                <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{user?.name}</div>
-                                <div style={{ fontSize: '0.55rem', color: '#94A3B8', fontWeight: 700 }}>Logout</div>
+                        <div style={{ height: 32, width: 1, background: 'var(--border)', margin: '0 8px' }} className="mobile-hide"></div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: 50, border: '1px solid var(--border)' }}>
+                            <div style={{ textAlign: 'right' }} className="mobile-hide">
+                                <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>{user.name || 'Industrial User'}</div>
+                                <div style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 600 }}>{user.email}</div>
                             </div>
+                            <Avatar image={user.picture || `https://ui-avatars.com/api/?name=${user.name}&background=3B82F6&color=fff`} shape="circle" size="normal" />
+                            <Button icon="pi pi-power-off" className="p-button-rounded p-button-text p-button-danger"
+                                tooltip="Logout" size="small"
+                                style={{ width: 32, height: 32 }}
+                                onClick={() => { localStorage.removeItem('user'); window.location.reload(); }} />
                         </div>
                     </div>
                 </div>
 
-                {/* KPI Dashboard */}
                 <div style={{ padding: '20px 24px 0' }}>
-                    <style>{`
-                        @keyframes kpiPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.2); } 50% { box-shadow: 0 0 0 8px rgba(59,130,246,0); } }
-                        .kpi-card { background: #fff; border-radius: 20px; padding: 20px; border: 1px solid #F1F5F9; transition: all 0.3s; }
-                        .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(0,0,0,0.08); }
-                        .step-wizard-card { background: #fff; border-radius: 24px; padding: 28px; border: 1px solid #F1F5F9; transition: all 0.3s; }
-                        .step-wizard-card:hover { box-shadow: 0 20px 40px -12px rgba(0,0,0,0.06); }
-                        .step-number { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 900; font-family: 'Outfit'; }
-                        .field-chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: #F8FAFC; border: 1px solid #E2E8F0; font-size: 0.8rem; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s; }
-                        .field-chip:hover { background: rgba(59,130,246,0.08); border-color: #3B82F6; color: #3B82F6; }
-                        .field-chip.mapped { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.3); color: #2563EB; }
-                        .action-btn-primary { background: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #A855F7 100%); background-size: 200% auto; border: none; border-radius: 16px; color: #fff; font-weight: 800; font-size: 1rem; padding: 16px 32px; cursor: pointer; width: 100%; transition: all 0.4s ease; display: flex; align-items: center; justify-content: center; gap: 10px; }
-                        .action-btn-primary:hover { background-position: right center; transform: translateY(-2px); }
-                        .action-btn-secondary { background: #fff; border: 1.5px solid #E2E8F0; border-radius: 16px; color: #334155; font-weight: 700; font-size: 0.95rem; padding: 14px 24px; cursor: pointer; width: 100%; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-                        .action-btn-secondary:hover { border-color: #3B82F6; color: #3B82F6; }
-                        .upload-zone-premium { border: 2px dashed #E2E8F0; border-radius: 16px; padding: 20px; transition: all 0.25s; cursor: pointer; background: linear-gradient(135deg, rgba(59,130,246,0.01), rgba(168,85,247,0.01)); }
-                        .upload-zone-premium:hover { border-color: #3B82F6; background: rgba(59,130,246,0.03); }
-                        @media (max-width: 768px) { .mobile-hide { display: none !important; } }
-                        .canvas-viewport::-webkit-scrollbar { height: 6px; }
-                        .canvas-viewport::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 10px; }
-                        .canvas-viewport::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-                    `}</style>
-
-                    <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-                        <div className="kpi-card">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
+                        <div className="kpi-card" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
                             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #3B82F6, #6366F1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div style={{
+                                    width: 40, height: 40, borderRadius: 10,
+                                    background: 'linear-gradient(135deg, var(--aurora-1), var(--aurora-2))',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
                                     <i className="pi pi-users" style={{ color: '#fff', fontSize: '0.9rem' }}></i>
                                 </div>
-                                {csvData && <div style={{ background: '#D1FAE5', color: '#059669', padding: '2px 8px', borderRadius: 999, fontSize: '0.6rem', fontWeight: 800 }}>LOADED</div>}
+                                {csvData && <div className="badge badge-green">LOADED</div>}
                             </div>
-                            <div>
-                                <div style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A', lineHeight: 1 }}>{csvData?.participants?.length || 0}</div>
-                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Total Records</div>
+                            <div style={{ marginTop: 15 }}>
+                                <div style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'var(--font-h)', color: 'var(--text)', lineHeight: 1 }}>{csvData?.participants?.length || 0}</div>
+                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Total Records</div>
                             </div>
                         </div>
 
-                        <div className="kpi-card">
+                        <div className="kpi-card" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
                             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #A855F7, #EC4899)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div style={{
+                                    width: 40, height: 40, borderRadius: 10,
+                                    background: 'linear-gradient(135deg, var(--aurora-2), var(--aurora-3))',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
                                     <i className="pi pi-link" style={{ color: '#fff', fontSize: '0.9rem' }}></i>
                                 </div>
-                                {fields.length > 0 && <div style={{ background: '#F3E8FF', color: '#9333EA', padding: '2px 8px', borderRadius: 999, fontSize: '0.6rem', fontWeight: 800 }}>ACTIVE</div>}
+                                {fields.length > 0 && <div className="badge badge-purple">ACTIVE</div>}
                             </div>
-                            <div>
+                            <div style={{ marginTop: 15 }}>
                                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-                                    <div style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A', lineHeight: 1 }}>{fields.length}</div>
-                                    {csvData && csvData.columns && <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#CBD5E1' }}>/ {csvData.columns.length}</div>}
+                                    <div style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'var(--font-h)', color: 'var(--text)', lineHeight: 1 }}>{fields.length}</div>
+                                    {csvData && <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>/ {csvData.columns.length}</div>}
                                 </div>
-                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Mapped Fields</div>
+                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Mapped Fields</div>
                             </div>
                         </div>
 
-                        <div className="kpi-card">
+                        <div className="kpi-card" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
                             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 10, background: templateUrl ? 'linear-gradient(135deg, #10B981, #34D399)' : '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className={`pi ${templateUrl ? 'pi-verified' : 'pi-image'}`} style={{ color: templateUrl ? '#fff' : '#CBD5E1', fontSize: '0.9rem' }}></i>
+                                <div style={{
+                                    width: 40, height: 40, borderRadius: 10,
+                                    background: templateUrl ? 'linear-gradient(135deg, var(--green), #34D399)' : 'rgba(255,255,255,0.05)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    <i className={`pi ${templateUrl ? 'pi-verified' : 'pi-image'}`} style={{ color: templateUrl ? '#fff' : 'var(--text-muted)', fontSize: '0.9rem' }}></i>
                                 </div>
                             </div>
-                            <div>
-                                <div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: templateUrl ? '#10B981' : '#CBD5E1', lineHeight: 1 }}>{templateUrl ? 'Ready' : 'Pending'}</div>
-                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Template Status</div>
+                            <div style={{ marginTop: 15 }}>
+                                <div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'var(--font-h)', color: templateUrl ? 'var(--green)' : 'var(--text-muted)', lineHeight: 1 }}>{templateUrl ? 'Ready' : 'Pending'}</div>
+                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Template Status</div>
                             </div>
                         </div>
 
-                        <div className="kpi-card">
+                        <div className="kpi-card" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
                             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #F59E0B, #FBBF24)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div style={{
+                                    width: 40, height: 40, borderRadius: 10,
+                                    background: 'linear-gradient(135deg, var(--amber), #FBBF24)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
                                     <i className="pi pi-shield" style={{ color: '#fff', fontSize: '0.9rem' }}></i>
                                 </div>
-                                <div style={{ background: '#FEF3C7', color: '#D97706', padding: '2px 8px', borderRadius: 999, fontSize: '0.6rem', fontWeight: 800 }}>SOC2</div>
+                                <div className="badge badge-amber">SOC2</div>
                             </div>
-                            <div>
-                                <div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A', lineHeight: 1 }}>AES-256</div>
-                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Encryption</div>
+                            <div style={{ marginTop: 15 }}>
+                                <div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'var(--font-h)', color: 'var(--text)', lineHeight: 1 }}>AES-256</div>
+                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Encryption</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Main Grid */}
-                <div style={{ padding: '0 16px 40px', display: 'grid', gridTemplateColumns: '1fr', gap: 24 }}>
-                    {/* Left: Controls */}
+                <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: '1fr', gap: 24 }} className="console-grid">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                        {/* Step 1: Import Assets */}
-                        <div className="step-wizard-card" data-aos="fade-right">
+                        <div className="step-wizard-card" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
-                                <div className="step-number" style={{ background: (csvData && templateUrl) ? '#D1FAE5' : 'linear-gradient(135deg, #3B82F6, #6366F1)', color: (csvData && templateUrl) ? '#059669' : '#fff' }}>
+                                <div className="step-number" style={{ background: (csvData && templateUrl) ? 'rgba(16,185,129,0.1)' : 'var(--aurora-gradient)', color: (csvData && templateUrl) ? 'var(--green)' : '#fff', boxShadow: (csvData && templateUrl) ? 'none' : '0 8px 20px rgba(59,130,246,0.35)' }}>
                                     {(csvData && templateUrl) ? <i className="pi pi-check" style={{ fontSize: '0.8rem' }}></i> : '01'}
                                 </div>
                                 <div>
-                                    <div style={{ fontSize: '0.62rem', fontWeight: 900, color: '#3B82F6', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Step 1 — IMPORT</div>
-                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit', color: '#0F172A' }}>Data & Template</h3>
+                                    <div style={{ fontSize: '0.62rem', fontWeight: 900, color: 'var(--accent)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Step 1 — IMPORT</div>
+                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, fontFamily: 'var(--font-h)', color: 'var(--text)' }}>Data & Template</h3>
                                 </div>
                             </div>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                                <div className="upload-zone-premium">
+                                <div className="upload-zone-premium" style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed var(--border)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                                        <div style={{ width: 36, height: 36, borderRadius: 10, background: csvData ? 'rgba(16,185,129,0.1)' : 'rgba(59,130,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <i className={`pi ${csvData ? 'pi-check-circle' : 'pi-file'}`} style={{ color: csvData ? '#10B981' : '#3B82F6', fontSize: '1rem' }}></i>
+                                        <div style={{ width: 36, height: 36, borderRadius: 10, background: csvData ? 'rgba(16,185,129,0.1)' : 'rgba(59,130,246,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <i className={`pi ${csvData ? 'pi-check-circle' : 'pi-file'}`} style={{ color: csvData ? 'var(--green)' : 'var(--accent)', fontSize: '1rem' }}></i>
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>CSV Data File</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>{csvData ? `${csvData.participants.length} records, ${csvData.columns?.length} columns loaded` : 'Accepts .csv — Max 10MB, 1001 rows'}</div>
+                                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text)' }}>CSV Data File</div>
+                                            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{csvData ? `${csvData.participants.length} records loaded` : 'Accepts .csv — Max 1001 rows'}</div>
                                         </div>
-                                        {csvData && <div style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 800, color: '#10B981', background: 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: 999 }}>✓ Ready</div>}
+                                        {csvData && <div style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 800, color: 'var(--green)', background: 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: 999 }}>✓ Ready</div>}
                                     </div>
-                                    <FileUpload mode="basic" name="csv" accept=".csv" maxFileSize={10000000} onSelect={onCsvUpload} auto chooseLabel={csvData ? 'Replace CSV' : 'Upload CSV'} className="w-full" />
-
-                                    <div style={{ marginTop: 12 }}>
-                                        <div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textAlign: 'center', margin: '8px 0', textTransform: 'uppercase' }}>— OR —</div>
-                                        <Button label="Import from Quiz Results" icon="pi pi-bolt" className="w-full p-button-outlined"
-                                            style={{ borderRadius: 12, borderStyle: 'dashed', fontSize: '0.85rem' }}
-                                            onClick={openQuizImport} />
+                                    <div style={{ display: 'flex', gap: 10 }}>
+                                        <FileUpload mode="basic" name="csv" accept=".csv" maxFileSize={10000000} onSelect={onCsvUpload} auto chooseLabel={csvData ? 'Replace CSV' : 'Upload CSV'} className="w-full" />
+                                        <Button icon="pi pi-database" label="Import from Quiz" className="p-button-outlined" onClick={openQuizImport} style={{ borderRadius: 12, borderColor: 'var(--border)', color: 'var(--text)' }} />
                                     </div>
                                 </div>
 
-                                <div className="upload-zone-premium">
+                                <div className="upload-zone-premium" style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed var(--border)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                                        <div style={{ width: 36, height: 36, borderRadius: 10, background: templateUrl ? 'rgba(16,185,129,0.1)' : 'rgba(168,85,247,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <i className={`pi ${templateUrl ? 'pi-check-circle' : 'pi-image'}`} style={{ color: templateUrl ? '#10B981' : '#A855F7', fontSize: '1rem' }}></i>
+                                        <div style={{ width: 36, height: 36, borderRadius: 10, background: templateUrl ? 'rgba(16,185,129,0.1)' : 'rgba(168,85,247,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <i className={`pi ${templateUrl ? 'pi-check-circle' : 'pi-image'}`} style={{ color: templateUrl ? 'var(--green)' : 'var(--purple)', fontSize: '1rem' }}></i>
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>Certificate Template</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>{templateUrl ? 'Design uploaded to cloud canvas' : 'JPEG Only — Max 2MB, Standard Res (Under 2500px)'}</div>
+                                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text)' }}>Certificate Template</div>
+                                            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{templateUrl ? 'Design uploaded to cloud canvas' : 'JPG Only — Max 2MB, Standard Res'}</div>
                                         </div>
-                                        {templateUrl && <div style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 800, color: '#10B981', background: 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: 999 }}>✓ Linked</div>}
+                                        {templateUrl && <div style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 800, color: 'var(--green)', background: 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: 999 }}>✓ Linked</div>}
                                     </div>
-                                    <FileUpload mode="basic" name="template" accept=".jpg,.jpeg" maxFileSize={2000000} onSelect={onTemplateUpload} auto chooseLabel={templateUrl ? 'Replace Design' : 'Upload Design'} className="w-full" />
+                                    <FileUpload mode="basic" name="template" accept="image/jpeg" maxFileSize={2000000} onSelect={onTemplateUpload} auto chooseLabel={templateUrl ? 'Replace Design' : 'Upload Design'} className="w-full" />
                                 </div>
 
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', border: '1px solid #E2E8F0' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', borderRadius: 14, padding: '14px 18px', border: '1px solid var(--border)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                        <i className="pi pi-expand" style={{ color: '#3B82F6', fontSize: '0.9rem' }}></i>
+                                        <i className="pi pi-expand" style={{ color: 'var(--accent)', fontSize: '0.9rem' }}></i>
                                         <div>
-                                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>Custom Resolution</div>
-                                            <div style={{ fontSize: '0.68rem', color: '#94A3B8' }}>{useCustomSize ? `${customWidth} × ${customHeight} px` : 'Using default 600×400'}</div>
+                                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text)' }}>Custom Resolution</div>
+                                            <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>{useCustomSize ? `${customWidth} × ${customHeight} px` : 'Using default template size'}</div>
                                         </div>
                                     </div>
                                     <InputSwitch checked={useCustomSize} onChange={(e) => setUseCustomSize(e.value)} />
                                 </div>
                                 {useCustomSize && (
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                                        <div style={{ background: '#F8FAFC', borderRadius: 12, padding: '10px 14px', border: '1px solid #E2E8F0' }}>
-                                            <div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Width (px)</div>
-                                            <InputNumber value={customWidth} onValueChange={(e) => setCustomWidth(e.value)} className="w-full" min={100} max={5000} />
+                                        <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 12, padding: '10px 14px', border: '1px solid var(--border)' }}>
+                                            <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Width (px)</div>
+                                            <InputNumber value={customWidth} onValueChange={(e) => setCustomWidth(e.value)} className="w-full" min={100} max={5000} inputStyle={{ border: 'none', background: 'transparent', fontWeight: 800, padding: 0, color: 'var(--text)' }} />
                                         </div>
-                                        <div style={{ background: '#F8FAFC', borderRadius: 12, padding: '10px 14px', border: '1px solid #E2E8F0' }}>
-                                            <div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Height (px)</div>
-                                            <InputNumber value={customHeight} onValueChange={(e) => setCustomHeight(e.value)} className="w-full" min={100} max={5000} />
+                                        <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 12, padding: '10px 14px', border: '1px solid var(--border)' }}>
+                                            <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Height (px)</div>
+                                            <InputNumber value={customHeight} onValueChange={(e) => setCustomHeight(e.value)} className="w-full" min={100} max={5000} inputStyle={{ border: 'none', background: 'transparent', fontWeight: 800, padding: 0, color: 'var(--text)' }} />
                                         </div>
                                     </div>
                                 )}
-
-                                <div style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.05), rgba(168,85,247,0.05))', borderRadius: 12, padding: '12px 16px', border: '1px solid rgba(59,130,246,0.12)' }}>
-                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                                        <i className="pi pi-info-circle" style={{ color: '#3B82F6', fontSize: '0.85rem', marginTop: 2 }}></i>
-                                        <div style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.6 }}>
-                                            <strong style={{ color: '#3B82F6' }}>100% Free</strong> — Batches limited to 1001 rows. Need higher limits or advanced features? <a href="#" style={{ color: '#7C3AED', fontWeight: 800 }}>Contact VSGRPS →</a>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
-                        {/* Step 2: Configure Fields */}
                         {csvData && (
-                            <div className="step-wizard-card" data-aos="fade-right" data-aos-delay="100">
+                            <div className="step-wizard-card" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
-                                    <div className="step-number" style={{ background: fields.length > 0 ? 'linear-gradient(135deg, #A855F7, #EC4899)' : '#F1F5F9', color: fields.length > 0 ? '#fff' : '#94A3B8' }}>
+                                    <div className="step-number" style={{ background: fields.length > 0 ? 'var(--aurora-gradient)' : 'rgba(255,255,255,0.05)', color: fields.length > 0 ? '#fff' : 'var(--text-muted)', boxShadow: fields.length > 0 ? '0 8px 20px rgba(168,85,247,0.35)' : 'none' }}>
                                         {fields.length > 0 ? <i className="pi pi-check" style={{ fontSize: '0.8rem' }}></i> : '02'}
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: '0.62rem', fontWeight: 900, color: '#A855F7', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Step 2 — CONFIGURE</div>
-                                        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit', color: '#0F172A' }}>Dynamic Field Mapping</h3>
+                                        <div style={{ fontSize: '0.62rem', fontWeight: 900, color: 'var(--purple)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Step 2 — CONFIGURE</div>
+                                        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, fontFamily: 'var(--font-h)', color: 'var(--text)' }}>Dynamic Field Mapping</h3>
                                     </div>
-                                    {fields.length > 0 && (
-                                        <div style={{ marginLeft: 'auto', fontSize: '0.7rem', fontWeight: 800, color: '#A855F7', background: 'rgba(168,85,247,0.08)', padding: '5px 12px', borderRadius: 999, border: '1px solid rgba(168,85,247,0.2)' }}>
-                                            {fields.length}/{csvData.columns?.length} mapped
-                                        </div>
-                                    )}
                                 </div>
 
                                 <div style={{ marginBottom: 16 }}>
-                                    <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Available Columns — Click to map to canvas</div>
+                                    <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Available Columns</div>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                                         {csvData.columns.map(col => {
                                             const isMapped = fields.find(f => f.field === col);
                                             return (
-                                                <button key={col} className={`field-chip ${isMapped ? 'mapped' : ''}`}
-                                                    onClick={() => isMapped ? setFields(fields.filter(f => f.field !== col)) : addField(col)}>
-                                                    <i className={`pi ${isMapped ? 'pi-check-circle' : 'pi-plus-circle'}`} style={{ fontSize: '0.75rem' }}></i>
+                                                <div
+                                                    key={col}
+                                                    onClick={() => isMapped ? setFields(fields.filter(f => f.field !== col)) : addField(col)}
+                                                    className={`field-chip ${isMapped ? 'mapped' : ''}`}
+                                                >
+                                                    <i className={`pi ${isMapped ? 'pi-times' : 'pi-plus'}`}></i>
                                                     {col}
-                                                    {isMapped && <i className="pi pi-times" style={{ fontSize: '0.6rem', opacity: 0.6 }}></i>}
-                                                </button>
+                                                </div>
                                             );
                                         })}
                                     </div>
                                 </div>
+                            </div>
+                        )}
 
-                                {fields.length > 0 && (
+                        {fields.length > 0 && (
                                     <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid #F1F5F9' }}>
                                         <DataTable value={fields} size="small" scrollable scrollHeight="200px" emptyMessage="No fields mapped">
                                             <Column field="field" header="Field" body={(f) => <span style={{ background: 'rgba(59,130,246,0.06)', padding: '3px 10px', borderRadius: 6, fontSize: '0.78rem', fontWeight: 700, color: '#3B82F6', fontFamily: 'monospace' }}>{f.field}</span>} />
@@ -857,8 +804,6 @@ function CertifyStudio() {
                                         </DataTable>
                                     </div>
                                 )}
-                            </div>
-                        )}
 
                         {/* Step 3: Execute & Generate */}
                         {fields.length > 0 && (
@@ -867,15 +812,15 @@ function CertifyStudio() {
                                     <div className="step-number" style={{ background: 'linear-gradient(135deg, #10B981, #34D399)', color: '#fff' }}>03</div>
                                     <div>
                                         <div style={{ fontSize: '0.62rem', fontWeight: 900, color: '#10B981', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Step 3 — EXECUTE</div>
-                                        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit', color: '#0F172A' }}>Generate Certificates</h3>
+                                        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, fontFamily: 'var(--font-h)', color: 'var(--text)' }}>Generate Certificates</h3>
                                     </div>
                                 </div>
 
                                 {csvData && (
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 20, background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', border: '1px solid #E2E8F0' }}>
-                                        <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Records</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A' }}>{csvData.participants.length}</div></div>
-                                        <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Fields</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#0F172A' }}>{fields.length}</div></div>
-                                        <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Est. Time</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#3B82F6' }}>~{Math.max(3, Math.ceil(csvData.participants.length * 0.3))}s</div></div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 20, background: 'rgba(255,255,255,0.03)', borderRadius: 14, padding: '14px 18px', border: '1px solid var(--border)' }}>
+                                        <div><div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Records</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'var(--font-h)', color: 'var(--text)' }}>{csvData.participants.length}</div></div>
+                                        <div><div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Fields</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'var(--font-h)', color: 'var(--text)' }}>{fields.length}</div></div>
+                                        <div><div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Est. Time</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'var(--font-h)', color: 'var(--accent)' }}>~{Math.max(3, Math.ceil(csvData.participants.length * 0.3))}s</div></div>
                                     </div>
                                 )}
 
@@ -1328,7 +1273,7 @@ function CertifyStudio() {
                             }}>
                                 Your certificates are being generated. During peak usage, requests may be queued.
                                 Your batch will be processed automatically, and the ZIP file will be ready for download once complete.
-                                Pls Stay on this page.
+                                Please stay on this page.
                             </p>
                         </div>
                     </div>

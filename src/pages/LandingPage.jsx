@@ -280,15 +280,15 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
             </section>
 
             {/* ═══ CONTACT ═══ */}
-            <section id="contact" style={{ padding: '80px 24px', background: '#F8FAFF' }}>
+            <section id="contact" style={{ padding: '80px 24px', background: 'var(--bg-primary)' }}>
                 <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }} data-aos="fade-up">
                     <div className="badge badge-blue" style={{ marginBottom: 16 }}>
                         <i className="pi pi-envelope"></i> Contact
                     </div>
-                    <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 900, marginBottom: 12, fontFamily: 'Outfit' }}>
+                    <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 900, marginBottom: 12, fontFamily: 'var(--font-h)', color: 'var(--text)' }}>
                         Get In Touch With VSGRPS
                     </h2>
-                    <p style={{ color: '#64748B', marginBottom: 36, fontSize: '0.95rem', lineHeight: 1.7 }}>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: 36, fontSize: '0.95rem', lineHeight: 1.7, fontWeight: 500 }}>
                         Questions about Enterprise Features, custom integrations, or need professional guidance for your organization?
                     </p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
@@ -303,26 +303,26 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
             </section>
 
             {/* ═══ PRIVACY ASSURANCE ═══ */}
-            <section style={{ padding: '80px 24px', background: '#F8FAFF' }}>
+            <section style={{ padding: '80px 24px', background: 'var(--bg-primary)' }}>
                 <div style={{ maxWidth: 1000, margin: '0 auto' }} data-aos="fade-up">
                     <div style={{
                         borderRadius: 32, padding: 'clamp(24px, 5vw, 48px) clamp(20px, 4vw, 32px)',
-                        background: '#FFFFFF',
-                        border: '1.5px solid #E2E8F0',
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--border)',
                         display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center', justifyContent: 'space-between',
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.03)'
+                        boxShadow: 'var(--shadow-card)'
                     }}>
                         <div style={{ flex: '1 1 250px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                                <div style={{ width: 44, height: 44, borderRadius: 14, background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="pi pi-lock" style={{ color: '#2563EB', fontSize: '1.2rem' }}></i>
+                                <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-lock" style={{ color: 'var(--accent)', fontSize: '1.2rem' }}></i>
                                 </div>
-                                <span style={{ fontSize: '0.7rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#2563EB' }}>Privacy First</span>
+                                <span style={{ fontSize: '0.7rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)' }}>Privacy First</span>
                             </div>
-                            <h3 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: '#0F172A', marginBottom: 14 }}>
+                            <h3 style={{ fontFamily: 'var(--font-h)', fontWeight: 900, fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: 'var(--text)', marginBottom: 14 }}>
                                 Built to Protect Your Data
                             </h3>
-                            <p style={{ color: '#64748B', fontSize: '0.95rem', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
                                 We don't store your data. Period. Your CSV files, certificate templates, and generated ZIP packages are automatically purged from our servers within 60 seconds of processing.
                             </p>
                         </div>
@@ -333,10 +333,10 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                                 { icon: 'pi pi-shield', label: 'End-to-end encryption' },
                             ].map((item, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                    <div style={{ width: 36, height: 36, borderRadius: 10, background: '#F1F5F9', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <i className={item.icon} style={{ color: '#10B981', fontSize: '0.9rem' }}></i>
+                                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <i className={item.icon} style={{ color: 'var(--green)', fontSize: '0.9rem' }}></i>
                                     </div>
-                                    <span style={{ color: '#475569', fontSize: '0.88rem', fontWeight: 600 }}>{item.label}</span>
+                                    <span style={{ color: 'var(--text)', fontSize: '0.88rem', fontWeight: 600 }}>{item.label}</span>
                                 </div>
                             ))}
                         </div>

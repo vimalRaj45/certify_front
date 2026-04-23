@@ -104,7 +104,7 @@ export default function Signin() {
     };
   }, []);
 
-  /* ── Loading overlay (Light Theme) ── */
+  /* ── Loading overlay (Aurora Dark Theme) ── */
   if (loading) {
     return (
       <div
@@ -113,7 +113,7 @@ export default function Signin() {
           alignItems: "center",
           justifyContent: "center",
           minHeight: "100vh",
-          background: "#FFFFFF",
+          background: "var(--bg-primary)",
           flexDirection: "column",
           gap: 32,
           padding: 24,
@@ -132,8 +132,8 @@ export default function Signin() {
               position: "absolute",
               inset: 0,
               borderRadius: "50%",
-              border: "3px solid #F1F5F9",
-              borderTopColor: "#3B82F6",
+              border: "3px solid var(--border)",
+              borderTopColor: "var(--accent)",
               animation: "spin360 0.8s linear infinite",
             }}
           />
@@ -141,13 +141,13 @@ export default function Signin() {
             style={{
               position: "absolute",
               inset: 16,
-              background: "linear-gradient(135deg, #3B82F6, #8B5CF6)",
+              background: "var(--aurora-gradient)",
               borderRadius: "50%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               animation: "orbPulse 1.5s ease-in-out infinite",
-              boxShadow: "0 10px 20px rgba(59,130,246,0.2)",
+              boxShadow: "var(--shadow-blue)",
             }}
           >
             <i className="pi pi-check" style={{ color: "#fff", fontSize: "1.2rem" }} />
@@ -157,10 +157,10 @@ export default function Signin() {
         <div style={{ textAlign: "center", animation: "fadeUp .6s ease both" }}>
           <h3
             style={{
-              fontFamily: "Outfit",
+              fontFamily: "var(--font-h)",
               fontWeight: 800,
               fontSize: "1.5rem",
-              color: "#0F172A",
+              color: "var(--text)",
               marginBottom: 12,
             }}
           >
@@ -174,13 +174,13 @@ export default function Signin() {
                   width: 8,
                   height: 8,
                   borderRadius: "50%",
-                  background: "#3B82F6",
+                  background: "var(--accent)",
                   animation: `dotBounce 1s ease-in-out ${i * 0.15}s infinite`,
                 }}
               />
             ))}
           </div>
-          <p style={{ color: "#64748B", fontSize: "0.95rem", fontWeight: 500 }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", fontWeight: 500 }}>
             Verifying your identity with Google
           </p>
         </div>
@@ -188,7 +188,7 @@ export default function Signin() {
     );
   }
 
-  /* ── Sign-in card (Light, Mobile-First Design) ── */
+  /* ── Sign-in card (Aurora Dark Theme) ── */
   return (
     <div
       style={{
@@ -196,13 +196,13 @@ export default function Signin() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        background: "#F8FAFC",
+        background: "var(--bg-primary)",
         padding: "24px 16px",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      {/* Decorative Blur Elements (Subtle on Light Theme) */}
+      {/* Decorative Blur Elements (Aurora Theme) */}
       <div
         style={{
           position: "absolute",
@@ -210,7 +210,7 @@ export default function Signin() {
           right: "-10%",
           width: "50vw",
           height: "50vw",
-          background: "radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -221,7 +221,7 @@ export default function Signin() {
           left: "-5%",
           width: "40vw",
           height: "40vw",
-          background: "radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -234,11 +234,12 @@ export default function Signin() {
           align-items: center; 
           gap: 10px; 
           padding: 8px 14px; 
-          background: #F1F5F9; 
+          background: rgba(255,255,255,0.03); 
           border-radius: 99px; 
-          color: #475569; 
+          color: var(--text-secondary); 
           font-size: 0.75rem; 
           font-weight: 600;
+          border: 1px solid var(--border);
         }
       `}</style>
 

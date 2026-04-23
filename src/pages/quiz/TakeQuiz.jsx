@@ -102,10 +102,10 @@ const TakeQuiz = () => {
       if (errorData?.startTime) {
         const localStartTime = new Date(errorData.startTime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
         toast.error(`Please come back at the scheduled time: ${localStartTime}`, { duration: 5000 });
-        setTimeout(() => navigate('/quiz'), 3000);
+        setTimeout(() => navigate('/'), 3000);
       } else {
         toast.error(errorData?.error || "Access denied or initialization failed");
-        if (err.response?.status === 403) setTimeout(() => navigate('/quiz'), 3000);
+        if (err.response?.status === 403) setTimeout(() => navigate('/'), 3000);
       }
     } finally {
       setLoading(false);
@@ -174,8 +174,8 @@ const TakeQuiz = () => {
 
   if (loading && !isSubmitted) {
     return (
-      <div style={{ minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: '3rem', color: '#3b82f6' }}></i>
+      <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <i className="pi pi-spin pi-spinner" style={{ fontSize: '3rem', color: 'var(--accent)' }}></i>
       </div>
     );
   }
@@ -183,20 +183,20 @@ const TakeQuiz = () => {
   // Instructions Page
   if (!isStarted && quiz && !isSubmitted) {
     return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#f8fafc', paddingTop: 40 }} className="quiz-container">
+      <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text)', paddingTop: 40 }} className="quiz-container">
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
            <Breadcrumbs items={[{ label: 'Take Assessment' }]} />
 
-           <Card style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, padding: 20 }} className="responsive-card">
+           <Card style={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: '1px solid var(--border)', borderRadius: 24, padding: 20, boxShadow: 'var(--shadow-card)' }} className="responsive-card">
               <div style={{ textAlign: 'center', marginBottom: 30 }}>
-                <h1 style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'Outfit' }}>{quiz.title}</h1>
-                <p style={{ color: '#94a3b8' }}>{quiz.description || "Official assessment examination."}</p>
+                <h1 style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'var(--font-h)', color: 'var(--text)' }}>{quiz.title}</h1>
+                <p style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{quiz.description || "Official assessment examination."}</p>
               </div>
 
-              <div style={{ background: 'rgba(15, 23, 42, 0.5)', padding: 20, borderRadius: 15, marginBottom: 25, border: '1px solid rgba(255,255,255,0.05)' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 15 }}>📋 Instructions & Security</h3>
-                <ul style={{ color: '#94a3b8', paddingLeft: 20, lineHeight: 1.8 }}>
-                   <li style={{ color: '#fbbf24', fontWeight: 700 }}><i className="pi pi-mobile mr-2"></i> Mobile Only: Access from Desktop/Laptop is strictly prohibited.</li>
+              <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: 20, borderRadius: 15, marginBottom: 25, border: '1px solid var(--border)' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: 15, color: 'var(--text)' }}>📋 Instructions & Security</h3>
+                <ul style={{ color: 'var(--text-secondary)', paddingLeft: 20, lineHeight: 1.8, fontWeight: 500 }}>
+                   <li style={{ color: 'var(--amber)', fontWeight: 700 }}><i className="pi pi-mobile mr-2"></i> Mobile Only: Access from Desktop/Laptop is strictly prohibited.</li>
                    <li><b>Fullscreen Required:</b> The browser will lock to fullscreen.</li>
                    <li><b>Face Monitoring:</b> Stay in front of your camera at all times.</li>
                    <li><b>Tab Switching:</b> Switching tabs may result in automatic disqualification.</li>
@@ -207,25 +207,25 @@ const TakeQuiz = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 15 }}>
                       <div className="flex flex-column gap-1">
-                          <label style={{ fontSize: '0.8rem', color: '#64748b' }}>Full Name</label>
-                          <InputText value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="e.g. John Doe" />
+                          <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 700 }}>Full Name</label>
+                          <InputText value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="e.g. John Doe" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
                       </div>
                       <div className="flex flex-column gap-1">
-                          <label style={{ fontSize: '0.8rem', color: '#64748b' }}>Email Address</label>
-                          <InputText value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} placeholder="e.g. john@example.com" />
+                          <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 700 }}>Email Address</label>
+                          <InputText value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} placeholder="e.g. john@example.com" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
                       </div>
                   </div>
 
                   {quiz.access_key && (
                     <div className="flex flex-column gap-1">
-                        <label style={{ fontSize: '0.8rem', color: '#64748b' }}>Secret Access Key</label>
-                        <InputText type="password" value={accessKeyInput} onChange={(e) => setAccessKeyInput(e.target.value)} placeholder="Enter key provided by examiner" />
+                        <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 700 }}>Secret Access Key</label>
+                        <InputText type="password" value={accessKeyInput} onChange={(e) => setAccessKeyInput(e.target.value)} placeholder="Enter key provided by examiner" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
                     </div>
                   )}
 
                   <Button label="Initialize Proctoring & Start" icon="pi pi-shield" 
                           onClick={startQuizFlow}
-                          style={{ padding: 18, borderRadius: 15, background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', fontWeight: 800, marginTop: 10 }} />
+                          style={{ padding: 18, borderRadius: 15, background: 'var(--aurora-gradient)', border: 'none', fontWeight: 800, marginTop: 10, color: '#fff', boxShadow: 'var(--shadow-blue)' }} />
               </div>
            </Card>
         </div>
@@ -239,25 +239,25 @@ const TakeQuiz = () => {
     const progress = ((currentIndex + 1) / questions.length) * 100;
 
     return (
-      <div style={{ minHeight: '100vh', background: '#0f172a', color: '#fff' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text)' }}>
          <FaceMonitor onViolation={() => setViolations(v => v + 1)} />
          
          <div style={{ maxWidth: 900, margin: '0 auto', padding: '20px 10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                <div>
-                  <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>{quiz.title}</h2>
-                  <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Question {currentIndex + 1} of {questions.length}</div>
+                  <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'var(--font-h)' }}>{quiz.title}</h2>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Question {currentIndex + 1} of {questions.length}</div>
                </div>
                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 900, color: timeLeft < 60 ? '#ef4444' : '#3b82f6' }}>{formatTime(timeLeft)}</div>
-                  <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase' }}>Time Remaining</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 900, color: timeLeft < 60 ? 'var(--red)' : 'var(--accent)', fontFamily: 'var(--font-h)' }}>{formatTime(timeLeft)}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800 }}>Time Remaining</div>
                </div>
             </div>
 
-            <ProgressBar value={progress} showValue={false} style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.05)', marginBottom: 40 }} />
+            <ProgressBar value={progress} showValue={false} style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.03)', marginBottom: 40 }} />
 
-            <Card style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, padding: 20 }}>
-               <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: 30, lineHeight: 1.5 }}>{q.question}</h3>
+            <Card style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 24, padding: 20, boxShadow: 'var(--shadow-card)' }}>
+               <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: 30, lineHeight: 1.5, color: 'var(--text)' }}>{q.question}</h3>
                
                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {q.type === 'mcq' || q.type === 'multiple' ? (
@@ -268,35 +268,35 @@ const TakeQuiz = () => {
                              onClick={() => handleAnswer(opt)}
                              style={{ 
                                padding: 18, borderRadius: 15, 
-                               background: isSelected ? 'rgba(59, 130, 246, 0.15)' : 'rgba(15, 23, 42, 0.5)', 
-                               border: `2px solid ${isSelected ? '#3b82f6' : 'rgba(255,255,255,0.05)'}`,
+                               background: isSelected ? 'rgba(37,99,235,0.08)' : 'rgba(255,255,255,0.02)', 
+                               border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
                                cursor: 'pointer', transition: 'all 0.2s'
                              }} className="option-hover">
                            <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-                              <div style={{ width: 24, height: 24, borderRadius: '50%', border: `2px solid ${isSelected ? '#3b82f6' : '#334155'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                 {isSelected && <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#3b82f6' }}></div>}
+                              <div style={{ width: 24, height: 24, borderRadius: '50%', border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--text-muted)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                 {isSelected && <div style={{ width: 12, height: 12, borderRadius: '50%', background: 'var(--accent)' }}></div>}
                               </div>
-                              <span style={{ fontWeight: 500 }}>{opt}</span>
+                              <span style={{ fontWeight: 600, color: isSelected ? 'var(--text)' : 'var(--text-secondary)' }}>{opt}</span>
                            </div>
                         </div>
                       )
                     })
                   ) : (
                     <InputText value={answers[currentIndex] || ''} 
-                               onChange={(e) => handleAnswer(e.target.value)} 
-                               placeholder="Type your answer here..."
-                               style={{ padding: 15, background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', borderRadius: 12 }} />
+                                onChange={(e) => handleAnswer(e.target.value)} 
+                                placeholder="Type your answer here..."
+                                style={{ padding: 15, background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 12 }} />
                   )}
                </div>
             </Card>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 30 }}>
-               <Button label="Previous" icon="pi pi-chevron-left" disabled={currentIndex === 0} onClick={prevQuestion} text style={{ color: '#94a3b8' }} />
+               <Button label="Previous" icon="pi pi-chevron-left" disabled={currentIndex === 0} onClick={prevQuestion} text style={{ color: 'var(--text-muted)', fontWeight: 700 }} />
                
                {currentIndex === questions.length - 1 ? (
-                 <Button label="Submit Assessment" icon="pi pi-send" onClick={submitQuiz} severity="success" style={{ borderRadius: 12, padding: '12px 30px' }} />
+                 <Button label="Submit Assessment" icon="pi pi-send" onClick={submitQuiz} style={{ borderRadius: 12, padding: '12px 30px', background: 'var(--green)', border: 'none', fontWeight: 800, color: '#fff' }} />
                ) : (
-                 <Button label="Next" iconPos="right" icon="pi pi-chevron-right" onClick={nextQuestion} style={{ borderRadius: 12, padding: '12px 30px', background: '#3b82f6', border: 'none' }} />
+                 <Button label="Next" iconPos="right" icon="pi pi-chevron-right" onClick={nextQuestion} style={{ borderRadius: 12, padding: '12px 30px', background: 'var(--accent)', border: 'none', fontWeight: 800, color: '#fff' }} />
                )}
             </div>
          </div>
@@ -307,36 +307,34 @@ const TakeQuiz = () => {
   // Result Page
   if (isSubmitted && result) {
     return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-         <Card style={{ maxWidth: 500, width: '100%', background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 30, textAlign: 'center', padding: 20 }}>
-            <div style={{ width: 80, height: 80, background: '#10b981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+         <Card style={{ maxWidth: 500, width: '100%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 30, textAlign: 'center', padding: 20, boxShadow: 'var(--shadow-card)' }}>
+            <div style={{ width: 80, height: 80, background: 'var(--green)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 8px 20px rgba(16,185,129,0.3)' }}>
                <i className="pi pi-check" style={{ fontSize: '2.5rem', color: '#fff' }}></i>
             </div>
-            <h2 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: 10 }}>Well Done!</h2>
-            <p style={{ color: '#94a3b8', marginBottom: 30 }}>Your assessment has been evaluated.</p>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: 10, fontFamily: 'var(--font-h)' }}>Well Done!</h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: 30, fontWeight: 500 }}>Your assessment has been evaluated.</p>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 30 }}>
-               <div style={{ background: 'rgba(15, 23, 42, 0.5)', padding: 20, borderRadius: 20 }}>
-                  <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase' }}>Score</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#3b82f6' }}>{result.score}/{result.max_possible}</div>
+               <div style={{ background: 'rgba(255,255,255,0.03)', padding: 20, borderRadius: 20, border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>Score</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--accent)', fontFamily: 'var(--font-h)' }}>{result.score}/{result.max_possible}</div>
                </div>
-               <div style={{ background: 'rgba(15, 23, 42, 0.5)', padding: 20, borderRadius: 20 }}>
-                  <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase' }}>Accuracy</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#10b981' }}>{result.percent}%</div>
+               <div style={{ background: 'rgba(255,255,255,0.03)', padding: 20, borderRadius: 20, border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>Accuracy</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--green)', fontFamily: 'var(--font-h)' }}>{result.percent}%</div>
                </div>
             </div>
 
             <Button label="Back to Dashboard" icon="pi pi-home" onClick={() => navigate('/quiz')} 
-                    style={{ width: '100%', padding: 15, borderRadius: 15, background: '#3b82f6', border: 'none', fontWeight: 700 }} />
+                    style={{ width: '100%', padding: 15, borderRadius: 15, background: 'var(--accent)', border: 'none', fontWeight: 800, color: '#fff' }} />
             
             <Button label="View Leaderboard" icon="pi pi-chart-bar" text onClick={() => navigate(`/quiz/leaderboard/${quizId}`)} 
-                    style={{ width: '100%', marginTop: 10, color: '#94a3b8' }} />
+                    style={{ width: '100%', marginTop: 10, color: 'var(--text-muted)', fontWeight: 700 }} />
          </Card>
       </div>
     )
   }
-
-  return null;
-};
+}
 
 export default TakeQuiz;

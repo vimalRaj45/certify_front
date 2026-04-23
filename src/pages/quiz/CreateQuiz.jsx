@@ -280,8 +280,8 @@ const CreateQuiz = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      color: '#f8fafc',
+      background: 'var(--bg-primary)',
+      color: 'var(--text)',
       paddingTop: 40
     }} className="quiz-container">
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -297,13 +297,13 @@ const CreateQuiz = () => {
         <div className="create-quiz-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: 30 }}>
            <div className="main-content">
               {!isCreated ? (
-                <Card style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24, padding: 30 }}>
+                <Card style={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: '1px solid var(--border)', borderRadius: 24, padding: 30, boxShadow: 'var(--shadow-card)' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                     <div className="flex flex-column gap-2">
-                        <label style={{ fontWeight: 600, color: '#94a3b8' }}>Quiz Title</label>
+                        <label style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Quiz Title</label>
                         <InputText value={title} onChange={(e) => setTitle(e.target.value)} 
                                 placeholder="e.g. Modern Web Development Trivia" 
-                                style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 15, borderRadius: 12 }} />
+                                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)', padding: 15, borderRadius: 12 }} />
                     </div>
 
                     <div className="flex flex-column gap-1">
@@ -315,44 +315,44 @@ const CreateQuiz = () => {
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
                         <div className="flex flex-column gap-1">
-                            <label style={{ fontWeight: 600, color: '#94a3b8' }}>Duration (Minutes)</label>
-                            <InputNumber value={metadata.duration_minutes} onValueChange={(e) => setMetadata({...metadata, duration_minutes: e.value})} min={1} />
+                            <label style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Duration (Minutes)</label>
+                            <InputNumber value={metadata.duration_minutes} onValueChange={(e) => setMetadata({...metadata, duration_minutes: e.value})} min={1} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
                         </div>
                         <div className="flex flex-column gap-1">
-                           <label style={{ fontWeight: 600, color: '#94a3b8' }}>Quiz Access Key (Optional)</label>
+                           <label style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Quiz Access Key (Optional)</label>
                            <InputText value={metadata.access_key} onChange={(e) => setMetadata({...metadata, access_key: e.target.value})} 
                                       placeholder="e.g. EXAM2024"
-                                      style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff' }} />
+                                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
                         </div>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
                         <div className="flex flex-column gap-1">
-                           <label style={{ fontWeight: 600, color: '#94a3b8' }}>Start Date & Time (Optional)</label>
+                           <label style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Start Date & Time (Optional)</label>
                            <Calendar value={metadata.start_time} onChange={(e) => setMetadata({...metadata, start_time: e.value})} 
                                      showTime hourFormat="12" placeholder="When should quiz start?"
-                                     style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155' }} />
+                                     style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }} />
                         </div>
                         <div className="flex flex-column gap-1">
-                           <label style={{ fontWeight: 600, color: '#94a3b8' }}>End Date & Time (Optional)</label>
+                           <label style={{ fontWeight: 700, color: 'var(--text-muted)' }}>End Date & Time (Optional)</label>
                            <Calendar value={metadata.end_time} onChange={(e) => setMetadata({...metadata, end_time: e.value})} 
                                      showTime hourFormat="12" placeholder="When should quiz end?"
-                                     style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155' }} />
+                                     style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }} />
                         </div>
                     </div>
 
                     <div className="flex flex-column gap-1">
-                        <label style={{ fontWeight: 600, color: '#94a3b8' }}>Allowed Student Emails (One per line)</label>
+                        <label style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Allowed Student Emails (One per line)</label>
                         <textarea 
                         value={metadata.whitelist} 
                         onChange={(e) => setMetadata({...metadata, whitelist: e.target.value})}
                         placeholder="student1@college.edu&#10;student2@college.edu"
-                        style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid #334155', color: '#fff', padding: 12, borderRadius: 12, height: 100, resize: 'none', fontFamily: 'monospace' }}
+                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)', padding: 12, borderRadius: 12, height: 100, resize: 'none', fontFamily: 'monospace' }}
                         />
                     </div>
 
                     <Button label={editId ? "Update Configuration" : "Initialize Assessment"} onClick={handleCreateQuiz} 
-                            style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', padding: 15, borderRadius: 12, fontWeight: 700 }} />
+                            style={{ background: 'var(--aurora-gradient)', border: 'none', padding: 15, borderRadius: 12, fontWeight: 800, color: '#fff', boxShadow: 'var(--shadow-blue)' }} />
                     </div>
                 </Card>
               ) : (
@@ -378,7 +378,7 @@ const CreateQuiz = () => {
                     </div>
 
                     {/* Question Entry Form */}
-                    <Card title={`Add Question ${questions.length + 1}`} style={{ background: 'rgba(30, 41, 59, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 24 }}>
+                    <Card title={`Add Question ${questions.length + 1}`} style={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: '1px solid var(--border)', borderRadius: 24, boxShadow: 'var(--shadow-card)' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }} className="create-quiz-grid">
@@ -550,16 +550,16 @@ const CreateQuiz = () => {
           style={{ width: '90vw', maxWidth: 800 }}
           footer={generatedQuestions.length > 0 && (
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, padding: 15 }}>
-                  <Button label="Cancel" text onClick={() => setAiDialogVisible(false)} />
+                  <Button label="Cancel" text onClick={() => setAiDialogVisible(false)} style={{ color: 'var(--text-muted)', fontWeight: 700 }} />
                   <Button label={`Add ${selectedAiQuestions.length} Selected`} 
                           icon="pi pi-plus" 
                           disabled={aiStatus.loading}
                           onClick={addSelectedAiQuestions}
-                          style={{ background: '#10b981', border: 'none', borderRadius: 10 }} />
+                          style={{ background: 'var(--green)', border: 'none', borderRadius: 10, fontWeight: 800, color: '#fff' }} />
               </div>
           )}
-          contentStyle={{ background: '#0f172a', color: '#fff' }}
-          headerStyle={{ background: '#0f172a', color: '#fff', borderBottom: '1px solid #1e293b' }}
+          contentStyle={{ background: 'var(--bg-primary)', color: 'var(--text)' }}
+          headerStyle={{ background: 'var(--bg-primary)', color: 'var(--text)', borderBottom: '1px solid var(--border)' }}
       >
           {generatedQuestions.length === 0 ? (
               <div style={{ padding: '40px', textAlign: 'center' }}>

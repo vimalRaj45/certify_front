@@ -167,34 +167,34 @@ a { text-decoration: none; color: inherit; }
 
 /* Step Wizard Cards */
 .step-wizard-card {
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 24px;
   padding: 28px;
-  border: 1px solid #F1F5F9;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
   transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
 }
 .step-wizard-card:hover {
-  box-shadow: 0 20px 40px -12px rgba(0,0,0,0.06);
-  border-color: rgba(59,130,246,0.12);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--border-hover);
 }
 
 /* KPI Cards */
 .kpi-card {
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 20px;
   padding: 20px;
-  border: 1px solid #F1F5F9;
+  border: 1px solid var(--border);
   transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
 }
 .kpi-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(0,0,0,0.08);
-  border-color: rgba(59,130,246,0.15);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--border-hover);
 }
 .kpi-card::after {
   content: '';
