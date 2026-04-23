@@ -21,7 +21,7 @@ import VerificationPage from './pages/Verification';
 import Loader from './components/Loader';
 import quizApi from './services/quizApi';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open.onrender.com';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
 
 const DraggableField = ({ field, isSelected, onClick, handleDragStop, updateFieldSize, updateFieldColor, removeField }) => {
     const nodeRef = useRef(null);
@@ -243,6 +243,11 @@ function CertifyStudio() {
 
     const onTemplateUpload = async (e) => {
         const file = e.files[0];
+
+        if (file.type !== 'image/jpeg') {
+            toast.error("Format Error: Only JPEG/JPG templates are supported for high-speed generation.", { icon: '🚫' });
+            return;
+        }
 
         const validateImage = (imgFile) => {
             return new Promise((resolve, reject) => {
@@ -728,7 +733,7 @@ function CertifyStudio() {
                                         </div>
                                         <div>
                                             <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>CSV Data File</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>{csvData ? `${csvData.participants.length} records, ${csvData.columns?.length} columns loaded` : 'Accepts .csv — Max 10MB, 100 rows'}</div>
+                                            <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>{csvData ? `${csvData.participants.length} records, ${csvData.columns?.length} columns loaded` : 'Accepts .csv — Max 10MB, 1001 rows'}</div>
                                         </div>
                                         {csvData && <div style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 800, color: '#10B981', background: 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: 999 }}>✓ Ready</div>}
                                     </div>
@@ -749,11 +754,11 @@ function CertifyStudio() {
                                         </div>
                                         <div>
                                             <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>Certificate Template</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>{templateUrl ? 'Design uploaded to cloud canvas' : 'PNG/JPG — Max 2MB, Standard Res (Under 2500px)'}</div>
+                                            <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>{templateUrl ? 'Design uploaded to cloud canvas' : 'JPEG Only — Max 2MB, Standard Res (Under 2500px)'}</div>
                                         </div>
                                         {templateUrl && <div style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 800, color: '#10B981', background: 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: 999 }}>✓ Linked</div>}
                                     </div>
-                                    <FileUpload mode="basic" name="template" accept="image/*" maxFileSize={2000000} onSelect={onTemplateUpload} auto chooseLabel={templateUrl ? 'Replace Design' : 'Upload Design'} className="w-full" />
+                                    <FileUpload mode="basic" name="template" accept=".jpg,.jpeg" maxFileSize={2000000} onSelect={onTemplateUpload} auto chooseLabel={templateUrl ? 'Replace Design' : 'Upload Design'} className="w-full" />
                                 </div>
 
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', border: '1px solid #E2E8F0' }}>
@@ -783,7 +788,7 @@ function CertifyStudio() {
                                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                                         <i className="pi pi-info-circle" style={{ color: '#3B82F6', fontSize: '0.85rem', marginTop: 2 }}></i>
                                         <div style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.6 }}>
-                                            <strong style={{ color: '#3B82F6' }}>100% Free</strong> — Batches limited to 100 rows. Need higher limits or advanced features? <a href="#" style={{ color: '#7C3AED', fontWeight: 800 }}>Contact VSGRPS →</a>
+                                            <strong style={{ color: '#3B82F6' }}>100% Free</strong> — Batches limited to 1001 rows. Need higher limits or advanced features? <a href="#" style={{ color: '#7C3AED', fontWeight: 800 }}>Contact VSGRPS →</a>
                                         </div>
                                     </div>
                                 </div>

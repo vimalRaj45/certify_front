@@ -5,16 +5,15 @@ import { Button } from 'primereact/button';
 import toast, { Toaster } from 'react-hot-toast';
 import AOS from 'aos';
 
-const API_BASE = 'https://certify-open.onrender.com';
+const API_BASE = 'https://certify-vsgrps.onrender.com';
 
 const STEP_META = {
     hashing: { label: 'Layer 1 · Cryptographic Integrity', icon: 'pi-key', color: '#6366F1', num: 1 },
     parsing: { label: 'Layer 2 · Metadata Extraction', icon: 'pi-database', color: '#0EA5E9', num: 2 },
-    handshake: { label: 'Layer 3 · Signature Validation', icon: 'pi-verified', color: '#8B5CF6', num: 3 },
-    registry: { label: 'Layer 4 · Registry Consensus', icon: 'pi-globe', color: '#10B981', num: 4 },
+    registry: { label: 'Layer 3 · Registry Consensus', icon: 'pi-globe', color: '#10B981', num: 3 },
 };
 
-const STEP_ORDER = ['hashing', 'parsing', 'handshake', 'registry'];
+const STEP_ORDER = ['hashing', 'parsing', 'registry'];
 
 // Comparison row with entrance animation
 const CompareRow = ({ row, index }) => {
@@ -182,7 +181,7 @@ const VerificationPage = ({ onBack }) => {
         setSteps([]);
 
         const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'https://certify-open.onrender.com' : API_BASE;
+            ? 'https://certify-vsgrps.onrender.com' : API_BASE;
 
         const es = new EventSource(`${currentApiBase}/progress?key=${verifyKey}`);
         esRef.current = es;
@@ -268,6 +267,30 @@ const VerificationPage = ({ onBack }) => {
                         Upload a CertifyPro PDF. Each security layer computes, shows its full comparison, then passes control to the next.
                     </p>
 
+                    {/* How it Works / Help Section */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', textAlign: 'left', marginBottom: '32px', padding: '20px', background: '#F8FAFC', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+                        <div>
+                            <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <i className="pi pi-question-circle" style={{ color: '#3B82F6' }}></i> HOW TO USE
+                            </h4>
+                            <ul style={{ fontSize: '0.8rem', color: '#64748B', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
+                                <li>Select the certificate PDF file you wish to validate.</li>
+                                <li>Wait for the 3-layer security engine to finish its audit.</li>
+                                <li>View the official recipient data directly from our registry.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <i className="pi pi-share-alt" style={{ color: '#A855F7' }}></i> HOW WE SHARE
+                            </h4>
+                            <ul style={{ fontSize: '0.8rem', color: '#64748B', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
+                                <li><strong>Direct Email:</strong> Auto-sent to participants via Brevo API.</li>
+                                <li><strong>Secure ZIP:</strong> Bulk download available after generation.</li>
+                                <li><strong>Public Links:</strong> We recommend uploading your certificate to Google Drive/One drive and sharing the link for easy public validation.</li>
+                            </ul>
+                        </div>
+                    </div>
+
                     {!verifying && !result && (
                         <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: '36px', background: 'rgba(99,102,241,0.02)' }}>
                             <FileUpload mode="basic" name="file" accept="application/pdf" maxFileSize={10000000}
@@ -347,18 +370,43 @@ const VerificationPage = ({ onBack }) => {
                         </p>
 
                         {result.verified && result.data && (
-                            <div style={{ background: '#fff', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid #D1FAE5' }}>
-                                {[
-                                    { label: 'Recipient', value: result.data.name },
-                                    { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' }) },
-                                    { label: 'Certificate ID', value: result.data.id, mono: true },
-                                ].map(row => (
-                                    <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
-                                        <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
-                                        <span style={{ fontWeight: 700, color: row.mono ? '#6366F1' : '#0F172A', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
+                            <>
+                                <div style={{ background: '#fff', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid #D1FAE5' }}>
+                                    {[
+                                        { label: 'Recipient', value: result.data.name },
+                                        { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' }) },
+                                        { label: 'Certificate ID', value: result.data.id, mono: true },
+                                    ].map(row => (
+                                        <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
+                                            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
+                                            <span style={{ fontWeight: 700, color: row.mono ? '#6366F1' : '#0F172A', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Dos and Don'ts Section */}
+                                <div style={{ marginTop: '24px', textAlign: 'left', borderTop: '1px solid #D1FAE5', paddingTop: '20px' }}>
+                                    <h4 style={{ fontSize: '0.9rem', fontWeight: 900, color: '#064E3B', marginBottom: '16px', letterSpacing: '0.02em' }}>CERTIFICATE USAGE GUIDELINES</h4>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                                        <div>
+                                            <div style={{ color: '#059669', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>✅ THE DOS</div>
+                                            <ul style={{ fontSize: '0.8rem', color: '#065F46', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
+                                                <li>Share your ID on LinkedIn/CV.</li>
+                                                <li>Keep the original PDF file safe.</li>
+                                                <li>Use this page for official proof.</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <div style={{ color: '#DC2626', fontSize: '0.75rem', fontWeight: 900, marginBottom: '8px' }}>❌ THE DON'TS</div>
+                                            <ul style={{ fontSize: '0.8rem', color: '#991B1B', paddingLeft: '16px', margin: 0, lineHeight: 1.5 }}>
+                                                <li>Never edit the PDF text or images.</li>
+                                                <li>Don't compress/shrink the file.</li>
+                                                <li>Don't remove system watermarks.</li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            </>
                         )}
                     </div>
                 )}
