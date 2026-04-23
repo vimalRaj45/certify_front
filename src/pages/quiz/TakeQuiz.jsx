@@ -97,9 +97,11 @@ const TakeQuiz = () => {
       const errorData = err.response?.data;
       if (errorData?.startTime) {
         const localStartTime = new Date(errorData.startTime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
-        toast.error(`This quiz hasn't started yet. It opens at ${localStartTime}`);
+        toast.error(`Please come back at the scheduled time: ${localStartTime}`, { duration: 5000 });
+        setTimeout(() => navigate('/quiz'), 3000);
       } else {
         toast.error(errorData?.error || "Access denied or initialization failed");
+        if (err.response?.status === 403) setTimeout(() => navigate('/quiz'), 3000);
       }
     } finally {
       setLoading(false);
