@@ -256,8 +256,8 @@ function CertifyStudio() {
                 const objectUrl = URL.createObjectURL(imgFile);
                 img.onload = () => {
                     URL.revokeObjectURL(objectUrl);
-                    if (img.width > 2500 || img.height > 2500) {
-                        reject(`High-resolution image (${img.width}x${img.height}) detected! Max allowed is 2500x2500 pixels for optimal stability.`);
+                    if (img.width > 5000 || img.height > 5000) {
+                        reject(`High-resolution image (${img.width}x${img.height}) detected! Max allowed is 5000x5000 pixels for optimal stability.`);
                     } else {
                         resolve();
                     }
@@ -288,9 +288,10 @@ function CertifyStudio() {
                 style: { borderRadius: '12px', background: '#333', color: '#fff' }
             });
         } catch (err) {
-            toast.error(err.message || 'Resolution check failed', {
+            const errorMsg = err.response?.data?.details || err.response?.data?.error || err.message || err || 'Template upload failed';
+            toast.error(errorMsg, {
                 icon: '⚠️',
-                duration: 5000,
+                duration: 6000,
                 style: { borderRadius: '12px', background: '#7f1d1d', color: '#fff' }
             });
         } finally {
@@ -783,7 +784,7 @@ function CertifyStudio() {
                                         </div>
                                         {templateUrl && <div style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 800, color: '#10B981', background: 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: 999 }}>✓ Linked</div>}
                                     </div>
-                                    <FileUpload mode="basic" name="template" accept=".jpg,.jpeg" maxFileSize={2000000} onSelect={onTemplateUpload} auto chooseLabel={templateUrl ? 'Replace Design' : 'Upload Design'} className="w-full" />
+                                    <FileUpload mode="basic" name="template" accept=".jpg,.jpeg" maxFileSize={10000000} onSelect={onTemplateUpload} auto chooseLabel={templateUrl ? 'Replace Design' : 'Upload Design'} className="w-full" />
                                 </div>
 
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', border: '1px solid #E2E8F0' }}>
