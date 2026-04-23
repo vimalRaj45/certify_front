@@ -131,6 +131,8 @@ const QuizHub = () => {
                          style={{ padding: '15px 30px', borderRadius: 12, background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', border: 'none', fontWeight: 700 }} className="mobile-full-width" />
                  <Button label="My Performance" icon="pi pi-history" onClick={() => navigate('/quiz/history')} 
                          style={{ padding: '15px 30px', borderRadius: 12, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} className="p-button-outlined mobile-full-width" />
+                 <Button label="Certificate Studio" icon="pi pi-verified" onClick={() => navigate('/')} 
+                         style={{ padding: '15px 30px', borderRadius: 12, background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', border: '1px solid #3b82f6' }} className="mobile-full-width" />
               </div>
            )}
         </header>
