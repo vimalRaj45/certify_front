@@ -61,8 +61,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                         <a href="#features" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Features</a>
                         <a href="#how-it-works" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>How It Works</a>
                         <a href="#benefits" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Benefits</a>
-                        <span onClick={() => window.location.href = '/guide'} style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569', cursor: 'pointer' }}>Guide</span>
-                        <span onClick={onVerify} style={{ fontSize: '0.8rem', fontWeight: 700, color: '#2563EB', cursor: 'pointer' }}>Verify</span>
+                        <span onClick={() => window.location.href = '/verify'} style={{ fontSize: '0.8rem', fontWeight: 700, color: '#2563EB', cursor: 'pointer' }}>Verify</span>
                     </div>
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderLeft: '1px solid #E2E8F0', paddingLeft: 12 }}>
@@ -88,53 +87,17 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 }
             `}</style>
 
-            {/* ═══ MASTER YOUR WORKFLOW (Clarity Section) ═══ */}
-            <section id="how-it-works" style={{ padding: '100px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
-                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-                    <div style={{ textAlign: 'center', marginBottom: 64 }} data-aos="fade-up">
-                        <div className="badge badge-purple" style={{ marginBottom: 16 }}>
-                            <i className="pi pi-map"></i> The Workflow
-                        </div>
-                        <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>
-                            From Data to Award in 3 Steps
-                        </h2>
-                        <p style={{ color: '#64748B', maxWidth: 600, margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.6 }}>
-                            We've eliminated the tedious manual work. Here is how CertifyPro turns your spreadsheets into prestigious credentials.
-                        </p>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40 }}>
-                        {[
-                            { step: '01', title: 'Import Participants', desc: 'Upload your CSV or Excel list. We handle any column format, from names to specialized scores.', icon: 'pi-file-import', color: '#3B82F6' },
-                            { step: '02', title: 'Map Your Template', desc: 'Drag and drop dynamic fields onto your certificate image. See your data update in real-time.', icon: 'pi-pencil', color: '#A855F7' },
-                            { step: '03', title: 'Bulk Generate', desc: 'CertifyPro blasts through thousands of records, generating secure, signed PDFs and sending them via email.', icon: 'pi-send', color: '#10B981' },
-                        ].map((s, i) => (
-                            <div key={i} data-aos="fade-up" data-aos-delay={i * 150} style={{ position: 'relative' }}>
-                                <div style={{ fontSize: '5rem', fontWeight: 900, color: '#F1F5F9', position: 'absolute', top: -30, left: -10, zIndex: 1, fontFamily: 'Outfit' }}>{s.step}</div>
-                                <div style={{ position: 'relative', zIndex: 2 }}>
-                                    <div style={{ width: 56, height: 56, borderRadius: 16, background: s.color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, boxShadow: `0 10px 20px ${s.color}30` }}>
-                                        <i className={`pi ${s.icon}`} style={{ fontSize: '1.5rem' }}></i>
-                                    </div>
-                                    <h3 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: 12, fontFamily: 'Outfit' }}>{s.title}</h3>
-                                    <p style={{ color: '#64748B', lineHeight: 1.7, fontSize: '0.95rem' }}>{s.desc}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             {/* ═══ FEATURES ═══ */}
             <section id="features" style={{ padding: '100px 24px', maxWidth: 1200, margin: '0 auto' }}>
                 <div style={{ textAlign: 'center', marginBottom: 64 }} data-aos="fade-up">
                     <div className="badge badge-blue" style={{ marginBottom: 16 }}>
-                        <i className="pi pi-th-large"></i> Why CertifyPro?
+                        <i className="pi pi-th-large"></i> Core Platform
                     </div>
                     <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>
-                        Built for Educational Integrity
+                        Enterprise-Grade Tooling
                     </h2>
                     <p style={{ color: '#64748B', maxWidth: 550, margin: '0 auto', fontSize: '1rem' }}>
-                        Everything you need to run a professional certification program, from assessment to tamper-proof distribution.
+                        Beyond simple generation — we provide an ecosystem that builds knowledge, validates skills, and rewards achievement.
                     </p>
                 </div>
 
@@ -222,7 +185,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                             </div>
                         </div>
                         <div style={{ textAlign: 'left' }}>
-                            <button className="btn btn-blue" onClick={onVerify}>
+                            <button className="btn btn-blue" onClick={() => window.location.href = '/verify'}>
                                 Try Verification Portal <i className="pi pi-arrow-right" style={{ marginLeft: 8 }}></i>
                             </button>
                         </div>
@@ -232,82 +195,6 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
 
             {/* ═══ HOW IT WORKS ═══ */}
             <HowItWorks />
-
-            {/* ═══ TRUST & SECURITY (From Guide) ═══ */}
-            <section id="trust" style={{ padding: '80px 24px', background: 'linear-gradient(180deg, #fff, #F8FAFF)' }}>
-                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-                    <div style={{ textAlign: 'center', marginBottom: 50 }} data-aos="fade-up">
-                        <div className="badge badge-blue" style={{ marginBottom: 16 }}>
-                            <i className="pi pi-shield"></i> Security & Privacy
-                        </div>
-                        <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>
-                            The Gold Standard of Integrity
-                        </h2>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
-                        {/* Security Layer Card */}
-                        <div className="card-premium" data-aos="fade-right" style={{ background: '#fff', border: '1px solid #E2E8F0' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(59,130,246,0.1)', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="pi pi-verified" style={{ fontSize: '1.2rem' }}></i>
-                                </div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>3-Layer Verification</h3>
-                            </div>
-                            <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
-                                Our proprietary 3-layer audit (Hash + Steganography + Registry) ensures every certificate is authentic and impossible to forge.
-                            </p>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                {['Cryptographic Fingerprint', 'Invisible Binary Metadata', 'Secure Registry Consensus'].map((t, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>
-                                        <i className="pi pi-check-circle" style={{ color: '#10B981' }}></i> {t}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Privacy Card */}
-                        <div className="card-premium" data-aos="fade-up" style={{ background: '#fff', border: '1px solid #E2E8F0' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(16,185,129,0.1)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="pi pi-trash" style={{ fontSize: '1.2rem' }}></i>
-                                </div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>60-Second Purge</h3>
-                            </div>
-                            <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
-                                Your privacy is our priority. We don't harvest data. Everything is purged from our servers 60 seconds after processing.
-                            </p>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                {['Zero Permanent Storage', 'Auto-Delete Triggers', 'End-to-End Encryption'].map((t, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>
-                                        <i className="pi pi-check-circle" style={{ color: '#10B981' }}></i> {t}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Mobile Studio Card */}
-                        <div className="card-premium" data-aos="fade-left" style={{ background: '#fff', border: '1px solid #E2E8F0' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(168,85,247,0.1)', color: '#A855F7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="pi pi-mobile" style={{ fontSize: '1.2rem' }}></i>
-                                </div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>Mobile Precision</h3>
-                            </div>
-                            <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
-                                Manage your entire certification ecosystem from your phone. Pixel-perfect mapping, even on small screens.
-                            </p>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                {['Touch-Optimized Mapping', 'Real-time Mobile Preview', 'One-Tap Generation'].map((t, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>
-                                        <i className="pi pi-check-circle" style={{ color: '#10B981' }}></i> {t}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* ═══ BENEFITS ═══ */}
             <BenefitsSection />
@@ -510,8 +397,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                     <div style={{ display: 'flex', gap: 32, fontSize: '0.9rem', color: '#64748B', fontWeight: 600 }}>
                         <span onClick={() => setShowPrivacy(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Privacy Policy</span>
                         <span onClick={() => setShowTerms(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Terms of Use</span>
-                        <span onClick={() => window.location.href = '/guide'} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>User Guide</span>
-                        <span onClick={onVerify} style={{ transition: 'color 0.2s', color: '#2563EB', cursor: 'pointer' }}>Verify Certificate</span>
+                        <span onClick={() => window.location.href = '/verify'} style={{ transition: 'color 0.2s', color: '#2563EB', cursor: 'pointer' }}>Verify Certificate</span>
                         <span onClick={() => setShowSecurity(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Security</span>
                     </div>
                     <div style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 500 }}>

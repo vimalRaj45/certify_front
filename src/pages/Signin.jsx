@@ -28,7 +28,7 @@ export default function Signin() {
       }
       localStorage.setItem("user", JSON.stringify(user));
 
-      fetch(" https://certify-vsgrps.onrender.com /save-user", {
+      fetch(" https://certify-open.onrender.com /save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -392,24 +392,49 @@ export default function Signin() {
           </span>
         </p>
 
-        {/* Support Link */}
+        {/* Support & Public Verification Links */}
         <div
           style={{
             marginTop: 40,
             paddingTop: 24,
             borderTop: "1px solid #F1F5F9",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 6,
-            color: "#64748B",
-            fontSize: "0.85rem",
-            fontWeight: 600,
+            gap: 16,
           }}
         >
-          <i className="pi pi-question-circle" style={{ fontSize: "0.9rem" }} />
-          <span>Need help? Contact support</span>
+          <button 
+            onClick={() => window.location.href = '/verify'}
+            style={{
+              background: 'rgba(59, 130, 246, 0.08)',
+              color: '#3B82F6',
+              border: '1px solid rgba(59, 130, 246, 0.2)',
+              borderRadius: 14,
+              padding: '10px 24px',
+              fontSize: '0.85rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              transition: 'all 0.2s ease',
+              width: '100%'
+            }}
+            onMouseOver={e => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.12)'; }}
+            onMouseOut={e => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.08)'; }}
+          >
+            <i className="pi pi-verified" style={{ fontSize: '1rem' }} />
+            Verify an Existing Certificate
+          </button>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#64748B", fontSize: "0.85rem", fontWeight: 600 }}>
+            <i className="pi pi-question-circle" style={{ fontSize: "0.9rem" }} />
+            <span>Need help? Contact support</span>
+          </div>
         </div>
+
       </div>
 
       <TermsModal visible={showTerms} onHide={() => setShowTerms(false)} />
