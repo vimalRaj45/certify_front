@@ -14,14 +14,16 @@ import Leaderboard from './pages/quiz/Leaderboard';
 import History from './pages/quiz/History';
 import Analytics from './pages/quiz/Analytics';
 import StudentResults from './pages/quiz/StudentResults';
+import StartupCheck from './components/StartupCheck';
 
 function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-center" />
-      <Routes>
-        {/* Main CertifyPro Routes */}
-        <Route path="/" element={<CertifyStudio />} />
+      <StartupCheck>
+        <Routes>
+          {/* Main CertifyPro Routes */}
+          <Route path="/" element={<CertifyStudio />} />
         <Route path="/verify" element={<VerificationPage onBack={() => window.location.href = '/'} />} />
 
         {/* Quiz System Routes */}
@@ -34,6 +36,7 @@ function App() {
         <Route path="/quiz/history" element={<History />} />
         <Route path="/quiz/analytics/:id" element={<Analytics />} />
       </Routes>
+      </StartupCheck>
     </BrowserRouter>
   );
 }
