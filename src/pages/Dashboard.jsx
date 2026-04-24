@@ -1483,10 +1483,43 @@ function Home() {
                                         <i className="pi pi-check-circle" style={{ fontSize: '1.8rem' }}></i>
                                     </div>
                                     <h3 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.5rem', marginBottom: 8, letterSpacing: '-0.01em' }}>Batch Generated! 🎉</h3>
-                                    <p style={{ opacity: 0.7, marginBottom: 24, fontSize: '0.85rem', maxWidth: 280, margin: '0 auto 24px' }}>Your batch of certificates is ready for delivery.</p>
+                                    <p style={{ opacity: 0.9, marginBottom: 20, fontSize: '0.85rem', maxWidth: 280, margin: '0 auto 20px', lineHeight: 1.5 }}>
+                                        Your certificates are digitally signed and secured.
+                                    </p>
+
+                                    <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px', marginBottom: 24, textAlign: 'left', border: '1px solid rgba(255,255,255,0.2)' }}>
+                                        <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, opacity: 0.9 }}>
+                                            Security & Sharing Guide
+                                        </div>
+                                        
+                                        <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+                                            <i className="pi pi-google" style={{ color: '#fff', fontSize: '1rem', marginTop: 2 }}></i>
+                                            <div>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 700 }}>1. Upload to Google Drive</div>
+                                                <div style={{ fontSize: '0.7rem', opacity: 0.8, lineHeight: 1.4 }}>For maximum security, upload these PDFs to Drive. A public link is the easiest way for recruiters to verify.</div>
+                                            </div>
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+                                            <i className="pi pi-linkedin" style={{ color: '#fff', fontSize: '1rem', marginTop: 2 }}></i>
+                                            <div>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 700 }}>2. Share on LinkedIn</div>
+                                                <div style={{ fontSize: '0.7rem', opacity: 0.8, lineHeight: 1.4 }}>Add these to the "Licenses & certifications" section of your profile.</div>
+                                            </div>
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: 10 }}>
+                                            <i className="pi pi-ban" style={{ color: '#FCA5A5', fontSize: '1rem', marginTop: 2 }}></i>
+                                            <div>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#FCA5A5' }}>3. Do Not Modify</div>
+                                                <div style={{ fontSize: '0.7rem', opacity: 0.8, lineHeight: 1.4, color: '#FECACA' }}>Editing or compressing the files will break their cryptographic seal.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <button onClick={handleDownload} style={{ width: '100%', maxWidth: 280, background: 'rgba(255,255,255,0.95)', color: '#065F46', border: 'none', borderRadius: 16, padding: '14px 20px', fontWeight: 900, fontSize: '0.92rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 8px 30px rgba(0,0,0,0.1)' }}>
                                         <i className="pi pi-download"></i>
-                                        Download ZIP Package
+                                        Download Zip Archive
                                     </button>
                                 </div>
                             </div>
