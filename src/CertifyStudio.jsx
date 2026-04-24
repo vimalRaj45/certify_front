@@ -11,6 +11,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Avatar } from 'primereact/avatar';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Draggable from 'react-draggable';
@@ -113,7 +114,18 @@ function CertifyStudio() {
     const [fields, setFields] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [progress, setProgress] = useState(null);
+    const [connStatus, setConnStatus] = useState('connecting');
     const [queueState, setQueueState] = useState({ activeJob: null, queue: [] });
+
+    useEffect(() => {
+        if (progress) {
+            console.log("📈 [UI State] Progress Updated:", progress);
+        }
+    }, [progress]);
+
+    useEffect(() => {
+        console.log("📡 [UI State] Connection Status:", connStatus);
+    }, [connStatus]);
     const [showApp, setShowApp] = useState(false);
 
     const [genKey, setGenKey] = useState(null);
@@ -125,6 +137,7 @@ function CertifyStudio() {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent));
     const [viewModeSelected, setViewModeSelected] = useState(false);
     const [eventSource, setEventSource] = useState(null);
+    const [prodLogs, setProdLogs] = useState([]);
 
     const [useCustomSize, setUseCustomSize] = useState(false);
     const [customWidth, setCustomWidth] = useState(600);
@@ -132,6 +145,15 @@ function CertifyStudio() {
     const [user, setUser] = useState(null);
     const [showQuizImport, setShowQuizImport] = useState(false);
     const [availableQuizzes, setAvailableQuizzes] = useState([]);
+    const [sendEmail, setSendEmail] = useState(true);
+
+    const hasEmailColumn = React.useMemo(() => {
+        if (!csvData || !csvData.columns) return false;
+        return csvData.columns.some(col => {
+            const lower = col.toLowerCase();
+            return lower.includes('email') || lower.includes('mail') || lower.includes('recipient');
+        });
+    }, [csvData]);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -364,16 +386,22 @@ function CertifyStudio() {
         }
     };
 
-    const startGeneration = async () => {
+    const executeGeneration = async () => {
+        console.log("🚀 [UI] executeGeneration triggered");
         if (!csvData || !templateUrl) return;
         setIsGenerating(true);
+        setProdLogs([]); // Reset logs
         setProgress({ stage: 'starting', task: 'Initializing...' });
         setShowDownload(false);
         setQueueState({ activeJob: null, queue: [] });
 
         try {
             const res = await axios.post(`${API_BASE}/generate`, {
-                participants: csvData.participants, templateUrl, publicId, fields,
+                participants: csvData.participants,
+                templateUrl,
+                publicId,
+                fields,
+                force_mass_email: sendEmail,
                 customDimensions: useCustomSize ? { width: customWidth, height: customHeight } : null
             });
             const key = res.data.key;
@@ -386,13 +414,28 @@ function CertifyStudio() {
             const es = new EventSource(`${API_BASE}/progress?key=${key}`);
             setEventSource(es);
 
+            es.onopen = () => {
+                console.log("✅ [SSE] Connection Established");
+                setConnStatus('connected');
+            };
+
+            es.onerror = (err) => {
+                console.error("❌ [SSE] Connection Error:", err);
+                setConnStatus('error');
+            };
+
             es.onmessage = (e) => {
-                if (e.data === 'connected') return;
+                if (e.data === 'connected') {
+                    console.log("📨 [SSE-RAW]:", e.data);
+                    return;
+                }
 
                 try {
                     const data = JSON.parse(e.data);
 
                     if (data.type === 'ping') return;
+
+                    console.log("📨 [SSE-RAW]:", e.data);
 
                     if (data.type === 'queue_update') {
                         setQueueState(data.data);
@@ -410,17 +453,38 @@ function CertifyStudio() {
                                 estimatedWaitTime: userPosition * 30
                             });
                         } else if (data.data.activeJob && data.data.activeJob.key === key) {
+                            const jobProgress = data.data.activeJob.progress;
                             setProgress(prev => ({
                                 ...prev,
-                                stage: 'processing',
-                                task: prev?.task || 'Processing your certificates...'
+                                ...jobProgress,
+                                stage: jobProgress?.stage || prev?.stage || 'processing',
+                                task: jobProgress?.task || prev?.task || 'Processing...'
                             }));
+
+                            if (jobProgress?.stage === 'completed' && !showDownload) {
+                                const dUrl = jobProgress.downloadUrl;
+                                if (dUrl) {
+                                    setDownloadUrl(`${API_BASE}${dUrl}`);
+                                    setShowDownload(true);
+                                    setIsGenerating(false);
+                                    es.close();
+                                    setEventSource(null);
+                                }
+                            }
                         }
                         return;
                     }
 
                     setProgress(prev => {
                         const newProgress = { ...prev, ...data };
+
+                        // Add to live logs if there is a task
+                        if (data.task && data.task !== prev?.task) {
+                            setProdLogs(prevLogs => [
+                                { msg: data.task, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) },
+                                ...prevLogs.slice(0, 4) // Keep last 5
+                            ]);
+                        }
 
                         if (data.stage === 'processing' && data.percent !== undefined) {
                             setQueueState(qs => ({
@@ -466,6 +530,30 @@ function CertifyStudio() {
         } catch (err) {
             setIsGenerating(false);
             toast.error(err.message);
+        }
+    };
+
+    const confirmStart = () => {
+        if (hasEmailColumn && sendEmail) {
+            confirmDialog({
+                message: `Are you ready to finalize and email certificates to all ${csvData.participants.length} participants?`,
+                header: 'Mass Email Production Confirmation',
+                icon: 'pi pi-envelope',
+                acceptLabel: 'Yes, Confirm & Send',
+                rejectLabel: 'Cancel',
+                accept: () => executeGeneration(),
+                reject: () => { }
+            });
+        } else {
+            confirmDialog({
+                message: `Are you ready to generate ${csvData.participants.length} certificates for bulk download?`,
+                header: 'Bulk Production Confirmation',
+                icon: 'pi pi-file-pdf',
+                acceptLabel: 'Start Generation',
+                rejectLabel: 'Cancel',
+                accept: () => executeGeneration(),
+                reject: () => { }
+            });
         }
     };
 
@@ -521,6 +609,7 @@ function CertifyStudio() {
     return (
         <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
             <Toaster position="top-center" />
+            <ConfirmDialog />
 
             <div className="main-content" style={{ marginLeft: 0 }}>
                 <Dialog
@@ -628,7 +717,7 @@ function CertifyStudio() {
 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10 }}>
                         {isGenerating && (
-                            <Button icon="pi pi-stop-circle" size="small" className="p-button-danger p-button-text" onClick={stopGeneration} style={{ borderRadius: 50 }} />
+                            <Button icon="pi pi-stop-circle" size="small" className="p-button-danger p-button-text" onClick={stopGeneration} style={{ borderRadius: 50, color: '#EF4444' }} />
                         )}
 
                         <div style={{ height: 32, width: 1, background: 'var(--border)', margin: '0 8px' }} className="mobile-hide"></div>
@@ -801,6 +890,24 @@ function CertifyStudio() {
                                         <div style={{ fontSize: '0.62rem', fontWeight: 900, color: 'var(--purple)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Step 2 — CONFIGURE</div>
                                         <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, fontFamily: 'var(--font-h)', color: 'var(--text)' }}>Dynamic Field Mapping</h3>
                                     </div>
+                                    {hasEmailColumn && (
+                                        <div style={{ background: 'rgba(59,130,246,0.04)', borderRadius: 14, padding: '16px 20px', border: '1px solid rgba(59,130,246,0.1)', marginTop: 20, marginBottom: 10 }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                                    <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <i className="pi pi-envelope" style={{ color: '#3B82F6', fontSize: '0.8rem' }}></i>
+                                                    </div>
+                                                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: 'var(--text)', fontFamily: 'Outfit' }}>Auto-Email Delivery</div>
+                                                </div>
+                                                <InputSwitch checked={sendEmail} onChange={(e) => setSendEmail(e.value)} />
+                                            </div>
+                                            <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
+                                                {sendEmail
+                                                    ? `System will email certificates to all ${csvData.participants.length} recipients. Ensure data contains valid email addresses.`
+                                                    : "Email delivery is disabled. System will only generate certificates for local bulk download."}
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div style={{ marginBottom: 16 }}>
@@ -858,12 +965,14 @@ function CertifyStudio() {
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                     <button className="action-btn-secondary" onClick={generatePreview} disabled={isPreviewing}>
                                         <i className="pi pi-eye" style={{ fontSize: '1rem' }}></i>
-                                        {isPreviewing ? 'Generating Preview...' : 'Preview First Certificate'}
+                                        {isPreviewing ? 'Preparing Sample...' : 'Generate Sample Preview'}
                                     </button>
-                                    <button className="action-btn-primary" onClick={startGeneration} disabled={isGenerating}>
-                                        <i className="pi pi-bolt" style={{ fontSize: '1rem' }}></i>
-                                        {isGenerating ? 'Production Running...' : 'Run Full Production'}
-                                        {!isGenerating && csvData && <span style={{ fontSize: '0.75rem', opacity: 0.8, marginLeft: 4 }}>({csvData.participants.length} certs)</span>}
+                                    <button className="action-btn-primary"
+                                        onClick={confirmStart}
+                                        disabled={isGenerating || fields.length === 0}
+                                        style={{ background: fields.length === 0 ? 'rgba(255,255,255,0.05)' : 'var(--aurora-gradient)', opacity: (isGenerating || fields.length === 0) ? 0.5 : 1 }}>
+                                        <i className={`pi ${isGenerating ? 'pi-spin pi-spinner' : 'pi-bolt'}`} style={{ fontSize: '1rem' }}></i>
+                                        {isGenerating ? 'Production in Progress...' : 'Run Full Production'}
                                     </button>
                                 </div>
                             </div>
@@ -1081,103 +1190,9 @@ function CertifyStudio() {
                             </div>
                         )}
 
-                        {/* Progress Panel */}
-                        {isGenerating && (
-                            <div style={{
-                                position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                                background: 'rgba(255, 255, 255, 0.75)',
-                                backdropFilter: 'blur(30px) saturate(180%)', zIndex: 9999,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                padding: 20
-                            }}>
-                                <div style={{
-                                    width: '100%', maxWidth: 480, background: 'rgba(255, 255, 255, 0.95)',
-                                    padding: '24px 20px', borderRadius: 28, border: '1px solid rgba(37, 99, 235, 0.15)',
-                                    boxShadow: '0 25px 60px -12px rgba(37, 99, 235, 0.15)',
-                                    textAlign: 'center', color: '#334155'
-                                }}>
-                                    {!progress || progress.stage === 'starting' ? (
-                                        <div>
-                                            <i className="pi pi-cog pi-spin" style={{ fontSize: '2.5rem', color: '#2563EB' }}></i>
-                                            <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.4rem', marginTop: 16 }}>Engine Hot-Start</h2>
-                                            <p style={{ color: '#64748b', fontSize: '0.85rem' }}>Provisioning your dedicated industrial cloud</p>
-                                        </div>
-                                    ) : progress.stage === 'queued' ? (
-                                        <div>
-                                            <div style={{ width: 64, height: 64, background: 'rgba(37,99,235,0.04)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-                                                <i className="pi pi-clock" style={{ fontSize: '1.8rem', color: '#2563EB' }}></i>
-                                            </div>
-                                            <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.3rem' }}>Priority Waitlist</h2>
-                                            {progress.position && (
-                                                <div style={{ fontSize: '4.2rem', fontWeight: 900, color: '#2563EB', margin: '4px 0', fontFamily: 'Outfit' }}>#{progress.position}</div>
-                                            )}
-                                            <p style={{ color: '#64748b', fontSize: '0.8rem', fontWeight: 700 }}>
-                                                {progress.position === 1 ? "You are NEXT in line!" : `Position #${progress.position} in queue`}
-                                            </p>
-                                            {progress.activeJob && (
-                                                <div style={{ background: 'rgba(37,99,235,0.03)', borderRadius: 20, padding: 16, marginTop: 16 }}>
-                                                    <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#2563EB', textTransform: 'uppercase', marginBottom: 8 }}>
-                                                        Currently Processing
-                                                    </div>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', fontWeight: 800, marginBottom: 8 }}>
-                                                        <span>{progress.activeJob.progress?.percent || 0}% Done</span>
-                                                        <span>~{progress.activeJob.progress?.estimatedTimeRemaining || 'Calculating'}s left</span>
-                                                    </div>
-                                                    <ProgressBar value={progress.activeJob.progress?.percent || 0} showValue={false} style={{ height: 6, borderRadius: 50 }} />
-                                                    <div style={{ fontSize: '0.6rem', color: '#94A3B8', marginTop: 10 }}>Your job will start automatically after this.</div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <div style={{ marginBottom: 32 }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                                                    <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#2563EB', textTransform: 'uppercase' }}>{progress.task || 'Processing'}</span>
-                                                    <span style={{ fontSize: '2.4rem', fontWeight: 900, fontFamily: 'Outfit' }}>{progress.percent || 0}%</span>
-                                                </div>
-                                                <ProgressBar value={progress.percent || 0} showValue={false} style={{ height: 10, borderRadius: 50 }} />
-                                            </div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, background: 'rgba(255,255,255,0.4)', borderRadius: 20, padding: 24, marginBottom: 24 }}>
-                                                <div>
-                                                    <div style={{ fontSize: '0.6rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Records</div>
-                                                    <div style={{ fontSize: '1.3rem', fontWeight: 800, fontFamily: 'Outfit' }}>{progress.current || 0} / {progress.total || 0}</div>
-                                                </div>
-                                                <div>
-                                                    <div style={{ fontSize: '0.6rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Efficiency</div>
-                                                    <div style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'Outfit', color: '#2563EB' }}>
-                                                        {progress.estimatedTimeRemaining > 0 ? (
-                                                            progress.estimatedTimeRemaining > 60 ?
-                                                                `${Math.floor(progress.estimatedTimeRemaining / 60)}m ${progress.estimatedTimeRemaining % 60}s` :
-                                                                `${progress.estimatedTimeRemaining}s`
-                                                        ) : "Stabilizing"}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                    <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(0,0,0,0.04)' }}>
-                                        <div style={{ width: 6, height: 6, background: '#2563EB', borderRadius: '50%', margin: '0 auto', animation: 'pulse 1.5s infinite' }}></div>
-                                        <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase' }}>PRO PRODUCTION SUITE</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        {/* Progress UI Removed - Consolidated at bottom */}
 
-                        {/* Completion Card */}
-                        {showDownload && (
-                            <div data-aos="zoom-in" style={{ borderRadius: 24, overflow: 'hidden' }}>
-                                <div style={{ background: 'var(--aurora-gradient)', padding: '32px 20px', textAlign: 'center', color: 'white' }}>
-                                    <div style={{ width: 64, height: 64, background: 'rgba(255,255,255,0.15)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                                        <i className="pi pi-check-circle" style={{ fontSize: '1.8rem' }}></i>
-                                    </div>
-                                    <h3 style={{ fontFamily: 'var(--font-h)', fontWeight: 900, fontSize: '1.5rem', marginBottom: 8 }}>Batch Generated! 🎉</h3>
-                                    <p style={{ opacity: 0.7, marginBottom: 24 }}>Your batch of certificates is ready for delivery.</p>
-                                    <button onClick={startGeneration} style={{ background: 'rgba(255,255,255,0.95)', color: 'var(--bg-primary)', border: 'none', borderRadius: 16, padding: '14px 20px', fontWeight: 900, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-                                        <i className="pi pi-download"></i> Download ZIP Package
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                        {/* Completion Card Removed - Using Dialog instead */}
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
                             <div className="security-card" style={{ background: 'var(--bg-card)', borderRadius: 20, padding: 20, border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -1265,52 +1280,7 @@ function CertifyStudio() {
                 </div>
             )}
 
-            {/* Loader for Certificate Generation */}
-            {(isGenerating && (!progress || progress.stage === 'starting')) && (
-                <div style={{
-                    position: 'fixed',
-                    inset: 0,
-                    zIndex: 9999,
-                    background: 'rgba(7,13,31,0.8)',
-                    backdropFilter: 'blur(12px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}>
-                    <div style={{
-                        textAlign: 'center',
-                        padding: '50px 70px',
-                        background: 'var(--bg-card)',
-                        borderRadius: '24px',
-                        border: '1px solid var(--border)',
-                        boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
-                        maxWidth: '420px'
-                    }}>
-                        <ProgressSpinner
-                            style={{ width: '60px', height: '60px' }}
-                            strokeWidth="4"
-                        />
-                        <h3 style={{
-                            fontFamily: 'Outfit',
-                            fontWeight: 900,
-                            marginTop: 24,
-                            fontSize: '1.6rem'
-                        }}>
-                            Generating Certificates...
-                        </h3>
-                        <p style={{
-                            color: 'var(--text-muted)',
-                            fontSize: '0.95rem',
-                            marginTop: 12,
-                            lineHeight: 1.6
-                        }}>
-                            Your certificates are being generated. During peak usage, requests may be queued.
-                            Your batch will be processed automatically, and the ZIP file will be ready for download once complete.
-                            Please stay on this page.
-                        </p>
-                    </div>
-                </div>
-            )}
+            {/* consolidated Loader removed - added below */}
             <Dialog header="Import Quiz Results" visible={showQuizImport} onHide={() => setShowQuizImport(false)} style={{ width: '90vw', maxWidth: 500 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <p style={{ fontSize: '0.9rem', color: '#64748b' }}>Select a quiz to import all participants who have completed the assessment.</p>
@@ -1341,6 +1311,127 @@ function CertifyStudio() {
                 `}</style>
             </Dialog>
 
+            <Dialog header="🎉 Batch Complete!" visible={showDownload} onHide={() => setShowDownload(false)} style={{ width: '90vw', maxWidth: 450 }} closable={false}>
+                <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                    <div style={{ width: 70, height: 70, background: 'rgba(16,185,129,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                        <i className="pi pi-check-circle" style={{ fontSize: '2.5rem', color: '#10B981' }}></i>
+                    </div>
+                    <h3 style={{ fontFamily: 'Outfit', fontWeight: 900, marginBottom: 12 }}>Production Successful!</h3>
+                    <div style={{ fontSize: '0.95rem', color: '#64748B', lineHeight: 1.6, marginBottom: 25 }}>
+                        All certificates have been generated and secured.
+                        {progress?.emailSuccessCount > 0 && (
+                            <div style={{ marginTop: 10, padding: 12, background: 'rgba(59,130,246,0.05)', borderRadius: 12, border: '1px solid rgba(59,130,246,0.1)' }}>
+                                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#3B82F6', textTransform: 'uppercase', marginBottom: 4 }}>Email Delivery Audit</div>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--text)', fontWeight: 600 }}>
+                                    ✅ {progress.emailSuccessCount} Successfully Sent
+                                    {progress.emailFailCount > 0 && <span style={{ color: '#EF4444', marginLeft: 10 }}>❌ {progress.emailFailCount} Failed</span>}
+                                </div>
+                            </div>
+                        )}
+                        <div style={{ marginTop: 10 }}>You can now download the complete ZIP archive below.</div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        <a href={downloadUrl} style={{ textDecoration: 'none' }} onClick={() => setShowDownload(false)}>
+                            <Button label="Download Certificates (ZIP)" icon="pi pi-download" className="w-full" style={{ background: '#10B981', border: 'none', borderRadius: 12, padding: '15px' }} />
+                        </a>
+                        <Button label="Close" className="p-button-text p-button-secondary w-full" onClick={() => setShowDownload(false)} />
+                    </div>
+                </div>
+            </Dialog>
+
+            {/* Consolidated Production Progress Modal */}
+            {isGenerating && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+                    background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(12px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999
+                }}>
+                    <div style={{
+                        textAlign: 'center', padding: '50px 70px', background: 'var(--bg-card)',
+                        borderRadius: '24px', border: '1px solid var(--border)',
+                        boxShadow: '0 25px 60px rgba(0,0,0,0.4)', maxWidth: '440px', width: '90%'
+                    }}>
+                        <ProgressSpinner style={{ width: '64px', height: '64px' }} strokeWidth="4" />
+
+                        <h3 style={{ fontFamily: 'Outfit', fontWeight: 900, marginTop: 24, fontSize: '1.6rem', color: 'var(--text)' }}>
+                            {progress?.stage === 'queued' ? 'In Production Queue' : 'Generating Certificates...'}
+                        </h3>
+
+                        <div style={{ marginTop: 24, width: '100%', textAlign: 'left' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                                <span style={{ color: 'var(--accent)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    {progress?.stage || 'INITIALIZING'}
+                                </span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(0,0,0,0.2)', padding: '4px 10px', borderRadius: 20 }}>
+                                    <div style={{
+                                        width: 8, height: 8, borderRadius: '50%',
+                                        background: connStatus === 'connected' ? '#10B981' : connStatus === 'error' ? '#EF4444' : '#F59E0B',
+                                        boxShadow: connStatus === 'connected' ? '0 0 10px #10B981' : 'none'
+                                    }}></div>
+                                    <span style={{ fontSize: '0.65rem', color: 'white', fontWeight: 800 }}>
+                                        {connStatus.toUpperCase()}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div style={{ height: 10, background: 'rgba(255,255,255,0.05)', borderRadius: 20, overflow: 'hidden', border: '1px solid var(--border)', marginBottom: 12 }}>
+                                <div style={{
+                                    height: '100%',
+                                    width: `${progress?.percent || 0}%`,
+                                    background: 'var(--aurora-gradient)',
+                                    transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)'
+                                }}></div>
+                            </div>
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontSize: '0.85rem', color: 'var(--text)', fontWeight: 600 }}>
+                                    {progress?.task || 'Connecting to secure engine...'}
+                                </span>
+                                {progress?.percent !== undefined && (
+                                    <span style={{ fontSize: '0.85rem', color: 'var(--accent)', fontWeight: 900 }}>
+                                        {progress.percent}%
+                                    </span>
+                                )}
+                            </div>
+
+                            {progress?.current !== undefined && (
+                                <div style={{ marginTop: 8, fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700 }}>
+                                    Batch Progress: {progress.current} / {progress.total}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Live Production Log */}
+                        <div style={{ marginTop: 24, background: 'rgba(0,0,0,0.2)', borderRadius: 12, padding: 12, border: '1px solid var(--border)', textAlign: 'left' }}>
+                            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', marginBottom: 8, letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <i className="pi pi-list" style={{ fontSize: '0.7rem' }}></i> Production Log
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                {prodLogs.length > 0 ? prodLogs.map((log, idx) => (
+                                    <div key={idx} style={{ fontSize: '0.75rem', color: idx === 0 ? 'var(--text)' : 'var(--text-muted)', display: 'flex', justifyContent: 'space-between', opacity: 1 - (idx * 0.2) }}>
+                                        <span style={{ fontWeight: idx === 0 ? 600 : 400 }}>{log.msg}</span>
+                                        <span style={{ fontSize: '0.65rem', opacity: 0.5 }}>{log.time}</span>
+                                    </div>
+                                )) : (
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Initializing stream...</div>
+                                )}
+                            </div>
+                        </div>
+
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: 30, lineHeight: 1.6 }}>
+                            {progress?.stage === 'queued'
+                                ? "Waiting for your turn in the high-performance cluster..."
+                                : "Documents are being digitally signed and secured. Please keep this tab open."}
+                        </p>
+
+                        <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--border)' }}>
+                            <Button label="Cancel Production" icon="pi pi-times" className="p-button-text p-button-danger p-button-sm" onClick={stopGeneration} />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

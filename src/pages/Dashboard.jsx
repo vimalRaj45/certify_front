@@ -139,7 +139,7 @@ function Home() {
     const [customWidth, setCustomWidth] = useState(600);
     const [customHeight, setCustomHeight] = useState(400);
 
-    const [sendEmail, setSendEmail] = useState(false);
+    const [sendEmail, setSendEmail] = useState(true);
     const hasEmailColumn = useMemo(() => {
         if (!csvData || !csvData.columns) return false;
         const found = csvData.columns.some(col => {
@@ -360,7 +360,7 @@ function Home() {
                 templateUrl,
                 publicId,
                 fields,
-                force_mass_email: true, // HARDCODED TRUE FOR TESTING
+                force_mass_email: shouldSendEmail,
                 customDimensions: useCustomSize ? { width: customWidth, height: customHeight } : null
             };
             console.log("📤 [FRONTEND] FINAL PAYLOAD DUMP:", JSON.stringify(payload, null, 2));
@@ -426,7 +426,7 @@ function Home() {
     };
 
     const startGeneration = () => {
-        if (hasEmailColumn) {
+        if (hasEmailColumn && sendEmail) {
             confirmDialog({
                 message: `Are you ready to finalize and email certificates to all ${csvData.participants.length} participants?`,
                 header: 'Mass Email Production Confirmation',
@@ -475,10 +475,6 @@ function Home() {
     /* ═══ MAIN CONSOLE ═══ */
     return (
         <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
-            {/* CACHE BREAKER BANNER */}
-            <div style={{ background: '#EF4444', color: 'white', textAlign: 'center', fontSize: '10px', fontWeight: 900, padding: '2px', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999 }}>
-                V2.0 DEBUG MODE ACTIVE - EMAIL FLAG HARDCODED
-            </div>
             <Toaster position="top-center" />
 
             <div className="main-content" style={{ marginLeft: 0 }}>
@@ -898,6 +894,25 @@ function Home() {
                                     </div>
                                 </div>
 
+                                {hasEmailColumn && (
+                                    <div style={{ background: 'rgba(59,130,246,0.04)', borderRadius: 14, padding: '16px 20px', border: '1px solid rgba(59,130,246,0.1)', marginTop: 24 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    <i className="pi pi-envelope" style={{ color: '#2563EB', fontSize: '0.8rem' }}></i>
+                                                </div>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0F172A', fontFamily: 'Outfit' }}>Auto-Email Delivery</div>
+                                            </div>
+                                            <InputSwitch checked={sendEmail} onChange={(e) => setSendEmail(e.value)} />
+                                        </div>
+                                        <p style={{ fontSize: '0.7rem', color: '#64748B', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
+                                            {sendEmail
+                                                ? `System will email certificates to all ${csvData.participants.length} recipients. Ensure your CSV has valid email addresses.`
+                                                : "Email delivery is disabled. System will only generate certificates for local download."}
+                                        </p>
+                                    </div>
+                                )}
+
                                 {fields.length > 0 && (
                                     <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid #F1F5F9' }}>
                                         <DataTable value={fields} size="small" scrollable scrollHeight="200px"
@@ -936,21 +951,6 @@ function Home() {
                                         <div><div style={{ fontSize: '0.6rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Est. Time</div><div style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit', color: '#3B82F6' }}>~{Math.max(3, Math.ceil(csvData.participants.length * 0.3))}s</div></div>
                                     </div>
                                 )}
-
-                                {hasEmailColumn && (
-                                    <div style={{ background: 'rgba(59,130,246,0.04)', borderRadius: 14, padding: '16px 20px', border: '1px solid rgba(59,130,246,0.1)', marginBottom: 16 }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                                            <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                <i className="pi pi-lock" style={{ color: '#2563EB', fontSize: '0.8rem' }}></i>
-                                            </div>
-                                            <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0F172A', fontFamily: 'Outfit' }}>Delivery Authorization <span style={{ fontSize: '0.6rem', color: '#2563EB', opacity: 0.6 }}>v2.0</span></div>
-                                        </div>
-                                        <p style={{ fontSize: '0.7rem', color: '#64748B', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
-                                            The system detected <span style={{ color: '#2563EB', fontWeight: 800 }}>{csvData.participants.length}</span> potential recipients. You will be prompted to grant final delivery permission after clicking the button below.
-                                        </p>
-                                    </div>
-                                )}
-
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                     <button className="action-btn-secondary" onClick={generatePreview} disabled={isPreviewing}>
