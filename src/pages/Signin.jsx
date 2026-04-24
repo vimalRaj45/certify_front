@@ -42,7 +42,14 @@ export default function Signin() {
         picture: tempUser.picture,
         user_type: roleId
       }),
-    }).catch(() => { });
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.token) {
+        localStorage.setItem("quiz_token", data.token);
+      }
+    })
+    .catch(() => { });
 
     setTimeout(() => {
       window.location.href = "/";

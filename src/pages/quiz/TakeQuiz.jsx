@@ -78,6 +78,9 @@ const TakeQuiz = () => {
         currentUser = regData.user;
         setUser(currentUser);
         localStorage.setItem('quiz_user', JSON.stringify(currentUser));
+        if (regData.token) {
+          localStorage.setItem('quiz_token', regData.token);
+        }
       }
 
       if (quiz.access_key && !accessKeyInput) {
@@ -114,8 +117,19 @@ const TakeQuiz = () => {
   };
 
   const handleAnswer = (option) => {
+    const q = questions[currentIndex];
     const newAnswers = [...answers];
-    newAnswers[currentIndex] = option;
+    
+    if (q.type === 'multiple') {
+      const currentSelected = newAnswers[currentIndex] ? newAnswers[currentIndex].split(',').filter(a => a) : [];
+      if (currentSelected.includes(option)) {
+        newAnswers[currentIndex] = currentSelected.filter(a => a !== option).sort().join(',');
+      } else {
+        newAnswers[currentIndex] = [...currentSelected, option].sort().join(',');
+      }
+    } else {
+      newAnswers[currentIndex] = option;
+    }
     setAnswers(newAnswers);
   };
 
@@ -305,19 +319,31 @@ const TakeQuiz = () => {
                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {q.type === 'mcq' || q.type === 'multiple' ? (
                     q.options.map((opt, i) => {
-                      const isSelected = answers[currentIndex] === opt;
+                      const isSelected = q.type === 'multiple' 
+                        ? (answers[currentIndex] || '').split(',').includes(opt)
+                        : answers[currentIndex] === opt;
+                      
                       return (
                         <div key={i} 
                              onClick={() => handleAnswer(opt)}
                              style={{ 
-                               padding: 18, borderRadius: 15, 
-                               background: isSelected ? 'rgba(37,99,235,0.08)' : 'rgba(255,255,255,0.02)', 
-                               border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
-                               cursor: 'pointer', transition: 'all 0.2s'
+                                padding: 18, borderRadius: 15, 
+                                background: isSelected ? 'rgba(37,99,235,0.08)' : 'rgba(255,255,255,0.02)', 
+                                border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
+                                cursor: 'pointer', transition: 'all 0.2s'
                              }} className="option-hover">
                            <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-                              <div style={{ width: 24, height: 24, borderRadius: '50%', border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--text-muted)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                 {isSelected && <div style={{ width: 12, height: 12, borderRadius: '50%', background: 'var(--accent)' }}></div>}
+                              <div style={{ 
+                                width: 24, height: 24, 
+                                borderRadius: q.type === 'mcq' ? '50%' : '6px', 
+                                border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--text-muted)'}`, 
+                                display: 'flex', alignItems: 'center', justifyContent: 'center' 
+                              }}>
+                                 {isSelected && (
+                                   q.type === 'mcq' 
+                                    ? <div style={{ width: 12, height: 12, borderRadius: '50%', background: 'var(--accent)' }}></div>
+                                    : <i className="pi pi-check" style={{ fontSize: '0.8rem', color: 'var(--accent)' }}></i>
+                                 )}
                               </div>
                               <span style={{ fontWeight: 600, color: isSelected ? 'var(--text)' : 'var(--text-secondary)' }}>{opt}</span>
                            </div>
