@@ -1519,7 +1519,7 @@ function Home() {
 
                                     <button onClick={handleDownload} style={{ width: '100%', maxWidth: 280, background: 'rgba(255,255,255,0.95)', color: '#065F46', border: 'none', borderRadius: 16, padding: '14px 20px', fontWeight: 900, fontSize: '0.92rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 8px 30px rgba(0,0,0,0.1)' }}>
                                         <i className="pi pi-download"></i>
-                                        Download Zip Archive
+                                        Your Zip Will be dowloaded
                                     </button>
                                 </div>
                             </div>
