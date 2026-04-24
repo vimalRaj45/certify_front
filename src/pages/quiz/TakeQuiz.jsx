@@ -377,30 +377,20 @@ const TakeQuiz = () => {
   if (isSubmitted && result) {
     return (
       <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-         <Card style={{ maxWidth: 500, width: '100%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 30, textAlign: 'center', padding: 20, boxShadow: 'var(--shadow-card)' }}>
+          <Card style={{ maxWidth: 500, width: '100%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 30, textAlign: 'center', padding: 40, boxShadow: 'var(--shadow-card)' }}>
             <div style={{ width: 80, height: 80, background: 'var(--green)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 8px 20px rgba(16,185,129,0.3)' }}>
                <i className="pi pi-check" style={{ fontSize: '2.5rem', color: '#fff' }}></i>
             </div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: 10, fontFamily: 'var(--font-h)' }}>Well Done!</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: 30, fontWeight: 500 }}>Your assessment has been evaluated.</p>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: 10, fontFamily: 'var(--font-h)' }}>Submitted!</h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: 30, fontSize: '1.1rem', fontWeight: 500 }}>
+              Your assessment has been successfully recorded. 
+              <br/>
+              The administrator will review your results.
+            </p>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 30 }}>
-               <div style={{ background: 'rgba(255,255,255,0.03)', padding: 20, borderRadius: 20, border: '1px solid var(--border)' }}>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>Score</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--accent)', fontFamily: 'var(--font-h)' }}>{result.score}/{result.max_possible}</div>
-               </div>
-               <div style={{ background: 'rgba(255,255,255,0.03)', padding: 20, borderRadius: 20, border: '1px solid var(--border)' }}>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>Accuracy</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--green)', fontFamily: 'var(--font-h)' }}>{result.percent}%</div>
-               </div>
-            </div>
-
-            <Button label="Back to Dashboard" icon="pi pi-home" onClick={() => navigate('/quiz')} 
+            <Button label="Back to Assessment Hub" icon="pi pi-home" onClick={() => navigate('/quiz')} 
                     style={{ width: '100%', padding: 15, borderRadius: 15, background: 'var(--accent)', border: 'none', fontWeight: 800, color: '#fff' }} />
-            
-            <Button label="View Leaderboard" icon="pi pi-chart-bar" text onClick={() => navigate(`/quiz/leaderboard/${quizId}`)} 
-                    style={{ width: '100%', marginTop: 10, color: 'var(--text-muted)', fontWeight: 700 }} />
-         </Card>
+          </Card>
       </div>
     )
   }
