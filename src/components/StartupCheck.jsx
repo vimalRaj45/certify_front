@@ -70,24 +70,32 @@ const StartupCheck = ({ children }) => {
                     <Loader />
                 </div>
                 
-                <div style={{ 
+                <div className="loader-content" style={{ 
                     animation: 'fadeInUp 0.8s ease-out both',
-                    maxWidth: 600
+                    maxWidth: '90vw',
+                    width: 600,
+                    padding: '40px 20px',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    borderRadius: 32,
+                    boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
                 }}>
                     <h2 style={{ 
                         fontFamily: 'Outfit', 
                         fontWeight: 900, 
-                        fontSize: '2.2rem', 
+                        fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', 
                         marginBottom: 12,
+                        lineHeight: 1.2,
                         background: 'var(--aurora-gradient)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent'
                     }}>
                         {messages[msgIndex]}
                     </h2>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: '1.6', fontWeight: 500, letterSpacing: '0.01em' }}>
-                        Please wait while we establish a secure connection to the CertifyPro environment. 
-                        Our high-performance engine is preparing your workspace for production.
+                    <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.9rem, 3vw, 1.1rem)', lineHeight: '1.6', fontWeight: 500, letterSpacing: '0.01em', margin: '0 auto', maxWidth: 450 }}>
+                        Connecting to the CertifyPro environment. 
+                        Our high-performance engine is preparing your workspace.
                     </p>
                     
                     <div style={{ 
@@ -97,31 +105,40 @@ const StartupCheck = ({ children }) => {
                         justifyContent: 'center',
                         gap: 15
                     }}>
-                        <div style={{ 
-                            width: 8, height: 8, borderRadius: '50%', background: 'var(--accent)',
-                            animation: 'dotPulse 1.2s infinite' 
+                        <div className="pulse-dot" style={{ 
+                            width: 10, height: 10, borderRadius: '50%', background: 'var(--accent)',
+                            boxShadow: '0 0 15px var(--accent)'
                         }}></div>
                         <div style={{ 
-                            fontSize: '0.75rem', 
+                            fontSize: '0.7rem', 
                             color: 'var(--text-muted)', 
                             fontWeight: 800,
                             textTransform: 'uppercase',
-                            letterSpacing: '0.2em'
+                            letterSpacing: '0.25em'
                         }}>
-                            Connection Integrity Status: {retries > 0 ? 'Warming Up' : 'Checking'}
+                            Integrity Status: {retries > 0 ? 'Warming Up' : 'Checking'}
                         </div>
                     </div>
                 </div>
 
                 <style>{`
                     @keyframes fadeInUp {
-                        from { opacity: 0; transform: translateY(20px); }
+                        from { opacity: 0; transform: translateY(30px); }
                         to { opacity: 1; transform: translateY(0); }
                     }
+                    .pulse-dot {
+                        animation: dotPulse 1.5s infinite ease-in-out;
+                    }
                     @keyframes dotPulse {
-                        0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
-                        70% { transform: scale(1.2); opacity: 0.5; box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
-                        100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+                        0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+                        50% { transform: scale(1.4); opacity: 0.6; filter: brightness(1.5); }
+                        100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+                    }
+                    @media (max-width: 480px) {
+                        .loader-content {
+                            padding: 30px 15px;
+                            border-radius: 24px;
+                        }
                     }
                 `}</style>
             </div>
