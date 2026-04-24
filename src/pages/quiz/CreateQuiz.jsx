@@ -101,7 +101,9 @@ const CreateQuiz = () => {
       if (editId) {
         data = await quizApi.updateQuiz(editId, payload);
       } else {
-        data = await quizApi.createQuiz(title, user?.id || null, payload);
+        const mUser = JSON.parse(localStorage.getItem('user'));
+        const creatorId = mUser?.sub || mUser?.id || user?.id || null;
+        data = await quizApi.createQuiz(title, creatorId, payload);
       }
 
       if (data.success) {

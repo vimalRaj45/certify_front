@@ -169,7 +169,13 @@ const QuizHub = () => {
                          <Button icon="pi pi-share-alt" className="p-button-text p-button-sm" 
                                  style={{ color: 'var(--accent)', padding: 0, width: 30, height: 30 }} 
                                  onClick={(e) => handleShare(quiz.id, e)} tooltip="Copy Quiz Link" />
-                          {((user && quiz.created_by === user.id) || (JSON.parse(localStorage.getItem('user'))?.id === quiz.created_by)) && (
+                          {(() => {
+                            const mUser = JSON.parse(localStorage.getItem('user'));
+                            const qUser = JSON.parse(localStorage.getItem('quiz_user'));
+                            const isOwner = (qUser && String(quiz.created_by) === String(qUser.id)) || 
+                                           (mUser && (String(quiz.created_by) === String(mUser.sub) || String(quiz.created_by) === String(mUser.id)));
+                            return isOwner;
+                          })() && (
                             <>
                               <Button icon="pi pi-external-link" className="p-button-text p-button-sm" 
                                       style={{ color: 'var(--green)', padding: 0, width: 30, height: 30 }} 
