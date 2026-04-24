@@ -1491,7 +1491,7 @@ function Home() {
                                         <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, opacity: 0.9 }}>
                                             Security & Sharing Guide
                                         </div>
-                                        
+
                                         <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
                                             <i className="pi pi-google" style={{ color: '#fff', fontSize: '1rem', marginTop: 2 }}></i>
                                             <div>
