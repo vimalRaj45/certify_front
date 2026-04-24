@@ -126,14 +126,16 @@ const QuizHub = () => {
            </div>
 
            {user && (
-              <div style={{ marginTop: 40, display: 'flex', justifyContent: 'flex-start', gap: 15 }} className="mobile-flex-column">
-                 <Button label="Create New Quiz" icon="pi pi-plus" onClick={() => navigate('/quiz/create')} 
-                         style={{ padding: '15px 30px', borderRadius: 12, background: 'var(--accent)', border: 'none', fontWeight: 800, boxShadow: 'var(--shadow-blue)' }} className="mobile-full-width" />
-                 <Button label="My Performance" icon="pi pi-history" onClick={() => navigate('/quiz/history')} 
-                         style={{ padding: '15px 30px', borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }} className="p-button-outlined mobile-full-width" />
-                 <Button label="Certificate Studio" icon="pi pi-verified" onClick={() => navigate('/')} 
-                         style={{ padding: '15px 30px', borderRadius: 12, background: 'rgba(59, 130, 246, 0.05)', color: 'var(--accent)', border: '1px solid var(--accent)', fontWeight: 700 }} className="mobile-full-width" />
-              </div>
+               <div style={{ marginTop: 40, display: 'flex', justifyContent: 'flex-start', gap: 15, flexWrap: 'wrap' }} className="mobile-flex-column">
+                  <Button label="Create New Quiz" icon="pi pi-plus" onClick={() => navigate('/quiz/create')} 
+                          style={{ padding: '15px 30px', borderRadius: 12, background: 'var(--accent)', border: 'none', fontWeight: 800, boxShadow: 'var(--shadow-blue)' }} className="mobile-full-width" />
+                  <Button label="My Performance" icon="pi pi-history" onClick={() => navigate('/quiz/history')} 
+                          style={{ padding: '15px 30px', borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }} className="p-button-outlined mobile-full-width" />
+                  <Button label="Check My Results" icon="pi pi-search" onClick={() => navigate('/quiz/results')} 
+                          style={{ padding: '15px 30px', borderRadius: 12, background: 'rgba(168, 85, 247, 0.1)', color: '#A855F7', border: '1px solid #A855F7', fontWeight: 700 }} className="mobile-full-width" />
+                  <Button label="Certificate Studio" icon="pi pi-verified" onClick={() => navigate('/')} 
+                          style={{ padding: '15px 30px', borderRadius: 12, background: 'rgba(59, 130, 246, 0.05)', color: 'var(--accent)', border: '1px solid var(--accent)', fontWeight: 700 }} className="mobile-full-width" />
+               </div>
            )}
         </header>
 

@@ -396,6 +396,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                         <span onClick={() => setShowPrivacy(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Privacy Policy</span>
                         <span onClick={() => setShowTerms(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Terms of Use</span>
                         <span onClick={() => navigate('/verify')} style={{ transition: 'color 0.2s', color: 'var(--accent)', cursor: 'pointer' }}>Verify Certificate</span>
+                        <span onClick={() => navigate('/quiz/results')} style={{ transition: 'color 0.2s', color: 'var(--aurora-2)', cursor: 'pointer' }}>Check Results</span>
                         <span onClick={() => setShowSecurity(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Security</span>
                     </div>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>

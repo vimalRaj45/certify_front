@@ -13,6 +13,7 @@ import TakeQuiz from './pages/quiz/TakeQuiz';
 import Leaderboard from './pages/quiz/Leaderboard';
 import History from './pages/quiz/History';
 import Analytics from './pages/quiz/Analytics';
+import StudentResults from './pages/quiz/StudentResults';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         {/* Quiz System Routes */}
         <Route path="/quiz" element={<QuizHub />} />
         <Route path="/quiz/create" element={<CreateQuiz />} />
+        <Route path="/quiz/results" element={<StudentResults />} />
         <Route path="/quiz/take/:quizId" element={<TakeQuiz />} />
         <Route path="/quiz/leaderboard/:quizId" element={<Leaderboard />} />
         <Route path="/quiz/history" element={<History />} />
