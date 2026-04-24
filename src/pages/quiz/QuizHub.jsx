@@ -168,9 +168,17 @@ const QuizHub = () => {
                                  onClick={(e) => { e.stopPropagation(); navigate(`/quiz/analytics/${quiz.id}`); }} tooltip="Performance Analytics" />
                          <Button icon="pi pi-share-alt" className="p-button-text p-button-sm" 
                                  style={{ color: 'var(--accent)', padding: 0, width: 30, height: 30 }} 
-                                 onClick={(e) => handleShare(quiz.id, e)} tooltip="Copy Link" />
+                                 onClick={(e) => handleShare(quiz.id, e)} tooltip="Copy Quiz Link" />
                           {((user && quiz.created_by === user.id) || (JSON.parse(localStorage.getItem('user'))?.id === quiz.created_by)) && (
                             <>
+                              <Button icon="pi pi-external-link" className="p-button-text p-button-sm" 
+                                      style={{ color: 'var(--green)', padding: 0, width: 30, height: 30 }} 
+                                      onClick={(e) => { 
+                                          e.stopPropagation(); 
+                                          const resultLink = `${window.location.origin}/quiz/results/${quiz.id}`;
+                                          navigator.clipboard.writeText(resultLink);
+                                          toast.success("Result Portal link copied!");
+                                      }} tooltip="Publish Results (Link)" />
                               <Button icon="pi pi-pencil" className="p-button-text p-button-sm" 
                                       style={{ color: 'var(--text-muted)', padding: 0, width: 30, height: 30 }} 
                                       onClick={(e) => { e.stopPropagation(); navigate(`/quiz/create?edit=${quiz.id}`); }} />

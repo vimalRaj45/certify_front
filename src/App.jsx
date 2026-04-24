@@ -28,6 +28,7 @@ function App() {
         <Route path="/quiz" element={<QuizHub />} />
         <Route path="/quiz/create" element={<CreateQuiz />} />
         <Route path="/quiz/results" element={<StudentResults />} />
+        <Route path="/quiz/results/:quizId" element={<StudentResults />} />
         <Route path="/quiz/take/:quizId" element={<TakeQuiz />} />
         <Route path="/quiz/leaderboard/:quizId" element={<Leaderboard />} />
         <Route path="/quiz/history" element={<History />} />

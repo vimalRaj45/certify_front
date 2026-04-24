@@ -5,7 +5,7 @@ import { Card } from 'primereact/card';
 import { Badge } from 'primereact/badge';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { toast } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
@@ -14,12 +14,16 @@ const StudentResults = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const navigate = useNavigate();
+    const { quizId } = useParams();
 
     const fetchResults = async () => {
         if (!email) return toast.error("Please enter your email");
         setLoading(true);
         try {
-            const resp = await fetch(`${API_URL}/quiz/results-by-email?email=${encodeURIComponent(email)}`);
+            const url = quizId 
+                ? `${API_URL}/quiz/results-by-email?email=${encodeURIComponent(email)}&quiz_id=${quizId}`
+                : `${API_URL}/quiz/results-by-email?email=${encodeURIComponent(email)}`;
+            const resp = await fetch(url);
             const json = await resp.json();
             if (json.success) {
                 setData(json);
@@ -63,8 +67,14 @@ const StudentResults = () => {
 
             <div style={{ maxWidth: 800, margin: '0 auto' }}>
                 <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.5rem', marginBottom: 10 }}>Student Result Portal</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>Enter your registered email to view your quiz scores and correct answers.</p>
+                    <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.5rem', marginBottom: 10 }}>
+                        {quizId ? 'Quiz Result Portal' : 'Student Result Portal'}
+                    </h1>
+                    <p style={{ color: 'var(--text-secondary)' }}>
+                        {quizId 
+                            ? 'Enter your registered email to view your score and correct answers for this assessment.' 
+                            : 'Enter your registered email to view your quiz scores and correct answers across all assessments.'}
+                    </p>
                 </div>
 
                 <Card className="card-premium" style={{ marginBottom: 30, background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
