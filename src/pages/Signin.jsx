@@ -49,26 +49,58 @@ export default function Signin() {
         if (data.token) {
           console.log("✅ [SIGNIN] Token received and saved to localStorage:", data.token.substring(0, 15) + "...");
           localStorage.setItem("quiz_token", data.token);
+          
+          // Redirect ONLY after successful token storage
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 100);
         } else {
           console.warn("⚠️ [SIGNIN] Server responded but no token was provided.", data);
+          setLoading(false); // Stop loading if failed
         }
       })
       .catch(err => {
         console.error("❌ [SIGNIN] Network error during signup/login:", err);
+        setLoading(false);
       });
-
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 500);
   };
 
   useEffect(() => {
-    window.__certifyGoogleCB = (response) => {
+    window.__certifyGoogleCB = async (response) => {
       const user = parseJwt(response.credential);
       if (!user) return;
 
       setTempUser(user);
-      setStep("role");
+      
+      // OPTIMIZATION: Check if user already exists with a role
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      try {
+        const res = await fetch(`${API_BASE}/save-user`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sub: user.sub,
+            name: user.name,
+            email: user.email,
+            picture: user.picture
+          }),
+        });
+        const data = await res.json();
+        
+        // If user already has a role (not the default 'User'), log them in immediately
+        if (data.token && data.user_type && data.user_type !== 'User') {
+          console.log("🚀 [SIGNIN] Returning user detected with role:", data.user_type);
+          localStorage.setItem("quiz_token", data.token);
+          localStorage.setItem("user", JSON.stringify({ ...user, user_type: data.user_type }));
+          window.location.href = "/";
+        } else {
+          // New user or no role yet, show the role selection screen
+          setStep("role");
+        }
+      } catch (err) {
+        console.error("Error during auto-login check:", err);
+        setStep("role"); // Fallback to role selection
+      }
     };
 
     let attempts = 0;
