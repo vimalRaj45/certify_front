@@ -32,7 +32,8 @@ export default function Signin() {
     const userWithRole = { ...tempUser, user_type: roleId };
     localStorage.setItem("user", JSON.stringify(userWithRole));
 
-    fetch("https://certify-vsgrps.onrender.com/save-user", {
+    const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
+    fetch(`${API_BASE}/save-user`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
