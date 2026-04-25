@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import toast, { Toaster } from 'react-hot-toast';
 import AOS from 'aos';
 
-const API_BASE = 'https://certify-vsgrps.onrender.com';
+const API_BASE = 'http://localhost:5000';
 
 const STEP_META = {
     hashing: { label: 'Layer 1 · Cryptographic Integrity', icon: 'pi-key', color: '#6366F1', num: 1 },
@@ -155,7 +155,7 @@ const VerificationPage = ({ onBack }) => {
 
     useEffect(() => {
         AOS.init({ duration: 600 });
-        
+
         // Check for ?id= in URL for instant verification
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
@@ -169,16 +169,18 @@ const VerificationPage = ({ onBack }) => {
     const handleInstantVerify = async (id) => {
         setVerifying(true);
         setSteps([{ id: 'registry', status: 'working', message: 'Querying official registry by ID...' }]);
-        
+
         const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'https://certify-vsgrps.onrender.com' : API_BASE;
-            
+            ? 'http://localhost:5000' : API_BASE;
+
         try {
             const resp = await axios.get(`${currentApiBase}/verify-id?id=${id}`);
-            setSteps([{ id: 'registry', status: 'pass', message: 'Registry record found and validated.', comparisons: [
-                { label: 'Cert ID', got: id, match: true },
-                { label: 'Registry Hit', got: '1 record found', match: true }
-            ]}]);
+            setSteps([{
+                id: 'registry', status: 'pass', message: 'Registry record found and validated.', comparisons: [
+                    { label: 'Cert ID', got: id, match: true },
+                    { label: 'Registry Hit', got: '1 record found', match: true }
+                ]
+            }]);
             setResult(resp.data);
             toast.success('Certificate Verified via Registry!');
         } catch (err) {
@@ -212,7 +214,7 @@ const VerificationPage = ({ onBack }) => {
         setSteps([]);
 
         const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'https://certify-vsgrps.onrender.com' : API_BASE;
+            ? 'http://localhost:5000' : API_BASE;
 
         const es = new EventSource(`${currentApiBase}/progress?key=${verifyKey}`);
         esRef.current = es;

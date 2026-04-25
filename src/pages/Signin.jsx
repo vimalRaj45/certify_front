@@ -32,7 +32,7 @@ export default function Signin() {
     const userWithRole = { ...tempUser, user_type: roleId };
     localStorage.setItem("user", JSON.stringify(userWithRole));
 
-    const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
+    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     fetch(`${API_BASE}/save-user`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -44,13 +44,13 @@ export default function Signin() {
         user_type: roleId
       }),
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.token) {
-        localStorage.setItem("quiz_token", data.token);
-      }
-    })
-    .catch(() => { });
+      .then(res => res.json())
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem("quiz_token", data.token);
+        }
+      })
+      .catch(() => { });
 
     setTimeout(() => {
       window.location.href = "/";
