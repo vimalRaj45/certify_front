@@ -155,8 +155,39 @@ const VerificationPage = ({ onBack }) => {
 
     useEffect(() => {
         AOS.init({ duration: 600 });
+        
+        // Check for ?id= in URL for instant verification
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (id) {
+            handleInstantVerify(id);
+        }
+
         return () => { if (esRef.current) esRef.current.close(); };
     }, []);
+
+    const handleInstantVerify = async (id) => {
+        setVerifying(true);
+        setSteps([{ id: 'registry', status: 'working', message: 'Querying official registry by ID...' }]);
+        
+        const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'https://certify-vsgrps.onrender.com' : API_BASE;
+            
+        try {
+            const resp = await axios.get(`${currentApiBase}/verify-id?id=${id}`);
+            setSteps([{ id: 'registry', status: 'pass', message: 'Registry record found and validated.', comparisons: [
+                { label: 'Cert ID', got: id, match: true },
+                { label: 'Registry Hit', got: '1 record found', match: true }
+            ]}]);
+            setResult(resp.data);
+            toast.success('Certificate Verified via Registry!');
+        } catch (err) {
+            setSteps([{ id: 'registry', status: 'fail', message: err.response?.data?.error || 'Certificate not found in registry.' }]);
+            toast.error('Verification Failed');
+        } finally {
+            setVerifying(false);
+        }
+    };
 
     const pushStep = (id, status, message, comparisons) => {
         setSteps(prev => {
