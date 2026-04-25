@@ -15,8 +15,13 @@ import History from './pages/quiz/History';
 import Analytics from './pages/quiz/Analytics';
 import StudentResults from './pages/quiz/StudentResults';
 import StartupCheck from './components/StartupCheck';
+import Onboarding from './pages/Onboarding';
 
 function App() {
+  const navigate = (path) => {
+    window.location.href = path.startsWith('/') ? path : `/${path}`;
+  };
+
   return (
     <BrowserRouter>
       <Toaster position="top-center" />
@@ -24,7 +29,8 @@ function App() {
         <Routes>
           {/* Main CertifyPro Routes */}
           <Route path="/" element={<CertifyStudio />} />
-        <Route path="/verify" element={<VerificationPage onBack={() => window.location.href = '/'} />} />
+          <Route path="/how-it-works" element={<Onboarding onNavigate={navigate} />} />
+          <Route path="/verify" element={<VerificationPage onBack={() => navigate('/')} />} />
 
         {/* Quiz System Routes */}
         <Route path="/quiz" element={<QuizHub />} />

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import SparkleButton from './SparkleButton';
 import gsap from 'gsap';
 
-const Hero = ({ onOpenApp }) => {
+const Hero = ({ onOpenApp, onLearnMore }) => {
     const [typedText, setTypedText] = useState('');
     const fullText = "Assessments & Recognition.";
     const [index, setIndex] = useState(0);
@@ -112,7 +112,7 @@ const Hero = ({ onOpenApp }) => {
                         <i className="pi pi-bolt"></i> Start Generating Now
                     </button>
                     <button 
-                        onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                        onClick={onLearnMore}
                         style={{
                             padding: '16px 32px', fontSize: '1.1rem', fontWeight: 700,
                             background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1.5px solid var(--border)',

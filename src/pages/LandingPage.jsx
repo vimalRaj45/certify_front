@@ -61,7 +61,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div className="hidden md:flex" style={{ gap: 20, marginRight: 8 }}>
                         <a href="#features" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Features</a>
-                        <a href="#how-it-works" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>How It Works</a>
+                        <span onClick={() => navigate('/how-it-works')} style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', cursor: 'pointer' }}>How It Works</span>
                         <a href="#benefits" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Benefits</a>
                         <span onClick={() => navigate('/verify')} style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent)', cursor: 'pointer' }}>Verify</span>
                     </div>
@@ -79,7 +79,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 </div>
             </nav>
 
-            <Hero onOpenApp={onStartApp} />
+            <Hero onOpenApp={onStartApp} onLearnMore={() => navigate('/how-it-works')} />
 
             <PerformanceSection />
 
