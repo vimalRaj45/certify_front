@@ -184,7 +184,17 @@ const VerificationPage = ({ onBack }) => {
                 ]
             }]);
             setResult(resp.data);
-            toast.success('Certificate Verified via Registry!');
+            
+            // Custom Security Alert Pop-up
+            toast((t) => (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ fontSize: '1.5rem' }}>🛡️</div>
+                    <div style={{ textAlign: 'left' }}>
+                        <div style={{ fontWeight: 900, color: '#1E293B', fontSize: '0.9rem' }}>TRUST LEVEL: 50%</div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748B' }}>Identity confirmed, but PDF integrity is pending. Upload file for 100% audit.</div>
+                    </div>
+                </div>
+            ), { duration: 6000, style: { borderRadius: '16px', border: '2px solid #6366F1', background: '#fff' } });
         } catch (err) {
             setSteps([{ id: 'registry', status: 'fail', message: err.response?.data?.error || 'Certificate not found in registry.' }]);
             toast.error('Verification Failed');
@@ -294,13 +304,13 @@ const VerificationPage = ({ onBack }) => {
                 <div style={{ background: 'var(--bg-card)', borderRadius: 28, padding: '40px 32px 32px', boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)', textAlign: 'center', marginBottom: 24 }} data-aos="fade-up">
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(59, 130, 246, 0.1)', padding: '6px 14px', borderRadius: 20, marginBottom: 18, border: '1px solid rgba(59, 130, 246, 0.2)' }}>
                         <i className="pi pi-shield" style={{ color: 'var(--accent)', fontSize: '0.8rem' }}></i>
-                        <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Multi-Layer Security Engine</span>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Industrial-Grade Security Audit</span>
                     </div>
                     <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '2.4rem', color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
-                        Certificate Verification
+                        Cryptographic Verification
                     </h1>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.7 }}>
-                        Upload a CertifyPro PDF. Each security layer computes, shows its full comparison, then passes control to the next.
+                        This is not a simple link check. Our engine performs a deep, 3-layer cryptographic audit to ensure document integrity and registry consensus.
                     </p>
 
                     {/* How it Works / Help Section */}
