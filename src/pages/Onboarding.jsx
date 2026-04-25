@@ -55,7 +55,7 @@ const Onboarding = ({ onNavigate }) => {
                         <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>System v2.0 Ready</span>
                     </div>
                     <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', color: 'var(--text)', margin: '0 0 16px', letterSpacing: '-0.03em' }}>
-                        Welcome to <span style={{ background: 'linear-gradient(135deg, #3B82F6, #A855F7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CertifyPro</span>
+                        Welcome to <span style={{ background: 'linear-gradient(135deg, #3B82F6, #A855F7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CertLock</span>
                     </h1>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>
                         The industrial-grade ecosystem for high-stakes assessment and verified recognition.

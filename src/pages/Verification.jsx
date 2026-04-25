@@ -292,7 +292,7 @@ const VerificationPage = ({ onBack }) => {
                         <i className="pi pi-verified" style={{ color: '#fff', fontSize: '1rem' }}></i>
                     </div>
                     <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.2rem', color: 'var(--text)' }}>
-                        CertifyPro <span style={{ color: 'var(--accent)', fontWeight: 400 }}>Verify</span>
+                        CertLock <span style={{ color: 'var(--accent)', fontWeight: 400 }}>Verify</span>
                     </span>
                 </div>
                 <Button label="Back to Home" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={onBack} />

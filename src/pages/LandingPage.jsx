@@ -54,7 +54,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                         <i className="pi pi-verified text-white" style={{ fontSize: '0.9rem' }}></i>
                     </div>
                     <div>
-                        <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', letterSpacing: '-0.02em', lineHeight: 1, color: 'var(--text)' }}>CertifyPro</div>
+                        <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', letterSpacing: '-0.02em', lineHeight: 1, color: 'var(--text)' }}>CertLock</div>
                         <div style={{ fontSize: '0.45rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Smart Bulk Generation</div>
                     </div>
                 </div>
@@ -215,7 +215,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                             Scaling Your Reach?
                         </h2>
                         <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.8, fontSize: '1.05rem', fontWeight: 500 }}>
-                            CertifyPro is <strong>completely free</strong> with a 100-certificate limit per run. 
+                            CertLock is <strong>completely free</strong> with a 100-certificate limit per run. 
                             For organizations needing unlimited generation, custom branding, or integrated API access — we offer dedicated enterprise solutions.
                         </p>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: 40 }}>
@@ -388,7 +388,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                             <i className="pi pi-verified text-white" style={{ fontSize: '1.2rem' }}></i>
                         </div>
                         <div>
-                            <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.1rem', color: 'var(--text)', display: 'block', lineHeight: 1 }}>CertifyPro</span>
+                            <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.1rem', color: 'var(--text)', display: 'block', lineHeight: 1 }}>CertLock</span>
                             <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Privacy-First Certification</span>
                         </div>
                     </div>
@@ -400,7 +400,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                         <span onClick={() => setShowSecurity(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Security</span>
                     </div>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-                        © 2026 CertifyPro. Empowering creators.
+                        © 2026 CertLock. Empowering creators.
                     </div>
                 </div>
             </footer>

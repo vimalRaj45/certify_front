@@ -498,7 +498,7 @@ export default function Signin() {
               <i className="pi pi-users" style={{ color: 'var(--accent)', fontSize: '1.5rem' }} />
             </div>
             <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', color: 'var(--text)', marginBottom: 8 }}>Select Your Role</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 32 }}>Tell us how you'll use CertifyPro</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 32 }}>Tell us how you'll use CertLock</p>
 
             <div style={{ display: 'grid', gap: 12 }}>
               {roles.map(r => (
