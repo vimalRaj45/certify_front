@@ -20,6 +20,13 @@ const quizApi = {
     const res = await api.post(`/quiz/users`, { email, name });
     return res.data;
   },
+  refreshToken: async () => {
+    const res = await api.get(`/quiz/refresh-token`);
+    if (res.data.token) {
+      localStorage.setItem('quiz_token', res.data.token);
+    }
+    return res.data;
+  },
   getUser: async (id) => {
     const res = await api.get(`/quiz/users/${id}`);
     return res.data;
