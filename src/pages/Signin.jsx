@@ -47,10 +47,15 @@ export default function Signin() {
       .then(res => res.json())
       .then(data => {
         if (data.token) {
+          console.log("✅ [SIGNIN] Token received and saved to localStorage:", data.token.substring(0, 15) + "...");
           localStorage.setItem("quiz_token", data.token);
+        } else {
+          console.warn("⚠️ [SIGNIN] Server responded but no token was provided.", data);
         }
       })
-      .catch(() => { });
+      .catch(err => {
+        console.error("❌ [SIGNIN] Network error during signup/login:", err);
+      });
 
     setTimeout(() => {
       window.location.href = "/";
