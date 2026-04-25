@@ -40,6 +40,18 @@ const Guide = ({ onBack }) => {
                 "Email: Certificates are auto-sent via Nodemailer Gmail Service during generation.",
                 "Public Links: Host your PDF on Google Drive and share the link for public audit."
             ]
+        },
+        {
+            title: "⚙️ System Integrity & Performance",
+            icon: "pi-cog",
+            color: "#64748B",
+            content: "CertifyPro is optimized for high-speed industrial use with the following operational constraints:",
+            layers: [
+                { name: "Batch Limit", detail: "Maximum of 1001 participants per single generation run for stability." },
+                { name: "Security Guard", detail: "All tokens are signed with a mandatory environment-locked JWT_SECRET." },
+                { name: "Rate Limiting", detail: "Quiz attempts and submissions are rate-limited to 10 per minute per user." },
+                { name: "Resource Optimization", detail: "Shared Redis connections ensure zero-latency job queuing." }
+            ]
         }
     ];
 
