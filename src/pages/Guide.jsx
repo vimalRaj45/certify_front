@@ -37,7 +37,7 @@ const Guide = ({ onBack }) => {
             color: "#A855F7",
             tips: [
                 "LinkedIn: Use your unique Certificate ID in your profile certifications.",
-                "Email: Certificates are auto-sent via Brevo API during generation.",
+                "Email: Certificates are auto-sent via Nodemailer Gmail Service during generation.",
                 "Public Links: Host your PDF on Google Drive and share the link for public audit."
             ]
         }

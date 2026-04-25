@@ -284,7 +284,7 @@ const VerificationPage = ({ onBack }) => {
                                 <i className="pi pi-share-alt" style={{ color: 'var(--purple)' }}></i> HOW WE SHARE
                             </h4>
                             <ul style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', paddingLeft: '18px', margin: 0, lineHeight: 1.6 }}>
-                                <li><strong>Direct Email:</strong> Auto-sent to participants via Brevo API.</li>
+                                <li><strong>Direct Email:</strong> Auto-sent to participants via Nodemailer Gmail Service.</li>
                                 <li><strong>Secure ZIP:</strong> Bulk download available after generation.</li>
                                 <li><strong>Public Links:</strong> We recommend uploading to Drive/Cloud and sharing the link.</li>
                             </ul>

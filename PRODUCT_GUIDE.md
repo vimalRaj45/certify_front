@@ -44,7 +44,7 @@ We maintain a strict **Zero-Data Retention** policy.
 
 ## 📦 Distribution Channels
 CertifyPro ensures your awards reach their recipients instantly:
-- **Automated Email**: Direct delivery via the Brevo (SMTP) API.
+- **Automated Email**: Direct delivery via the Nodemailer Gmail Service.
 - **Secure ZIP Export**: Download your entire batch in one organized package.
 - **Public Share Links**: Recommended sharing via cloud providers for high-speed public validation.
 
