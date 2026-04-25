@@ -151,6 +151,7 @@ const VerificationPage = ({ onBack }) => {
     const [verifying, setVerifying] = useState(false);
     const [result, setResult] = useState(null);
     const [steps, setSteps] = useState([]);
+    const [isInstant, setIsInstant] = useState(false);
     const esRef = useRef(null);
 
     useEffect(() => {
@@ -167,6 +168,7 @@ const VerificationPage = ({ onBack }) => {
     }, []);
 
     const handleInstantVerify = async (id) => {
+        setIsInstant(true);
         setVerifying(true);
         setSteps([{ id: 'registry', status: 'working', message: 'Querying official registry by ID...' }]);
 
@@ -209,6 +211,7 @@ const VerificationPage = ({ onBack }) => {
         if (!file) return;
 
         const verifyKey = `v_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+        setIsInstant(false);
         setVerifying(true);
         setResult(null);
         setSteps([]);
@@ -396,11 +399,31 @@ const VerificationPage = ({ onBack }) => {
                                 style={{ color: '#fff', fontSize: '2rem' }}></i>
                         </div>
                         <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 8px', color: result.verified ? 'var(--text)' : 'var(--red)' }}>
-                            {result.verified ? '✅ Legitimate Certificate' : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered Document' : '❌ Verification Failed')}
+                            {result.verified ? (isInstant ? '🔍 Identity Verified' : '✅ Legitimate Certificate') : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered Document' : '❌ Verification Failed')}
                         </h2>
+                        
+                        {result.verified && isInstant && (
+                            <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: 12, padding: '12px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left' }}>
+                                <div style={{ fontSize: '1.2rem' }}>🛡️</div>
+                                <div>
+                                    <div style={{ fontSize: '0.85rem', fontWeight: 900, color: 'var(--accent)' }}>TRUST LEVEL: 50% (REGISTRY ONLY)</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>The link is legitimate, but to ensure the PDF content hasn't been edited, please run a 100% Deep Audit by uploading the file.</div>
+                                </div>
+                            </div>
+                        )}
+
                         <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                            {result.verified ? 'This certificate is authentic and on record in our secure registry.' : result.message}
+                            {result.verified ? (isInstant ? 'This ID exists in our Registry, but Layer 1 & 2 Audits are pending file upload.' : 'This certificate is authentic and on record in our secure registry.') : result.message}
                         </p>
+
+                        {result.verified && isInstant && (
+                            <Button 
+                                label="Upgrade to 100% Security Audit" 
+                                icon="pi pi-shield" 
+                                onClick={() => { handleReset(); window.scrollTo({top: 0, behavior: 'smooth'}); }}
+                                style={{ width: '100%', marginBottom: 24, borderRadius: 12, background: 'linear-gradient(135deg, #6366F1, #A855F7)', border: 'none', fontWeight: 800 }} 
+                            />
+                        )}
 
                         {result.verified && result.data && (
                             <>
