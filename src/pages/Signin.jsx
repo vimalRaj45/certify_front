@@ -32,7 +32,7 @@ export default function Signin() {
     const userWithRole = { ...tempUser, user_type: roleId };
     localStorage.setItem("user", JSON.stringify(userWithRole));
 
-    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
     fetch(`${API_BASE}/save-user`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -73,7 +73,7 @@ export default function Signin() {
       setTempUser(user);
       
       // OPTIMIZATION: Check if user already exists with a role
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
       try {
         const res = await fetch(`${API_BASE}/save-user`, {
           method: "POST",
