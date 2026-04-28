@@ -56,11 +56,8 @@ const StudentResults = () => {
                 borderBottom: '1px solid rgba(255, 255, 255, 0.05)', padding: '0 24px', height: 60,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => navigate('/')}>
-                    <div style={{ width: 32, height: 32, background: 'var(--aurora-gradient)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <i className="pi pi-verified text-white" style={{ fontSize: '0.9rem' }}></i>
-                    </div>
-                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', color: 'var(--text)' }}>CertLock Results</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={() => navigate('/')}>
+                    <img src="/logo.png" alt="CertLock Logo" style={{ height: 42, width: 'auto', objectFit: 'contain' }} />
                 </div>
                 <Button label="Home" icon="pi pi-home" className="p-button-text p-button-sm" onClick={() => navigate('/')} />
             </nav>
@@ -78,15 +75,15 @@ const StudentResults = () => {
                 </div>
 
                 <Card className="card-premium" style={{ marginBottom: 30, background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                        <div style={{ flex: 1, minWidth: 250 }}>
+                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                        <div style={{ flex: 1, minWidth: 280 }}>
                             <span className="p-input-icon-left" style={{ width: '100%' }}>
-                                <i className="pi pi-envelope" />
+                                <i className="pi pi-envelope" style={{ top: '50%', transform: 'translateY(-50%)', left: 14 }} />
                                 <InputText 
                                     value={email} 
                                     onChange={(e) => setEmail(e.target.value)} 
                                     placeholder="Enter your email address..." 
-                                    style={{ width: '100%', borderRadius: 12, paddingLeft: 40 }}
+                                    style={{ width: '100%', borderRadius: 12, padding: '14px 14px 14px 44px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}
                                     onKeyDown={(e) => e.key === 'Enter' && fetchResults()}
                                 />
                             </span>
@@ -96,7 +93,7 @@ const StudentResults = () => {
                             icon="pi pi-search" 
                             disabled={loading}
                             onClick={fetchResults}
-                            style={{ borderRadius: 12, padding: '12px 24px', background: 'var(--accent)', border: 'none' }}
+                            style={{ borderRadius: 12, padding: '14px 28px', background: 'var(--accent)', border: 'none', fontWeight: 800, height: '100%' }}
                         />
                     </div>
                 </Card>
