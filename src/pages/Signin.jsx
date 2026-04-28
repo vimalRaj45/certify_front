@@ -117,10 +117,11 @@ export default function Signin() {
       setTimeout(() => {
         const el = document.getElementById("googleBtn");
         if (!el) return;
+        const btnWidth = window.innerWidth < 400 ? "280" : "320";
         google.accounts.id.renderButton(el, {
           theme: "outline",
           size: "large",
-          width: "320",
+          width: btnWidth,
           shape: "pill",
         });
       }, 150);
@@ -150,7 +151,7 @@ export default function Signin() {
       <style>{`
         .signin-page {
           display: flex; align-items: center; justify-content: center; min-height: 100vh;
-          background: var(--bg-primary); padding: 20px; position: relative; overflow: hidden;
+          background: var(--bg-primary); padding: 20px; position: relative; overflow-x: hidden;
         }
         .signin-container {
           width: 100%; max-width: ${step === "auth" ? '1000px' : '500px'};

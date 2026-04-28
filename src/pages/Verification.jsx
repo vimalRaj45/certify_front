@@ -343,7 +343,6 @@ const VerificationPage = ({ onBack }) => {
                                 <li><strong>Secure ZIP:</strong> Bulk download available after generation.</li>
                                 <li><strong>Public Links:</strong> We recommend uploading to Drive/Cloud and sharing the link.</li>
                             </ul>
-                            </ul>
                         </div>
                     </div>
 
@@ -404,7 +403,6 @@ const VerificationPage = ({ onBack }) => {
                         border: `1.5px solid ${result.verified ? '#10B981' : '#EF4444'}`,
                         borderRadius: 24, padding: '32px', textAlign: 'center'
                     }}>
-                    }}>
                         <div style={{
                             width: 64, height: 64, borderRadius: '50%', margin: '0 auto 20px',
                             background: result.verified ? '#10B981' : '#EF4444',
@@ -431,7 +429,6 @@ const VerificationPage = ({ onBack }) => {
                         <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px', fontSize: '0.95rem', lineHeight: 1.6 }}>
                             {result.verified ? (isInstant ? 'This ID exists in our Registry, but Layer 1 & 2 Audits are pending file upload.' : 'This certificate is authentic and on record in our secure registry.') : result.message}
                         </p>
-                        </p>
 
                         {result.verified && isInstant && (
                             <Button 
@@ -453,7 +450,6 @@ const VerificationPage = ({ onBack }) => {
                                         <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
                                             <span style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
                                             <span style={{ fontWeight: 700, color: row.mono ? 'var(--accent)' : 'var(--text)', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
-                                        </div>
                                         </div>
                                     ))}
                                 </div>
