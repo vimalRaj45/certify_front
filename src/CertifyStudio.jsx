@@ -15,7 +15,6 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Draggable from 'react-draggable';
-import gsap from 'gsap';
 import AOS from 'aos';
 import LandingPage from './pages/LandingPage';
 import Signin from './pages/Signin';
@@ -116,7 +115,7 @@ function CertifyStudio() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [progress, setProgress] = useState(null);
     const [connStatus, setConnStatus] = useState('connecting');
-    const [queueState, setQueueState] = useState({ activeJob: null, queue: [] });
+    const [, setQueueState] = useState({ activeJob: null, queue: [] });
 
     useEffect(() => {
         if (progress) {
@@ -135,7 +134,7 @@ function CertifyStudio() {
     const [canvasScale, setCanvasScale] = useState(1);
     const [canvasZoom, setCanvasZoom] = useState(1);
     const [forceDesktop, setForceDesktop] = useState(false);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent));
+    const [isMobile] = useState(window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent));
     const [viewModeSelected, setViewModeSelected] = useState(false);
     const [eventSource, setEventSource] = useState(null);
     const [prodLogs, setProdLogs] = useState([]);
@@ -147,6 +146,7 @@ function CertifyStudio() {
     const [showQuizImport, setShowQuizImport] = useState(false);
     const [availableQuizzes, setAvailableQuizzes] = useState([]);
     const [sendEmail, setSendEmail] = useState(true);
+    const [minScore, setMinScore] = useState(0);
     const [turnstileToken, setTurnstileToken] = useState(null);
 
     const hasEmailColumn = React.useMemo(() => {
@@ -164,10 +164,6 @@ function CertifyStudio() {
         }
     }, []);
 
-    const logout = () => {
-        localStorage.removeItem("user");
-        setUser(null);
-    };
     useEffect(() => {
         const meta = document.querySelector('meta[name="viewport"]');
         if (meta) {
@@ -222,9 +218,6 @@ function CertifyStudio() {
             return () => clearTimeout(timer);
         }
     }, [showDownload, downloadUrl]);
-
-    const [showPreviewDialog, setShowPreviewDialog] = useState(false);
-    const [previewUrl, setPreviewUrl] = useState('');
 
     useEffect(() => {
         AOS.init({ duration: 700, once: true });
@@ -565,9 +558,17 @@ function CertifyStudio() {
             setIsUploading(true);
             const data = await quizApi.exportQuizResults(quizId);
             if (data.success) {
-                setCsvData(data);
+                // Filter participants by minScore if provided
+                const filteredParticipants = minScore > 0 
+                    ? data.participants.filter(p => (parseFloat(p.Score) || 0) >= minScore)
+                    : data.participants;
+
+                setCsvData({
+                    ...data,
+                    participants: filteredParticipants
+                });
                 setShowQuizImport(false);
-                toast.success(`Imported ${data.participants.length} results from quiz.`, {
+                toast.success(`Imported ${filteredParticipants.length} results from quiz (Threshold: ${minScore}).`, {
                     icon: '📊',
                     style: { borderRadius: '12px', background: '#070D1F', color: '#fff' }
                 });
@@ -1292,6 +1293,25 @@ function CertifyStudio() {
             <Dialog header="Import Quiz Results" visible={showQuizImport} onHide={() => setShowQuizImport(false)} style={{ width: '90vw', maxWidth: 500 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <p style={{ fontSize: '0.9rem', color: '#64748b' }}>Select a quiz to import all participants who have completed the assessment.</p>
+                    
+                    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 12, padding: '16px', border: '1px solid var(--border)', marginBottom: 8 }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 12, letterSpacing: '0.05em' }}>
+                            <i className="pi pi-filter" style={{ marginRight: 6 }}></i> Score Threshold Filter
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', marginBottom: 4 }}>Minimum Score to Import</div>
+                                <InputNumber value={minScore} onValueChange={(e) => setMinScore(e.value || 0)} min={0} max={1000} placeholder="e.g. 50" inputStyle={{ width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 8, padding: '8px 12px' }} />
+                            </div>
+                            <div style={{ width: 1, height: 40, background: 'var(--border)' }}></div>
+                            <div style={{ flex: 1 }}>
+                                <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>
+                                    Only students with scores <span style={{ color: 'var(--green)', fontWeight: 700 }}>≥ {minScore}</span> will be imported. Set to 0 to import all.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     {availableQuizzes.map(q => (
                         <div key={q.id} className="quiz-import-item"
                             onClick={() => handleQuizImport(q.id)}

@@ -13,6 +13,7 @@ const STEP_META = {
     registry: { label: 'Layer 3 · Registry Consensus', icon: 'pi-globe', color: '#10B981', num: 3 },
 };
 
+
 const STEP_ORDER = ['hashing', 'parsing', 'registry'];
 
 // Comparison row with entrance animation
@@ -283,10 +284,18 @@ const VerificationPage = ({ onBack }) => {
                     to   { opacity:1; transform:translateY(0); }
                 }
                 .step-enter { animation: fadeSlideIn 0.35s ease forwards; }
+                
+                @media (max-width: 768px) {
+                    .verify-header h1 { font-size: 1.8rem !important; }
+                    .compare-row { grid-template-columns: 1fr 30px !important; }
+                    .compare-row span:first-child { grid-column: 1 / -1; margin-bottom: 4px; }
+                    .guidelines-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+                    .step-status-pill { padding: 4px 8px !important; font-size: 0.6rem !important; }
+                }
             `}</style>
 
             {/* Nav */}
-            <nav style={{ maxWidth: 780, margin: '0 auto 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <nav style={{ maxWidth: 780, margin: '0 auto 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={onBack}>
                     <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#3B82F6,#A855F7)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <i className="pi pi-verified" style={{ color: '#fff', fontSize: '1rem' }}></i>
@@ -295,7 +304,7 @@ const VerificationPage = ({ onBack }) => {
                         CertLock <span style={{ color: 'var(--accent)', fontWeight: 400 }}>Verify</span>
                     </span>
                 </div>
-                <Button label="Back to Home" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={onBack} />
+                <Button label="Back" icon="pi pi-arrow-left" className="p-button-text p-button-secondary" onClick={onBack} />
             </nav>
 
             <div style={{ maxWidth: 780, margin: '0 auto' }}>
@@ -334,21 +343,22 @@ const VerificationPage = ({ onBack }) => {
                                 <li><strong>Secure ZIP:</strong> Bulk download available after generation.</li>
                                 <li><strong>Public Links:</strong> We recommend uploading to Drive/Cloud and sharing the link.</li>
                             </ul>
+                            </ul>
                         </div>
                     </div>
 
                     {!verifying && !result && (
-                        <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: '36px', background: 'rgba(99,102,241,0.02)' }}>
+                        <div style={{ border: '2px dashed #CBD5E1', borderRadius: 20, padding: 'clamp(24px, 5vw, 36px)', background: 'rgba(99,102,241,0.02)' }}>
                             <FileUpload mode="basic" name="file" accept="application/pdf" maxFileSize={10000000}
-                                onSelect={onUpload} auto chooseLabel="Choose PDF Certificate to Verify"
-                                style={{ borderRadius: 14 }} />
-                            <p style={{ color: '#94A3B8', fontSize: '0.82rem', marginTop: 14 }}>Max 10MB · PDF only</p>
+                                onSelect={onUpload} auto chooseLabel="Select Certificate PDF"
+                                style={{ borderRadius: 14, width: '100%' }} />
+                            <p style={{ color: '#94A3B8', fontSize: '0.75rem', marginTop: 14 }}>Max 10MB · Official PDF only</p>
                         </div>
                     )}
 
                     {!verifying && result && (
-                        <Button label="Verify Another Certificate" icon="pi pi-refresh" onClick={handleReset}
-                            style={{ borderRadius: 12, fontWeight: 700, background: 'linear-gradient(135deg,#3B82F6,#6366F1)', border: 'none', padding: '12px 24px' }} />
+                        <Button label="Verify Another" icon="pi pi-refresh" onClick={handleReset}
+                            style={{ borderRadius: 12, fontWeight: 700, background: 'linear-gradient(135deg,#3B82F6,#6366F1)', border: 'none', padding: '12px 24px', width: '100%' }} />
                     )}
                 </div>
 
@@ -360,7 +370,7 @@ const VerificationPage = ({ onBack }) => {
                         {verifying && steps.length === 0 && (
                             <div className="step-enter" style={{ background: '#0F172A', border: '1.5px solid #1E293B', borderRadius: 20, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 14 }}>
                                 <div className="pi pi-spin pi-spinner" style={{ color: '#6366F1', fontSize: '1.2rem' }}></div>
-                                <span style={{ color: '#64748B', fontWeight: 600 }}>Connecting to security engine...</span>
+                                <span style={{ color: '#64748B', fontWeight: 600, fontSize: '0.9rem' }}>Initializing security engine...</span>
                             </div>
                         )}
 
@@ -377,13 +387,8 @@ const VerificationPage = ({ onBack }) => {
                                 <div style={{ width: 2, height: 24, background: 'linear-gradient(180deg,#6366F120,#6366F180)', borderRadius: 2, marginLeft: 18 }}></div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                     <div className="pi pi-spin pi-spinner" style={{ color: '#6366F1', fontSize: '0.85rem' }}></div>
-                                    <span style={{ color: '#6366F1', fontSize: '0.82rem', fontWeight: 700 }}>
-                                        Running{' '}
-                                        {(() => {
-                                            const doneIds = steps.map(s => s.id);
-                                            const next = STEP_ORDER.find(s => !doneIds.includes(s));
-                                            return next ? STEP_META[next]?.label : 'final checks';
-                                        })()}...
+                                    <span style={{ color: '#6366F1', fontSize: '0.8rem', fontWeight: 700 }}>
+                                        Running Layer{' '}{steps.length + 1}...
                                     </span>
                                 </div>
                             </div>
@@ -399,14 +404,15 @@ const VerificationPage = ({ onBack }) => {
                         border: `1.5px solid ${result.verified ? '#10B981' : '#EF4444'}`,
                         borderRadius: 24, padding: '32px', textAlign: 'center'
                     }}>
+                    }}>
                         <div style={{
-                            width: 72, height: 72, borderRadius: '50%', margin: '0 auto 20px',
+                            width: 64, height: 64, borderRadius: '50%', margin: '0 auto 20px',
                             background: result.verified ? '#10B981' : '#EF4444',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             boxShadow: `0 12px 28px ${result.verified ? '#10B98140' : '#EF444440'}`
                         }}>
                             <i className={`pi ${result.verified ? 'pi-check' : (result.message?.includes('SECURITY ALERT') ? 'pi-shield' : 'pi-times')}`}
-                                style={{ color: '#fff', fontSize: '2rem' }}></i>
+                                style={{ color: '#fff', fontSize: '1.8rem' }}></i>
                         </div>
                         <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 8px', color: result.verified ? 'var(--text)' : 'var(--red)' }}>
                             {result.verified ? (isInstant ? '🔍 Identity Verified' : '✅ Legitimate Certificate') : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered Document' : '❌ Verification Failed')}
@@ -425,6 +431,7 @@ const VerificationPage = ({ onBack }) => {
                         <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px', fontSize: '0.95rem', lineHeight: 1.6 }}>
                             {result.verified ? (isInstant ? 'This ID exists in our Registry, but Layer 1 & 2 Audits are pending file upload.' : 'This certificate is authentic and on record in our secure registry.') : result.message}
                         </p>
+                        </p>
 
                         {result.verified && isInstant && (
                             <Button 
@@ -440,12 +447,13 @@ const VerificationPage = ({ onBack }) => {
                                 <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 18, padding: '20px 24px', textAlign: 'left', display: 'grid', gap: 14, border: '1px solid var(--border)' }}>
                                     {[
                                         { label: 'Recipient', value: result.data.name },
-                                        { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'full' }) },
-                                        { label: 'Certificate ID', value: result.data.id, mono: true },
+                                        { label: 'Issue Date', value: new Date(result.data.date).toLocaleDateString(undefined, { dateStyle: 'medium' }) },
+                                        { label: 'Cert ID', value: result.data.id, mono: true },
                                     ].map(row => (
                                         <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
                                             <span style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{row.label}</span>
                                             <span style={{ fontWeight: 700, color: row.mono ? 'var(--accent)' : 'var(--text)', fontFamily: row.mono ? 'monospace' : 'inherit', fontSize: row.mono ? '0.82rem' : '1rem', wordBreak: 'break-all' }}>{row.value}</span>
+                                        </div>
                                         </div>
                                     ))}
                                 </div>

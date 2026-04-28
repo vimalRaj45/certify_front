@@ -9,7 +9,7 @@ import BenefitsSection from '../components/BenefitsSection';
 import PerformanceSection from '../components/PerformanceSection';
 import { useNavigate } from 'react-router-dom';
 
-const LandingPage = ({ onStartApp, onVerify, user }) => {
+const LandingPage = ({ onStartApp, user }) => {
     const navigate = useNavigate();
     const [showTerms, setShowTerms] = React.useState(false);
     const [showPrivacy, setShowPrivacy] = React.useState(false);
@@ -50,7 +50,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div className="hidden md:flex" style={{ gap: 20, marginRight: 8 }}>
                         <a href="#features" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Features</a>
-                        <span onClick={() => navigate('/how-it-works')} style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', cursor: 'pointer' }}>How It Works</span>
+                        <a href="#how-it-works" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>How It Works</a>
                         <a href="#benefits" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Benefits</a>
                         <span onClick={() => navigate('/verify')} style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent)', cursor: 'pointer' }}>Verify</span>
                     </div>
@@ -91,11 +91,47 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 }
             `}</style>
 
+            {/* ═══ MASTER YOUR WORKFLOW (Clarity Section) ═══ */}
+            <section id="how-it-works" style={{ padding: '100px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 64 }} data-aos="fade-up">
+                        <div className="badge badge-purple" style={{ marginBottom: 16 }}>
+                            <i className="pi pi-map"></i> The Workflow
+                        </div>
+                        <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>
+                            From Data to Award in 3 Steps
+                        </h2>
+                        <p style={{ color: '#64748B', maxWidth: 600, margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.6 }}>
+                            We've eliminated the tedious manual work. Here is how CertifyPro turns your spreadsheets into prestigious credentials.
+                        </p>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40 }}>
+                        {[
+                            { step: '01', title: 'Import Participants', desc: 'Upload your CSV or Excel list. We handle any column format, from names to specialized scores.', icon: 'pi-file-import', color: '#3B82F6' },
+                            { step: '02', title: 'Map Your Template', desc: 'Drag and drop dynamic fields onto your certificate image. See your data update in real-time.', icon: 'pi-pencil', color: '#A855F7' },
+                            { step: '03', title: 'Bulk Generate', desc: 'CertifyPro blasts through thousands of records, generating secure, signed PDFs and sending them via email.', icon: 'pi-send', color: '#10B981' },
+                        ].map((s, i) => (
+                            <div key={i} data-aos="fade-up" data-aos-delay={i * 150} style={{ position: 'relative' }}>
+                                <div style={{ fontSize: '5rem', fontWeight: 900, color: '#F1F5F9', position: 'absolute', top: -30, left: -10, zIndex: 1, fontFamily: 'Outfit' }}>{s.step}</div>
+                                <div style={{ position: 'relative', zIndex: 2 }}>
+                                    <div style={{ width: 56, height: 56, borderRadius: 16, background: s.color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, boxShadow: `0 10px 20px ${s.color}30` }}>
+                                        <i className={`pi ${s.icon}`} style={{ fontSize: '1.5rem' }}></i>
+                                    </div>
+                                    <h3 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: 12, fontFamily: 'Outfit' }}>{s.title}</h3>
+                                    <p style={{ color: '#64748B', lineHeight: 1.7, fontSize: '0.95rem' }}>{s.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* ═══ FEATURES ═══ */}
             <section id="features" style={{ padding: '100px 24px', maxWidth: 1200, margin: '0 auto' }}>
                 <div style={{ textAlign: 'center', marginBottom: 64 }} data-aos="fade-up">
                     <div className="badge badge-blue" style={{ marginBottom: 16 }}>
-                        <i className="pi pi-th-large"></i> Core Platform
+                        <i className="pi pi-th-large"></i> Why CertifyPro?
                     </div>
                     <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit', color: 'var(--text)' }}>
                         Enterprise-Grade Tooling
@@ -195,6 +231,85 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
 
             {/* ═══ HOW IT WORKS ═══ */}
             <HowItWorks />
+
+            {/* ═══ TRUST & SECURITY ═══ */}
+            <section id="trust" style={{ padding: '80px 24px', background: 'var(--bg-primary)' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 50 }} data-aos="fade-up">
+                        <div className="badge badge-blue" style={{ marginBottom: 16 }}>
+                            <i className="pi pi-shield"></i> Security & Privacy
+                        </div>
+                        <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit', color: 'var(--text)' }}>
+                            The Gold Standard of Integrity
+                        </h2>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
+                        {/* Security Layer Card */}
+                        <div className="card-premium" data-aos="fade-right" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(59,130,246,0.1)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-verified" style={{ fontSize: '1.2rem' }}></i>
+                                </div>
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>3-Layer Verification</h3>
+                            </div>
+                            <img src="/security_illustration.png" alt="Security" style={{ width: '100%', borderRadius: 12, marginBottom: 20, background: 'rgba(0,0,0,0.2)' }} />
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
+                                Our proprietary 3-layer audit (Hash + Steganography + Registry) ensures every certificate is authentic and impossible to forge.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {['Cryptographic Fingerprint', 'Invisible Binary Metadata', 'Secure Registry Consensus'].map((t, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                                        <i className="pi pi-check-circle" style={{ color: 'var(--green)' }}></i> {t}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Privacy Card */}
+                        <div className="card-premium" data-aos="fade-up" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(16,185,129,0.1)', color: 'var(--green)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-trash" style={{ fontSize: '1.2rem' }}></i>
+                                </div>
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>60-Second Purge</h3>
+                            </div>
+                            <img src="/ai_illustration.png" alt="AI Privacy" style={{ width: '100%', borderRadius: 12, marginBottom: 20, background: 'rgba(0,0,0,0.2)' }} />
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
+                                Your privacy is our priority. We don't harvest data. Everything is purged from our servers 60 seconds after processing.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {['Zero Permanent Storage', 'Auto-Delete Triggers', 'End-to-End Encryption'].map((t, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                                        <i className="pi pi-check-circle" style={{ color: 'var(--green)' }}></i> {t}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Mobile Studio Card */}
+                        <div className="card-premium" data-aos="fade-left" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(168,85,247,0.1)', color: 'var(--purple)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-mobile" style={{ fontSize: '1.2rem' }}></i>
+                                </div>
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, fontFamily: 'Outfit' }}>Mobile Precision</h3>
+                            </div>
+                            <img src="/design_illustration.png" alt="Design" style={{ width: '100%', borderRadius: 12, marginBottom: 20, background: 'rgba(0,0,0,0.2)' }} />
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
+                                Manage your entire certification ecosystem from your phone. Pixel-perfect mapping, even on small screens.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {['Touch-Optimized Mapping', 'Real-time Mobile Preview', 'One-Tap Generation'].map((t, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                                        <i className="pi pi-check-circle" style={{ color: 'var(--green)' }}></i> {t}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* ═══ BENEFITS ═══ */}
             <BenefitsSection />

@@ -145,62 +145,6 @@ const BenefitsSection = () => (
             </motion.div>
 
             {/* Verification Showcase Added */}
-            <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                    marginTop: 56, borderRadius: 28, padding: '48px 40px',
-                    background: 'var(--bg-card)', border: '1px solid var(--border)',
-                    boxShadow: 'var(--shadow-card)',
-                    display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center'
-                }}
-            >
-                <div style={{ flex: 1, minWidth: 300 }}>
-                    <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 7,
-                        background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)',
-                        borderRadius: 999, padding: '6px 16px', marginBottom: 20,
-                    }}>
-                        <i className="pi pi-shield" style={{ color: '#10B981', fontSize: '0.72rem' }} />
-                        <span style={{ color: '#10B981', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Built-in Authencity</span>
-                    </div>
-                    <h3 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', fontWeight: 900, fontFamily: 'Outfit', color: 'var(--text)', marginBottom: 12 }}>
-                        Instant Anti-Forgery Protection
-                    </h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, maxWidth: 520, marginBottom: 24 }}>
-                        Every certificate you generate includes invisible meta-signatures. Verify cryptographic hashes, issue dates, and file matches instantly—giving employers 100% confidence.
-                    </p>
-                </div>
-                <div style={{ flex: 1.2, minWidth: 300 }}>
-                    <div style={{ 
-                        background: 'rgba(15, 23, 42, 0.5)', borderRadius: 28, padding: 24, 
-                        boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)',
-                        marginTop: '1.5rem'
-                    }}>
-                         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16, marginTop: -8 }}>
-                             <div style={{ background: '#10B981', color: '#fff', padding: '6px 14px', borderRadius: 50, fontSize: '0.65rem', fontWeight: 900, boxShadow: '0 8px 20px rgba(16,185,129,0.3)' }}>AUTHENTIC FILE</div>
-                         </div>
-                         <div style={{ width: '100%', height: 140, background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px dashed var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                             <div style={{ textAlign: 'center' }}>
-                                 <i className="pi pi-shield" style={{ fontSize: '2.5rem', color: '#10B981', marginBottom: 12, opacity: 0.8 }}></i>
-                                 <div style={{ fontSize: '0.65rem', fontWeight: 900, color: '#10B981', letterSpacing: '0.1em' }}>CRYPTOGRAPHIC SIGNATURE VERIFIED</div>
-                             </div>
-                         </div>
-                         <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid var(--border)', gap: 6 }}>
-                                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Cryptographic Hash</span>
-                                <span style={{ fontSize: '0.72rem', color: '#3B82F6', fontWeight: 800, fontFamily: 'monospace', wordBreak: 'break-all' }}>a8f7b3...e9c2d1</span>
-                             </div>
-                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
-                                 <div style={{ flex: '1 1 120px', padding: '12px', background: 'rgba(16,185,129,0.06)', borderRadius: 10, fontSize: '0.75rem', color: '#10B981', fontWeight: 800, textAlign: 'center', border: '1px solid rgba(16,185,129,0.15)' }}>Authenticity: 100%</div>
-                                 <div style={{ flex: '1 1 120px', padding: '12px', background: 'rgba(59,130,246,0.06)', borderRadius: 10, fontSize: '0.75rem', color: '#2563EB', fontWeight: 800, textAlign: 'center', border: '1px solid rgba(59,130,246,0.15)' }}>Status: Active</div>
-                             </div>
-                         </div>
-                    </div>
-                </div>
-            </motion.div>
         </div>
     </section>
 );

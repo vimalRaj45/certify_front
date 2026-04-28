@@ -86,7 +86,7 @@ const QuizHub = () => {
       .catch(() => toast.error("Failed to copy link"));
   };
 
-  return (
+    return (
     <div style={{
       minHeight: '100vh',
       background: 'var(--bg-primary)',

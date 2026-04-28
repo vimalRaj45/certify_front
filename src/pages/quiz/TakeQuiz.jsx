@@ -25,8 +25,8 @@ const TakeQuiz = () => {
   const [result, setResult] = useState(null);
   
   // Anti-cheating state
-  const [violations, setViolations] = useState(0);
-  const [tabSwitches, setTabSwitches] = useState(0);
+  const [, setViolations] = useState(0);
+  const [, setTabSwitches] = useState(0);
   const [timeLeft, setTimeLeft] = useState(null);
 
   // Entrance state
@@ -37,9 +37,9 @@ const TakeQuiz = () => {
 
   useEffect(() => {
     fetchQuizInfo();
-  }, [quizId]);
+  }, [fetchQuizInfo]);
 
-  const fetchQuizInfo = async () => {
+  const fetchQuizInfo = React.useCallback(async () => {
     try {
       const quizData = await quizApi.getQuiz(quizId);
       if (quizData.success) {
@@ -47,13 +47,13 @@ const TakeQuiz = () => {
         setQuestions(quizData.questions);
         setTimeLeft((quizData.quiz.duration_minutes || 30) * 60);
       }
-    } catch (err) {
+    } catch {
       toast.error("Failed to load quiz");
       navigate('/quiz');
     } finally {
       setLoading(false);
     }
-  };
+  }, [quizId, navigate]);
 
   const startQuizFlow = async () => {
     // MOBILE ONLY CHECK
@@ -145,7 +145,7 @@ const TakeQuiz = () => {
     }
   };
 
-  const submitQuiz = async () => {
+  const submitQuiz = React.useCallback(async () => {
     try {
       setLoading(true);
       
@@ -170,7 +170,7 @@ const TakeQuiz = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [attemptId, questions, answers]);
 
   useEffect(() => {
     if (isStarted && !isSubmitted && timeLeft > 0) {
@@ -179,7 +179,7 @@ const TakeQuiz = () => {
     } else if (timeLeft === 0 && isStarted && !isSubmitted) {
       submitQuiz();
     }
-  }, [isStarted, isSubmitted, timeLeft]);
+  }, [isStarted, isSubmitted, timeLeft, submitQuiz]);
 
   // Unified Tab Switching / Visibility Monitor
   useEffect(() => {
@@ -221,7 +221,7 @@ const TakeQuiz = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
-  }, [isStarted, isSubmitted, attemptId, questions, answers]);
+  }, [isStarted, isSubmitted, submitQuiz, setTabSwitches, setViolations]);
 
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
