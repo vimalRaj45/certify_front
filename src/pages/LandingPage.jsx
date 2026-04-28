@@ -110,7 +110,7 @@ const LandingPage = ({ onStartApp, user }) => {
                         {[
                             { step: '01', title: 'Import Participants', desc: 'Upload your CSV or Excel list. We handle any column format, from names to specialized scores.', icon: 'pi-file-import', color: '#3B82F6' },
                             { step: '02', title: 'Map Your Template', desc: 'Drag and drop dynamic fields onto your certificate image. See your data update in real-time.', icon: 'pi-pencil', color: '#A855F7' },
-                            { step: '03', title: 'Bulk Generate', desc: 'CertifyPro blasts through thousands of records, generating secure, signed PDFs and sending them via email.', icon: 'pi-send', color: '#10B981' },
+                            { step: '03', title: 'Bulk Generate', desc: 'CertLock blasts through 1000 certificates within 10 minutes, generating secure, signed PDFs and sending them via email.', icon: 'pi-send', color: '#10B981' },
                         ].map((s, i) => (
                             <div key={i} data-aos="fade-up" data-aos-delay={i * 150} style={{ position: 'relative' }}>
                                 <div style={{ fontSize: '5rem', fontWeight: 900, color: '#F1F5F9', position: 'absolute', top: -30, left: -10, zIndex: 1, fontFamily: 'Outfit' }}>{s.step}</div>
