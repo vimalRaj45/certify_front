@@ -155,13 +155,14 @@ export default function Signin() {
         .signin-container {
           width: 100%; max-width: ${step === "auth" ? '1000px' : '500px'};
           display: flex; flex-direction: row;
-          background: var(--bg-card); border: 1px solid var(--border);
+          background: #02060c; border: 1px solid var(--border);
           borderRadius: 40px; overflow: hidden; boxShadow: var(--shadow-card-hover);
           zIndex: 1; min-height: ${step === "auth" ? '600px' : 'auto'};
           transition: all 0.4s ease;
         }
         .signin-content {
           flex: 1.2; padding: 60px 48px; display: flex; flex-direction: column; justify-content: center;
+          background: #02060c;
         }
         .signin-illustration-container {
           flex: 1; background: #02060c; border-left: 1px solid var(--border);

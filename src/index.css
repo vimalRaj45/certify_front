@@ -7,7 +7,7 @@
   /* Core Colors (Precision Match to Logo) */
   --bg:           #02060c;
   --bg-primary:   #02060c;
-  --bg-card:      rgba(13, 21, 38, 0.9);
+  --bg-card:      #02060c;
   --bg-secondary: #050a14;
   --bg-sidebar:   linear-gradient(180deg, #010409 0%, #02060c 50%, #030812 100%);
 
