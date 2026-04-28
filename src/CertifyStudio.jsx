@@ -673,7 +673,7 @@ function CertifyStudio() {
 
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <div style={{
-                                height: 38,
+                                height: 48,
                                 background: 'transparent',
                                 borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }} className="mobile-hide">

@@ -45,7 +45,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <img src="/logo.png" alt="CertLock Logo" style={{ height: 40, width: 'auto', objectFit: 'contain' }} />
+                    <img src="/logo.png" alt="CertLock Logo" style={{ height: 52, width: 'auto', objectFit: 'contain' }} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div className="hidden md:flex" style={{ gap: 20, marginRight: 8 }}>
@@ -372,7 +372,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
             {/* ═══ FOOTER ═══ */}
             <footer style={{ borderTop: '1px solid var(--border)', padding: '60px 24px', background: 'var(--bg-primary)' }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 32 }}>
-                    <div style={{ height: 48, display: 'flex', alignItems: 'center' }}>
+                    <div style={{ height: 60, display: 'flex', alignItems: 'center' }}>
                         <img src="/logo.png" alt="CertLock Logo" style={{ height: '100%', width: 'auto', objectFit: 'contain' }} />
                     </div>
                     <div style={{ display: 'flex', gap: 32, fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>

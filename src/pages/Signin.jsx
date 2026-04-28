@@ -306,20 +306,17 @@ export default function Signin() {
       >
         {step === "auth" ? (
           <>
-            {/* App Icon */}
             <div
               style={{
-                width: 64,
-                height: 64,
+                height: 100,
                 background: "transparent",
-                borderRadius: 20,
-                margin: "0 auto 20px",
+                margin: "0 auto 32px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <img src="/logo.png" alt="CertLock Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <img src="/logo.png" alt="CertLock Logo" style={{ height: '100%', width: 'auto', objectFit: 'contain' }} />
             </div>
 
             <div style={{ marginBottom: 20 }}></div>

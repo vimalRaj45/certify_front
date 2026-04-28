@@ -16,7 +16,7 @@ const AppSidebar = ({ activeSection, onNavigate, mobileOpen, onMobileClose }) =>
         <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
             {/* Logo Block */}
             <div style={{ padding:'28px 24px 20px', display:'flex', alignItems:'center' }}>
-                <img src="/logo.png" alt="CertLock Logo" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+                <img src="/logo.png" alt="CertLock Logo" style={{ height: 56, width: 'auto', objectFit: 'contain' }} />
             </div>
 
             <div style={{ height:1, background:'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)', margin:'0 20px 16px' }}></div>
