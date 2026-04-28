@@ -10,9 +10,9 @@ const PerformanceSection = () => {
   useEffect(() => {
     if (isInView) {
       let start = 0;
-      const end = 100;
+      const end = 999;
       const duration = 2000; // 2 seconds
-      const increment = 1;
+      const increment = 9; // Faster increment for higher number
       const stepTime = duration / end;
 
       const timer = setInterval(() => {
@@ -94,7 +94,7 @@ const PerformanceSection = () => {
             color: 'var(--text)', lineHeight: 1.1, marginBottom: 20, letterSpacing: '-0.04em' 
           }}>
             Generate <span style={{ color: '#3B82F6' }}>{count}+</span> Certificates<br />
-            In Under <span style={{ padding: '2px 10px', background: 'rgba(59,130,246,0.1)', borderRadius: 10, color: '#3B82F6', display: 'inline-block', marginTop: 8 }}>3 Minutes</span>
+            In Under <span style={{ padding: '2px 10px', background: 'rgba(59,130,246,0.1)', borderRadius: 10, color: '#3B82F6', display: 'inline-block', marginTop: 8 }}>10 Minutes</span>
           </h2>
 
           {/* Subtext */}
