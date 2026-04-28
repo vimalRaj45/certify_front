@@ -52,8 +52,8 @@ const StudentResults = () => {
             {/* Header / Nav */}
             <nav style={{
                 position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100,
-                background: 'rgba(15, 23, 42, 0.8)', backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.05)', padding: '0 24px', height: 60,
+                background: '#02060c', backdropFilter: 'blur(20px)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.05)', padding: '0 24px', height: 72,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={() => navigate('/')}>
@@ -75,8 +75,8 @@ const StudentResults = () => {
                 </div>
 
                 <Card className="card-premium" style={{ marginBottom: 30, background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-                        <div style={{ flex: 1, minWidth: 280 }}>
+                    <div className="search-container" style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ flex: '1 1 300px', width: '100%' }}>
                             <span className="p-input-icon-left" style={{ width: '100%' }}>
                                 <i className="pi pi-envelope" style={{ top: '50%', transform: 'translateY(-50%)', left: 14 }} />
                                 <InputText 
@@ -93,7 +93,7 @@ const StudentResults = () => {
                             icon="pi pi-search" 
                             disabled={loading}
                             onClick={fetchResults}
-                            style={{ borderRadius: 12, padding: '14px 28px', background: 'var(--accent)', border: 'none', fontWeight: 800, height: '100%' }}
+                            style={{ borderRadius: 12, padding: '14px 28px', background: 'var(--accent)', border: 'none', fontWeight: 800, width: '100%', maxWidth: '300px' }}
                         />
                     </div>
                 </Card>
@@ -199,6 +199,11 @@ const StudentResults = () => {
                 }
                 .card-premium {
                     box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+                }
+                @media (max-width: 600px) {
+                    .search-container { flex-direction: column; }
+                    .search-container > div, .search-container button { width: 100% !important; max-width: none !important; }
+                    .search-container button { margin-top: 4px; }
                 }
             `}</style>
         </div>
