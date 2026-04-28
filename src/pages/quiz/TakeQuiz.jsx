@@ -35,10 +35,6 @@ const TakeQuiz = () => {
   const [guestName, setGuestName] = useState('');
   const [accessKeyInput, setAccessKeyInput] = useState('');
 
-  useEffect(() => {
-    fetchQuizInfo();
-  }, [fetchQuizInfo]);
-
   const fetchQuizInfo = React.useCallback(async () => {
     try {
       const quizData = await quizApi.getQuiz(quizId);
@@ -54,6 +50,10 @@ const TakeQuiz = () => {
       setLoading(false);
     }
   }, [quizId, navigate]);
+
+  useEffect(() => {
+    fetchQuizInfo();
+  }, [fetchQuizInfo]);
 
   const startQuizFlow = async () => {
     // MOBILE ONLY CHECK
