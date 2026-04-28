@@ -311,16 +311,15 @@ export default function Signin() {
               style={{
                 width: 64,
                 height: 64,
-                background: "linear-gradient(135deg, #3B82F6, #8B5CF6)",
+                background: "transparent",
                 borderRadius: 20,
                 margin: "0 auto 20px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0 12px 24px rgba(59,130,246,0.2)",
               }}
             >
-              <i className="pi pi-bolt" style={{ color: "#fff", fontSize: "1.8rem" }} />
+              <img src="/logo.png" alt="CertLock Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
 
             <div style={{

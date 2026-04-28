@@ -18,14 +18,13 @@ const AppSidebar = ({ activeSection, onNavigate, mobileOpen, onMobileClose }) =>
             <div style={{ padding:'28px 24px 20px', display:'flex', alignItems:'center', gap:14 }}>
                 <div style={{
                     width:44, height:44,
-                    background:'linear-gradient(135deg, #2563EB 0%, #7C3AED 50%, #EC4899 100%)',
+                    background:'transparent',
                     borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center',
-                    boxShadow:'0 6px 20px rgba(37,99,235,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
                 }}>
-                    <i className="pi pi-verified" style={{ color:'#fff', fontSize:'1.2rem' }}></i>
+                    <img src="/logo.png" alt="CertLock Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <div>
-                    <div style={{ fontFamily:'Outfit', fontWeight:900, fontSize:'1.15rem', color:'#fff', letterSpacing:'-0.02em' }}>CertifyPro</div>
+                    <div style={{ fontFamily:'Outfit', fontWeight:900, fontSize:'1.15rem', color:'#fff', letterSpacing:'-0.02em' }}>CertLock</div>
                     <div style={{ fontSize:'0.58rem', fontWeight:700, color:'#60A5FA', letterSpacing:'0.18em', textTransform:'uppercase', marginTop:-1 }}>By VSGRPS</div>
                 </div>
             </div>

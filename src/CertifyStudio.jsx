@@ -674,11 +674,10 @@ function CertifyStudio() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                             <div style={{
                                 width: 34, height: 34,
-                                background: 'linear-gradient(135deg, var(--aurora-1), var(--aurora-2))',
+                                background: 'transparent',
                                 borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 4px 12px rgba(59,130,246,0.2)'
                             }} className="mobile-hide">
-                                <i className="pi pi-bolt" style={{ fontSize: '1rem', color: '#fff' }}></i>
+                                <img src="/logo.png" alt="CertLock Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             </div>
                             <div style={{ lineHeight: 1.1 }}>
                                 <h2 style={{ fontSize: '0.92rem', fontWeight: 900, fontFamily: 'var(--font-h)', margin: 0, color: 'var(--text)', letterSpacing: '-0.01em' }}>CertLock</h2>

@@ -51,7 +51,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                         borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
                         flexShrink: 0
                     }}>
-                        <i className="pi pi-verified text-white" style={{ fontSize: '0.9rem' }}></i>
+                        <img src="/logo.png" alt="CertLock Logo" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'contain' }} />
                     </div>
                     <div>
                         <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', letterSpacing: '-0.02em', lineHeight: 1, color: 'var(--text)' }}>CertLock</div>
@@ -384,8 +384,8 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
             <footer style={{ borderTop: '1px solid var(--border)', padding: '60px 24px', background: 'var(--bg-primary)' }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 32 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 40, height: 40, background: 'var(--aurora-gradient)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <i className="pi pi-verified text-white" style={{ fontSize: '1.2rem' }}></i>
+                        <div style={{ width: 40, height: 40, background: 'transparent', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <img src="/logo.png" alt="CertLock Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </div>
                         <div>
                             <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.1rem', color: 'var(--text)', display: 'block', lineHeight: 1 }}>CertLock</span>
