@@ -51,19 +51,7 @@ const Hero = ({ onOpenApp, onLearnMore }) => {
                 flexDirection: 'column',
                 alignItems: 'center'
             }}>
-                
-                {/* Status Badge */}
-                <div className="gsap-anim" style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '8px 16px', borderRadius: 99,
-                    background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)',
-                    marginBottom: 32
-                }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#3B82F6', animation: 'pulse 2s infinite' }}></div>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#3B82F6', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                        Generate 999+ certificates within 10 minutes
-                    </span>
-                </div>
+            
 
                 <style>{`
                     @keyframes pulse {
