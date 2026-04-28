@@ -40,8 +40,8 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
             {/* Top Navbar for Landing */}
             <nav style={{
                 position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100,
-                background: 'rgba(15, 23, 42, 0.8)', backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.05)', padding: '0 12px', height: 60,
+                background: 'rgba(2, 6, 12, 0.95)', backdropFilter: 'blur(20px)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.03)', padding: '0 12px', height: 72,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
