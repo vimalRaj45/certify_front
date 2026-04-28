@@ -1,165 +1,204 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 const Loader = () => {
-  return (
-    <StyledWrapper>
-      <div className="loader-wrapper">
-        <span className="loader-letter">G</span>
-        <span className="loader-letter">e</span>
-        <span className="loader-letter">n</span>
-        <span className="loader-letter">e</span>
-        <span className="loader-letter">r</span>
-        <span className="loader-letter">a</span>
-        <span className="loader-letter">t</span>
-        <span className="loader-letter">i</span>
-        <span className="loader-letter">n</span>
-        <span className="loader-letter">g</span>
-        <div className="loader" />
-      </div>
-    </StyledWrapper>
-  );
-}
+    return (
+        <LoaderContainer>
+            {/* Background Aurora Blurs */}
+            <AuroraBlur
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.5, 0.3],
+                    rotate: [0, 90, 0],
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                style={{ top: '-10%', left: '-10%', background: 'radial-gradient(circle, #3B82F6 0%, transparent 70%)' }}
+            />
+            <AuroraBlur
+                animate={{
+                    scale: [1.2, 1, 1.2],
+                    opacity: [0.4, 0.6, 0.4],
+                    rotate: [0, -90, 0],
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                style={{ bottom: '-10%', right: '-10%', background: 'radial-gradient(circle, #8B5CF6 0%, transparent 70%)' }}
+            />
 
-const StyledWrapper = styled.div`
-  .loader-wrapper {
+            <ContentWrapper>
+                {/* Main Logo Hexagon / Circle with Glow */}
+                <LogoWrapper
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <motion.div
+                        animate={{
+                            boxShadow: [
+                                "0 0 20px rgba(59, 130, 246, 0.2)",
+                                "0 0 40px rgba(59, 130, 246, 0.6)",
+                                "0 0 20px rgba(59, 130, 246, 0.2)"
+                            ]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        style={{
+                            width: 100, height: 100,
+                            borderRadius: '24px',
+                            background: 'rgba(15, 23, 42, 0.8)',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            position: 'relative', zIndex: 2
+                        }}
+                    >
+                        <img src="/logo.png" alt="CertLock" style={{ width: '60%', height: '60%', objectFit: 'contain' }} />
+                    </motion.div>
+
+                    {/* Orbiting Ring */}
+                    <OrbitRing
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    />
+                    <OrbitRing
+                        animate={{ rotate: -360 }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                        style={{ width: 140, height: 140, border: '1px dashed rgba(59, 130, 246, 0.3)' }}
+                    />
+                </LogoWrapper>
+
+                {/* Loading Text */}
+                <TextWrapper
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    <Title>CertLock</Title>
+                    <StatusText>
+                        {["Initializing Secure Environment...", "Verifying Assets...", "Generating Certificate..."][0]}
+                        <DotFlashing />
+                    </StatusText>
+                </TextWrapper>
+            </ContentWrapper>
+        </LoaderContainer>
+    );
+};
+
+const LoaderContainer = styled.div`
+    position: fixed;
+    inset: 0;
+    background: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    overflow: hidden;
+`;
+
+const AuroraBlur = styled(motion.div)`
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    filter: blur(100px);
+    pointer-events: none;
+`;
+
+const ContentWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    position: relative;
+    z-index: 10;
+`;
+
+const LogoWrapper = styled(motion.div)`
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 120px;
-    width: auto;
-    margin: 2rem;
+`;
 
-    font-family: "Outfit", "Poppins", sans-serif;
-    font-size: 1.6em;
-    font-weight: 800;
-    user-select: none;
-    color: #0F172A; /* Dark color for light theme */
-
-    scale: 1.5;
-  }
-
-  .loader {
+const OrbitRing = styled(motion.div)`
     position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top: 2px solid #3b82f6;
+    border-right: 2px solid rgba(139, 92, 246, 0.5);
     z-index: 1;
+`;
 
-    background-color: transparent;
-    mask: repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 6px,
-      black 7px,
-      black 8px
-    );
-  }
+const TextWrapper = styled(motion.div)`
+    text-align: center;
+`;
 
-  .loader::after {
+const Title = styled.h2`
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #fff;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+`;
+
+const StatusText = styled.p`
+    font-size: 0.9rem;
+    color: #94a3b8;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+`;
+
+const DotFlashing = styled.span`
+  position: relative;
+  width: 4px;
+  height: 4px;
+  border-radius: 5px;
+  background-color: #3b82f6;
+  color: #3b82f6;
+  animation: dot-flashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+  margin-left: 12px;
+
+  &::before, &::after {
     content: "";
+    display: inline-block;
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    /* Brand Colors: Blues and Purples */
-    background-image: 
-      radial-gradient(circle at 50% 50%, #2563EB 0%, transparent 50%),
-      radial-gradient(circle at 45% 45%, #7C3AED 0%, transparent 45%),
-      radial-gradient(circle at 55% 55%, #60A5FA 0%, transparent 45%),
-      radial-gradient(circle at 45% 55%, #A78BFA 0%, transparent 45%),
-      radial-gradient(circle at 55% 45%, #3B82F6 0%, transparent 45%);
-    mask: radial-gradient(
-      circle at 50% 50%,
-      transparent 0%,
-      transparent 10%,
-      black 25%
-    );
-    animation:
-      transform-animation 2s infinite alternate,
-      opacity-animation 4s infinite;
-    animation-timing-function: cubic-bezier(0.6, 0.8, 0.5, 1);
   }
 
-  @keyframes transform-animation {
-    0% {
-      transform: translate(-55%);
-    }
-    100% {
-      transform: translate(55%);
-    }
+  &::before {
+    left: -10px;
+    width: 4px;
+    height: 4px;
+    border-radius: 5px;
+    background-color: #3b82f6;
+    color: #3b82f6;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0s;
   }
 
-  @keyframes opacity-animation {
-    0%,
-    100% {
-      opacity: 0;
-    }
-    15% {
-      opacity: 1;
-    }
-    65% {
-      opacity: 0;
-    }
+  &::after {
+    left: 10px;
+    width: 4px;
+    height: 4px;
+    border-radius: 5px;
+    background-color: #3b82f6;
+    color: #3b82f6;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 1s;
   }
 
-  .loader-letter {
-    display: inline-block;
-    opacity: 0;
-    animation: loader-letter-anim 4s infinite linear;
-    z-index: 2;
+  @keyframes dot-flashing {
+    0% { background-color: #3b82f6; }
+    50%, 100% { background-color: rgba(59, 130, 246, 0.2); }
   }
-
-  .loader-letter:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  .loader-letter:nth-child(2) {
-    animation-delay: 0.205s;
-  }
-  .loader-letter:nth-child(3) {
-    animation-delay: 0.31s;
-  }
-  .loader-letter:nth-child(4) {
-    animation-delay: 0.415s;
-  }
-  .loader-letter:nth-child(5) {
-    animation-delay: 0.521s;
-  }
-  .loader-letter:nth-child(6) {
-    animation-delay: 0.626s;
-  }
-  .loader-letter:nth-child(7) {
-    animation-delay: 0.731s;
-  }
-  .loader-letter:nth-child(8) {
-    animation-delay: 0.837s;
-  }
-  .loader-letter:nth-child(9) {
-    animation-delay: 0.942s;
-  }
-  .loader-letter:nth-child(10) {
-    animation-delay: 1.047s;
-  }
-
-  @keyframes loader-letter-anim {
-    0% {
-      opacity: 0;
-    }
-    5% {
-      opacity: 1;
-      text-shadow: 0 0 4px rgba(37, 99, 235, 0.3);
-      transform: scale(1.1) translateY(-2px);
-    }
-    20% {
-      opacity: 0.2;
-    }
-    100% {
-      opacity: 0;
-    }
-  }`;
+`;
 
 export default Loader;
