@@ -4,18 +4,18 @@
    AURORA DESIGN SYSTEM — TOKEN LAYER
    ═══════════════════════════════════════════ */
 :root {
-  /* Core Colors (Dark Theme) */
-  --bg:           #0f172a;
-  --bg-primary:   #0f172a;
-  --bg-card:      rgba(30, 41, 59, 0.7);
-  --bg-secondary: #1e293b;
-  --bg-sidebar:   linear-gradient(180deg, #070D1F 0%, #0B1832 50%, #0A1628 100%);
+  /* Core Colors (Matched to Logo Palette) */
+  --bg:           #060b13;
+  --bg-primary:   #060b13;
+  --bg-card:      rgba(13, 21, 38, 0.8);
+  --bg-secondary: #0a111e;
+  --bg-sidebar:   linear-gradient(180deg, #04080f 0%, #060b13 50%, #080e1a 100%);
 
-  /* Aurora Gradient */
+  /* Aurora Gradient (Matched to Logo highlights) */
   --aurora-1: #3B82F6;
-  --aurora-2: #8b5cf6;
-  --aurora-3: #EC4899;
-  --aurora-gradient: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8b5cf6 100%);
+  --aurora-2: #22d3ee;
+  --aurora-3: #8b5cf6;
+  --aurora-gradient: linear-gradient(135deg, #3B82F6 0%, #22d3ee 50%, #8b5cf6 100%);
 
   /* Accent */
   --accent:         #3b82f6;
@@ -124,10 +124,10 @@ a { text-decoration: none; color: inherit; }
   position: sticky;
   top: 0;
   height: var(--topbar-h);
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(6, 11, 19, 0.8);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   z-index: 50;
   display: flex;
   align-items: center;
