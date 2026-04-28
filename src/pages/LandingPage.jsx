@@ -55,15 +55,15 @@ const LandingPage = ({ onStartApp, user }) => {
                         <a href="#benefits" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Benefits</a>
                         <span onClick={() => navigate('/verify')} style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent)', cursor: 'pointer' }}>Verify</span>
                     </div>
-                    
+
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderLeft: '1px solid var(--border)', paddingLeft: 12 }}>
                         <div className="hidden md:flex" style={{ textAlign: 'right' }}>
                             <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>{user?.name}</div>
                             <div style={{ fontSize: '0.55rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Pro Account</div>
                         </div>
-                        <Button label="Launch Console" icon="pi pi-bolt" size="small" className="p-button-raised" style={{ 
+                        <Button label="Launch Console" icon="pi pi-bolt" size="small" className="p-button-raised" style={{
                             background: 'var(--accent)', borderRadius: 50, fontSize: '0.7rem', padding: '6px 14px', border: 'none',
-                            boxShadow: '0 4px 12px rgba(59,130,246,0.2)' 
+                            boxShadow: '0 4px 12px rgba(59,130,246,0.2)'
                         }} onClick={onStartApp} />
                     </div>
                 </div>
@@ -159,42 +159,42 @@ const LandingPage = ({ onStartApp, user }) => {
             <section id="verification" style={{ padding: '80px 24px', background: 'var(--bg-primary)' }}>
                 <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'row', gap: 64, alignItems: 'center', flexWrap: 'wrap' }}>
                     <div data-aos="fade-right" style={{ flex: 1.1, minWidth: 300 }}>
-                        <div style={{ 
-                            background: 'var(--bg-card)', borderRadius: 28, padding: 24, 
+                        <div style={{
+                            background: 'var(--bg-card)', borderRadius: 28, padding: 24,
                             boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)',
                             marginTop: '1.5rem'
                         }}>
-                             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16, marginTop: -8 }}>
-                                 <div style={{ background: '#10B981', color: '#fff', padding: '6px 14px', borderRadius: 50, fontSize: '0.65rem', fontWeight: 900, boxShadow: '0 8px 20px rgba(16,185,129,0.3)' }}>AUTHENTIC FILE</div>
-                             </div>
-                             <div style={{ display: 'flex', alignItems: 'center', gap: 16, borderBottom: '1px solid var(--border)', paddingBottom: 20, marginBottom: 20 }}>
-                                 <div style={{ width: 44, height: 44, background: 'rgba(16,185,129,0.1)', color: '#10B981', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                     <i className="pi pi-check-circle" style={{ fontSize: '1.2rem' }}></i>
-                                 </div>
-                                 <div style={{ textAlign: 'left' }}>
-                                     <div style={{ fontSize: '0.85rem', fontWeight: 900, color: 'var(--text)' }}>James Henderson</div>
-                                     <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 700 }}>CertID: SEC-3945-X9</div>
-                                 </div>
-                             </div>
-                             <div style={{ width: '100%', height: 140, background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px dashed var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                 <div style={{ textAlign: 'center' }}>
-                                     <i className="pi pi-shield" style={{ fontSize: '2.5rem', color: '#10B981', marginBottom: 12, opacity: 0.8 }}></i>
-                                     <div style={{ fontSize: '0.65rem', fontWeight: 900, color: '#10B981', letterSpacing: '0.1em' }}>CRYPTOGRAPHIC SIGNATURE VERIFIED</div>
-                                 </div>
-                             </div>
-                             <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid var(--border)', gap: 6 }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16, marginTop: -8 }}>
+                                <div style={{ background: '#10B981', color: '#fff', padding: '6px 14px', borderRadius: 50, fontSize: '0.65rem', fontWeight: 900, boxShadow: '0 8px 20px rgba(16,185,129,0.3)' }}>AUTHENTIC FILE</div>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, borderBottom: '1px solid var(--border)', paddingBottom: 20, marginBottom: 20 }}>
+                                <div style={{ width: 44, height: 44, background: 'rgba(16,185,129,0.1)', color: '#10B981', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <i className="pi pi-check-circle" style={{ fontSize: '1.2rem' }}></i>
+                                </div>
+                                <div style={{ textAlign: 'left' }}>
+                                    <div style={{ fontSize: '0.85rem', fontWeight: 900, color: 'var(--text)' }}>James Henderson</div>
+                                    <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 700 }}>CertID: SEC-3945-X9</div>
+                                </div>
+                            </div>
+                            <div style={{ width: '100%', height: 140, background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px dashed var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div style={{ textAlign: 'center' }}>
+                                    <i className="pi pi-shield" style={{ fontSize: '2.5rem', color: '#10B981', marginBottom: 12, opacity: 0.8 }}></i>
+                                    <div style={{ fontSize: '0.65rem', fontWeight: 900, color: '#10B981', letterSpacing: '0.1em' }}>CRYPTOGRAPHIC SIGNATURE VERIFIED</div>
+                                </div>
+                            </div>
+                            <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid var(--border)', gap: 6 }}>
                                     <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Cryptographic Hash</span>
                                     <span style={{ fontSize: '0.72rem', color: '#3B82F6', fontWeight: 800, fontFamily: 'monospace', wordBreak: 'break-all' }}>a8f7b3...e9c2d1</span>
-                                 </div>
-                                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid var(--border)', gap: 6 }}>
+                                </div>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid var(--border)', gap: 6 }}>
                                     <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Issue Date</span>
                                     <span style={{ fontSize: '0.72rem', color: 'var(--text)', fontWeight: 800 }}>April 05, 2026</span>
-                                 </div>
-                             </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
+
                     <div data-aos="fade-left" style={{ flex: 1.2, minWidth: 300 }}>
                         <div className="badge badge-purple" style={{ marginBottom: 16 }}>
                             <i className="pi pi-lock"></i> Trust Foundation
@@ -333,7 +333,7 @@ const LandingPage = ({ onStartApp, user }) => {
                             Scaling Your Reach?
                         </h2>
                         <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.8, fontSize: '1.05rem', fontWeight: 500 }}>
-                            CertLock is <strong>completely free</strong> with a 100-certificate limit per run. 
+                            CertLock is <strong>completely free</strong> with a 100-certificate limit per run.
                             For organizations needing unlimited generation, custom branding, or integrated API access — we offer dedicated enterprise solutions.
                         </p>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: 40 }}>
@@ -346,12 +346,12 @@ const LandingPage = ({ onStartApp, user }) => {
                                 </div>
                             ))}
                         </div>
-                        <button 
-                            style={{ 
-                                padding: '16px 36px', fontSize: '1rem', background: 'var(--bg-card)', color: 'var(--text)', 
+                        <button
+                            style={{
+                                padding: '16px 36px', fontSize: '1rem', background: 'var(--bg-card)', color: 'var(--text)',
                                 fontWeight: 800, border: '1px solid var(--border)', borderRadius: 14, cursor: 'pointer',
                                 boxShadow: 'var(--shadow-card)'
-                            }} 
+                            }}
                             onClick={() => window.location.href = 'https://vsgrps.netlify.app/'}
                         >
                             <i className="pi pi-comment" style={{ marginRight: 10 }}></i> Discuss Requirements
@@ -373,7 +373,7 @@ const LandingPage = ({ onStartApp, user }) => {
                                 </div>
                                 <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Live Analytics</span>
                             </div>
-                            
+
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
                                 <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 16, padding: '20px 16px', border: '1px solid var(--border)' }}>
                                     <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text)' }}>42,840</div>
@@ -384,7 +384,7 @@ const LandingPage = ({ onStartApp, user }) => {
                                     <div style={{ fontSize: '0.6rem', color: 'var(--text-secondary)', fontWeight: 800, textTransform: 'uppercase', marginTop: 4 }}>Uptime</div>
                                 </div>
                             </div>
-                            
+
                             <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 16, height: 100, position: 'relative', overflow: 'hidden' }}>
                                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%', background: 'linear-gradient(to top, transparent, rgba(59,130,246,0.1))', display: 'flex', alignItems: 'flex-end', gap: 4, padding: '0 12px' }}>
                                     {[40, 70, 45, 90, 65, 80, 50, 95, 70, 85].map((h, i) => (
@@ -467,7 +467,7 @@ const LandingPage = ({ onStartApp, user }) => {
 
             {/* ═══ FINAL CTA ═══ */}
             <section style={{ padding: '100px 24px' }} data-aos="zoom-in">
-                <div style={{ 
+                <div style={{
                     maxWidth: 1000, margin: '0 auto', textAlign: 'center', borderRadius: 40, padding: '80px 24px',
                     background: 'var(--aurora-gradient)',
                     boxShadow: '0 25px 50px -12px rgba(37,99,235,0.2)',
@@ -475,7 +475,7 @@ const LandingPage = ({ onStartApp, user }) => {
                 }}>
                     <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: 250, height: 250, background: 'rgba(255,255,255,0.1)', filter: 'blur(60px)', borderRadius: '50%' }}></div>
                     <div style={{ position: 'absolute', bottom: '-10%', right: '-10%', width: 250, height: 250, background: 'rgba(139,92,246,0.2)', filter: 'blur(60px)', borderRadius: '50%' }}></div>
-                    
+
                     <div style={{ position: 'relative', zIndex: 2 }}>
                         <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: 'white', marginBottom: 16, fontFamily: 'Outfit', letterSpacing: '-0.03em' }}>
                             Ready to Transform<br />Your Certification?
@@ -483,13 +483,13 @@ const LandingPage = ({ onStartApp, user }) => {
                         <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: 520, margin: '0 auto 40px', fontSize: '1.05rem', lineHeight: 1.7, fontWeight: 500 }}>
                             Join thousands of educators and organizers who save hours every week. 100% Free, 100% Private.
                         </p>
-                        <button 
+                        <button
                             className="p-button-raised"
-                            style={{ 
-                                padding: '18px 48px', fontSize: '1.1rem', background: 'var(--accent)', color: '#FFFFFF', 
+                            style={{
+                                padding: '18px 48px', fontSize: '1.1rem', background: 'var(--accent)', color: '#FFFFFF',
                                 fontWeight: 800, border: 'none', borderRadius: 50, cursor: 'pointer',
                                 transition: 'transform 0.2s', boxShadow: '0 12px 24px -10px rgba(59,130,246,0.5)'
-                            }} 
+                            }}
                             onClick={onStartApp}
                         >
                             <i className="pi pi-rocket" style={{ marginRight: 10 }}></i> Launch Dashboard Now
@@ -512,13 +512,14 @@ const LandingPage = ({ onStartApp, user }) => {
                         <span onClick={() => setShowSecurity(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Security</span>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-end' }}>
-                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+                        <center> <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>
                             © 2026 CertLock. Empowering creators.
                         </div>
-                        <a href="https://vsgrps.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', opacity: 0.9, transition: 'opacity 0.2s' }}>
-                            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>DEVELOPED BY</span>
-                            <img src={vsgrpsLogo} alt="VSGRPS Logo" style={{ height: 24, width: 'auto', objectFit: 'contain' }} />
-                        </a>
+                            <a href="https://vsgrps.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', opacity: 0.9, transition: 'opacity 0.2s' }}>
+                                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>DEVELOPED BY</span>
+                                <img src={vsgrpsLogo} alt="VSGRPS Logo" style={{ height: 24, width: 'auto', objectFit: 'contain' }} />
+                            </a></center>
+
                     </div>
                 </div>
             </footer>
