@@ -92,17 +92,17 @@ const LandingPage = ({ onStartApp, user }) => {
             `}</style>
 
             {/* ═══ MASTER YOUR WORKFLOW (Clarity Section) ═══ */}
-            <section id="how-it-works" style={{ padding: '100px 24px', background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
+            <section id="how-it-works" style={{ padding: '100px 24px', background: 'var(--bg-primary)', borderBottom: '1px solid var(--border)' }}>
                 <div style={{ maxWidth: 1100, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 64 }} data-aos="fade-up">
                         <div className="badge badge-purple" style={{ marginBottom: 16 }}>
                             <i className="pi pi-map"></i> The Workflow
                         </div>
-                        <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>
+                        <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit', color: 'var(--text)' }}>
                             From Data to Award in 3 Steps
                         </h2>
-                        <p style={{ color: '#64748B', maxWidth: 600, margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.6 }}>
-                            We've eliminated the tedious manual work. Here is how CertifyPro turns your spreadsheets into prestigious credentials.
+                        <p style={{ color: 'var(--text-secondary)', maxWidth: 600, margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.6 }}>
+                            We've eliminated the tedious manual work. Here is how CertLock turns your spreadsheets into prestigious credentials.
                         </p>
                     </div>
 
