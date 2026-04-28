@@ -17,7 +17,7 @@ import StudentResults from './pages/quiz/StudentResults';
 import StartupCheck from './components/StartupCheck';
 import Onboarding from './pages/Onboarding';
 
-import Guide from './pages/Guide';
+
 
 function App() {
   const navigate = (path) => {
@@ -33,7 +33,7 @@ function App() {
           <Route path="/" element={<CertifyStudio />} />
           <Route path="/how-it-works" element={<Onboarding onNavigate={navigate} />} />
           <Route path="/verify" element={<VerificationPage onBack={() => navigate('/')} />} />
-          <Route path="/guide" element={<Guide onBack={() => navigate('/')} />} />
+
 
 
         {/* Quiz System Routes */}
