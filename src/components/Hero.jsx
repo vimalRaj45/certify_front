@@ -61,7 +61,7 @@ const Hero = ({ onOpenApp, onLearnMore }) => {
                 }}>
                     <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#3B82F6', animation: 'pulse 2s infinite' }}></div>
                     <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#3B82F6', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                        Generate 1000 certificates within 10 minutes
+                        Generate 999+ certificates within 10 minutes
                     </span>
                 </div>
 
