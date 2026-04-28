@@ -20,10 +20,10 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
     }, []);
 
     const features = [
-        { icon: 'pi pi-bolt', title: 'Smart Assessments', desc: 'Create AI-powered quizzes with proctoring and automated scoring to validate knowledge before certification.', color: '#F59E0B', bg: '#FEF3C7' },
-        { icon: 'pi pi-verified', title: 'Value-Driven Rewards', desc: 'Instantly recognize top performers with professional, verified certificates that hold real career value.', color: '#A855F7', bg: '#F3E8FF' },
-        { icon: 'pi pi-shield', title: 'Bank-Grade Security', desc: 'Anti-cheating proctoring and encrypted verification ensuring your credentials remain prestigious.', color: '#2563EB', bg: '#DBEAFE' },
-        { icon: 'pi pi-sync', title: 'Unified Workflow', desc: 'Directly import quiz results into our design studio to generate thousands of certificates in one click.', color: '#059669', bg: '#D1FAE5' },
+        { img: '/ai_about.png', title: 'Smart Assessments', desc: 'Create AI-powered quizzes with proctoring and automated scoring to validate knowledge before certification.', color: '#F59E0B' },
+        { img: '/trust_about.png', title: 'Value-Driven Rewards', desc: 'Instantly recognize top performers with professional, verified certificates that hold real career value.', color: '#A855F7' },
+        { img: '/security_about.png', title: 'Bank-Grade Security', desc: 'Anti-cheating proctoring and encrypted verification ensuring your credentials remain prestigious.', color: '#2563EB' },
+        { img: '/design_about.png', title: 'Unified Workflow', desc: 'Directly import quiz results into our design studio to generate thousands of certificates in one click.', color: '#059669' },
     ];
 
     const enterpriseFeatures = [
@@ -76,6 +76,19 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 @media (max-width: 375px) {
                     nav { padding: 0 8px !important; }
                 }
+                .feature-card {
+                    background: var(--bg-card);
+                    border: 1px solid var(--border);
+                    border-radius: 32px;
+                    padding: 32px;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                }
+                .feature-card:hover {
+                    border-color: var(--accent);
+                    transform: translateY(-8px);
+                    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.08);
+                }
             `}</style>
 
             {/* ═══ FEATURES ═══ */}
@@ -92,14 +105,14 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                     </p>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
                     {features.map((f, i) => (
-                        <div key={i} className="card-premium" data-aos="fade-up" data-aos-delay={i * 100} style={{ cursor: 'default', background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
-                            <div className="stat-icon" style={{ background: 'rgba(255,255,255,0.05)', color: f.color, marginBottom: 20 }}>
-                                <i className={f.icon}></i>
+                        <div key={i} className="feature-card" data-aos="fade-up" data-aos-delay={i * 100}>
+                            <div style={{ marginBottom: 24, height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <img src={f.img} alt={f.title} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                             </div>
-                            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: 10, fontFamily: 'Outfit', color: 'var(--text)' }}>{f.title}</h3>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.7 }}>{f.desc}</p>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: 12, fontFamily: 'Outfit', color: 'var(--text)' }}>{f.title}</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>{f.desc}</p>
                         </div>
                     ))}
                 </div>

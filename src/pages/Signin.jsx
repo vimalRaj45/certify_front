@@ -164,11 +164,11 @@ export default function Signin() {
           flex: 1.2; padding: 60px 48px; display: flex; flex-direction: column; justify-content: center;
         }
         .signin-illustration-container {
-          flex: 1; background: rgba(0, 0, 0, 0.2); border-left: 1px solid var(--border);
+          flex: 1; background: #02060c; border-left: 1px solid var(--border);
           display: flex; align-items: center; justify-content: center; padding: 40px; position: relative;
         }
         .signin-illustration {
-          width: 100%; height: auto; max-width: 440px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+          width: 100%; height: auto; max-width: 460px; filter: drop-shadow(0 20px 60px rgba(59, 130, 246, 0.15));
         }
         .mobile-illustration { display: none; }
         
@@ -177,7 +177,7 @@ export default function Signin() {
           .signin-illustration-container { display: none; }
           .signin-content { text-align: center; padding: 48px 24px; }
           .signin-content img { align-self: center !important; }
-          .mobile-illustration { display: flex; justify-content: center; padding: 0 40px 40px; }
+          .mobile-illustration { display: flex; justify-content: center; padding: 0 40px 40px; background: #02060c; }
           .mobile-illustration img { width: 100%; max-width: 320px; }
           .signin-tags { justify-content: center !important; }
           .signin-google { justify-content: center !important; }
