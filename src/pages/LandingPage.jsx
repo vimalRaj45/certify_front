@@ -45,18 +45,7 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{
-                        width: 32, height: 32,
-                        background: 'var(--aurora-gradient)',
-                        borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0
-                    }}>
-                        <img src="/logo.png" alt="CertLock Logo" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'contain' }} />
-                    </div>
-                    <div>
-                        <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', letterSpacing: '-0.02em', lineHeight: 1, color: 'var(--text)' }}>CertLock</div>
-                        <div style={{ fontSize: '0.45rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Smart Bulk Generation</div>
-                    </div>
+                    <img src="/logo.png" alt="CertLock Logo" style={{ height: 40, width: 'auto', objectFit: 'contain' }} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div className="hidden md:flex" style={{ gap: 20, marginRight: 8 }}>
@@ -383,14 +372,8 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
             {/* ═══ FOOTER ═══ */}
             <footer style={{ borderTop: '1px solid var(--border)', padding: '60px 24px', background: 'var(--bg-primary)' }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 32 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 40, height: 40, background: 'transparent', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <img src="/logo.png" alt="CertLock Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                        </div>
-                        <div>
-                            <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.1rem', color: 'var(--text)', display: 'block', lineHeight: 1 }}>CertLock</span>
-                            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Privacy-First Certification</span>
-                        </div>
+                    <div style={{ height: 48, display: 'flex', alignItems: 'center' }}>
+                        <img src="/logo.png" alt="CertLock Logo" style={{ height: '100%', width: 'auto', objectFit: 'contain' }} />
                     </div>
                     <div style={{ display: 'flex', gap: 32, fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
                         <span onClick={() => setShowPrivacy(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Privacy Policy</span>

@@ -322,16 +322,7 @@ export default function Signin() {
               <img src="/logo.png" alt="CertLock Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
 
-            <div style={{
-              fontSize: '0.65rem',
-              fontWeight: 800,
-              color: '#3B82F6',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              marginBottom: 8
-            }}>
-              product of vsgrps
-            </div>
+            <div style={{ marginBottom: 20 }}></div>
 
             <h1
               style={{

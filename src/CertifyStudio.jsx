@@ -671,17 +671,13 @@ function CertifyStudio() {
                             }}
                         />
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
                             <div style={{
-                                width: 34, height: 34,
+                                height: 38,
                                 background: 'transparent',
                                 borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }} className="mobile-hide">
-                                <img src="/logo.png" alt="CertLock Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                            </div>
-                            <div style={{ lineHeight: 1.1 }}>
-                                <h2 style={{ fontSize: '0.92rem', fontWeight: 900, fontFamily: 'var(--font-h)', margin: 0, color: 'var(--text)', letterSpacing: '-0.01em' }}>CertLock</h2>
-                                <div style={{ fontSize: '0.55rem', color: 'var(--text-secondary)', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }} className="mobile-hide">Generation Studio</div>
+                                <img src="/logo.png" alt="CertLock Logo" style={{ height: '100%', width: 'auto', objectFit: 'contain' }} />
                             </div>
                         </div>
                     </div>
