@@ -8,6 +8,7 @@ import HowItWorks from '../components/HowItWorks';
 import BenefitsSection from '../components/BenefitsSection';
 import PerformanceSection from '../components/PerformanceSection';
 import { useNavigate } from 'react-router-dom';
+import vsgrpsLogo from '../assets/vsgrps_navbar_dark_banner.webp';
 
 const LandingPage = ({ onStartApp, user }) => {
     const navigate = useNavigate();
@@ -514,9 +515,9 @@ const LandingPage = ({ onStartApp, user }) => {
                         <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>
                             © 2026 CertLock. Empowering creators.
                         </div>
-                        <a href="https://vsgrps.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', opacity: 0.7, transition: 'opacity 0.2s' }}>
+                        <a href="https://vsgrps.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', opacity: 0.9, transition: 'opacity 0.2s' }}>
                             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>DEVELOPED BY</span>
-                            <img src="/vsgrps_logo.webp" alt="VSGRPS Logo" style={{ height: 28, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+                            <img src={vsgrpsLogo} alt="VSGRPS Logo" style={{ height: 24, width: 'auto', objectFit: 'contain' }} />
                         </a>
                     </div>
                 </div>
