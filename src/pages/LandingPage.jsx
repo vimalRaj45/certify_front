@@ -510,8 +510,14 @@ const LandingPage = ({ onStartApp, user }) => {
                         <span onClick={() => navigate('/quiz/results')} style={{ transition: 'color 0.2s', color: 'var(--aurora-2)', cursor: 'pointer' }}>Check Results</span>
                         <span onClick={() => setShowSecurity(true)} style={{ transition: 'color 0.2s', cursor: 'pointer' }}>Security</span>
                     </div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-                        © 2026 CertLock. Empowering creators.
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-end' }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+                            © 2026 CertLock. Empowering creators.
+                        </div>
+                        <a href="https://vsgrps.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', opacity: 0.7, transition: 'opacity 0.2s' }}>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>DEVELOPED BY</span>
+                            <img src="/vsgrps_logo.webp" alt="VSGRPS Logo" style={{ height: 28, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+                        </a>
                     </div>
                 </div>
             </footer>
