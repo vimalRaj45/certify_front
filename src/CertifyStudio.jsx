@@ -22,6 +22,7 @@ import Signin from './pages/Signin';
 import VerificationPage from './pages/Verification';
 import Loader from './components/Loader';
 import quizApi from './services/quizApi';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -146,6 +147,7 @@ function CertifyStudio() {
     const [showQuizImport, setShowQuizImport] = useState(false);
     const [availableQuizzes, setAvailableQuizzes] = useState([]);
     const [sendEmail, setSendEmail] = useState(true);
+    const [turnstileToken, setTurnstileToken] = useState(null);
 
     const hasEmailColumn = React.useMemo(() => {
         if (!csvData || !csvData.columns) return false;
@@ -402,6 +404,7 @@ function CertifyStudio() {
                 publicId,
                 fields,
                 force_mass_email: sendEmail,
+                turnstileToken,
                 customDimensions: useCustomSize ? { width: customWidth, height: customHeight } : null
             });
             const key = res.data.key;
@@ -967,10 +970,20 @@ function CertifyStudio() {
                                         <i className="pi pi-eye" style={{ fontSize: '1rem' }}></i>
                                         {isPreviewing ? 'Preparing Sample...' : 'Generate Sample Preview'}
                                     </button>
+                                    
+                                    <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0' }}>
+                                        <Turnstile 
+                                            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '0x4AAAAAADBzttRiCCVj8y7L'} 
+                                            onSuccess={(token) => setTurnstileToken(token)}
+                                            onError={() => { setTurnstileToken(null); toast.error("Verification failed"); }}
+                                            onExpire={() => setTurnstileToken(null)}
+                                        />
+                                    </div>
+
                                     <button className="action-btn-primary"
                                         onClick={confirmStart}
-                                        disabled={isGenerating || fields.length === 0}
-                                        style={{ background: fields.length === 0 ? 'rgba(255,255,255,0.05)' : 'var(--aurora-gradient)', opacity: (isGenerating || fields.length === 0) ? 0.5 : 1 }}>
+                                        disabled={isGenerating || fields.length === 0 || !turnstileToken}
+                                        style={{ background: (fields.length === 0 || !turnstileToken) ? 'rgba(255,255,255,0.05)' : 'var(--aurora-gradient)', opacity: (isGenerating || fields.length === 0 || !turnstileToken) ? 0.5 : 1 }}>
                                         <i className={`pi ${isGenerating ? 'pi-spin pi-spinner' : 'pi-bolt'}`} style={{ fontSize: '1rem' }}></i>
                                         {isGenerating ? 'Production in Progress...' : 'Run Full Production'}
                                     </button>

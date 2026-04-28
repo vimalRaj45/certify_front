@@ -17,6 +17,7 @@ import axios from 'axios';
 import Draggable from 'react-draggable';
 import gsap from 'gsap';
 import AOS from 'aos';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 import Login from './Login';
 import Loader from '../components/Loader';
@@ -140,6 +141,7 @@ function Home() {
     const [customHeight, setCustomHeight] = useState(400);
 
     const [sendEmail, setSendEmail] = useState(true);
+    const [turnstileToken, setTurnstileToken] = useState(null);
     const hasEmailColumn = useMemo(() => {
         if (!csvData || !csvData.columns) return false;
         const found = csvData.columns.some(col => {
@@ -360,6 +362,7 @@ function Home() {
                 templateUrl,
                 publicId,
                 fields,
+                turnstileToken,
                 force_mass_email: shouldSendEmail,
                 customDimensions: useCustomSize ? { width: customWidth, height: customHeight } : null
             };
@@ -957,7 +960,17 @@ function Home() {
                                         <i className="pi pi-eye" style={{ fontSize: '1rem' }}></i>
                                         {isPreviewing ? 'Generating Preview...' : 'Preview First Certificate'}
                                     </button>
-                                    <button className="action-btn-primary" onClick={startGeneration} disabled={isGenerating}>
+
+                                    <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0' }}>
+                                        <Turnstile 
+                                            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '0x4AAAAAADBzttRiCCVj8y7L'} 
+                                            onSuccess={(token) => setTurnstileToken(token)}
+                                            onError={() => { setTurnstileToken(null); toast.error("Verification failed"); }}
+                                            onExpire={() => setTurnstileToken(null)}
+                                        />
+                                    </div>
+
+                                    <button className="action-btn-primary" onClick={startGeneration} disabled={isGenerating || !turnstileToken}>
                                         <i className="pi pi-bolt" style={{ fontSize: '1rem' }}></i>
                                         {isGenerating ? 'Production Running...' : 'Run Full Production'}
                                         {!isGenerating && csvData && <span style={{ fontSize: '0.75rem', opacity: 0.8, marginLeft: 4 }}>({csvData.participants.length} certs)</span>}
