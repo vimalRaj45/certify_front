@@ -37,6 +37,35 @@ const Analytics = () => {
     fetchData();
   }, [id]);
 
+  const handleCSVExport = async () => {
+    try {
+      const res = await quizApi.exportQuizResults(id);
+      if (res.success && res.participants) {
+        const headers = ['Name', 'Email', 'Score', 'Percentage', 'Date'];
+        const csvRows = res.participants.map(p => [
+          `"${p.name}"`,
+          `"${p.email}"`,
+          p.score,
+          `${p.percentage}%`,
+          `"${new Date(p.submitted_at).toLocaleString()}"`
+        ].join(','));
+        
+        const csvContent = [headers.join(','), ...csvRows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `results_${quiz?.title || id}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast.success("CSV Downloaded!");
+      }
+    } catch (err) {
+      toast.error("Failed to export CSV");
+    }
+  };
+
   if (loading) return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text)' }}>
       <div style={{ textAlign: 'center' }}>
@@ -67,8 +96,11 @@ const Analytics = () => {
             <h1 style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'var(--font-h)', margin: 0, color: 'var(--text)' }}>Quiz Analytics</h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', fontWeight: 500 }}>Detailed performance breakdown for "{quiz?.title}"</p>
           </div>
-          <div style={{ display: 'flex', gap: 15 }}>
-            <Button label="Export Results" icon="pi pi-download" className="p-button-outlined" 
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Button label="Export CSV" icon="pi pi-file-excel" className="p-button-outlined" 
+                    onClick={handleCSVExport}
+                    style={{ borderRadius: 12, borderColor: 'var(--green)', color: 'var(--green)' }} />
+            <Button label="Sync to Studio" icon="pi pi-sync" className="p-button-outlined" 
                     onClick={async () => {
                         const res = await quizApi.exportQuizResults(id);
                         if (res.success) {
@@ -78,7 +110,7 @@ const Analytics = () => {
                         }
                     }} 
                     style={{ borderRadius: 12, borderColor: 'var(--accent)', color: 'var(--accent)' }} />
-            <Button label="Back to Hub" icon="pi pi-arrow-left" onClick={() => navigate('/quiz')} 
+            <Button label="Hub" icon="pi pi-arrow-left" onClick={() => navigate('/quiz')} 
                     style={{ borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
           </div>
         </header>
