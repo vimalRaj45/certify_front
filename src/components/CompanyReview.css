@@ -25,17 +25,17 @@
 
 /* Company Review Inputs */
 .company-review__dialog .p-inputgroup {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  background: white;
+  background: rgba(255,255,255,0.05);
   border-radius: 8px;
   overflow: hidden;
   align-items: stretch !important;
+  border: 1px solid var(--border);
 }
 
 .company-review__dialog .p-inputgroup-addon {
-  background: #f8fafc !important;
-  color: #2563eb !important;
-  border: 1px solid #e2e8f0 !important;
+  background: rgba(255,255,255,0.03) !important;
+  color: var(--accent) !important;
+  border: 1px solid var(--border) !important;
   border-right: none !important;
   padding: 0 14px !important;
   display: flex !important;
@@ -49,7 +49,7 @@
 
 .company-review__dialog .p-inputtext, 
 .company-review__dialog .p-inputtextarea {
-  border: 1px solid #e2e8f0 !important;
+  border: 1px solid var(--border) !important;
   padding: 10px 14px !important;
   font-size: 0.9rem !important;
   border-radius: 0 8px 8px 0 !important;
@@ -58,8 +58,8 @@
 
 .company-review__dialog .p-inputtext:focus,
 .company-review__dialog .p-inputtextarea:focus {
-  border-color: #2563eb !important;
-  background: white !important;
+  border-color: var(--accent) !important;
+  background: rgba(255,255,255,0.08) !important;
   outline: none !important;
   box-shadow: none !important; /* Remove any glowing/blinking effects */
 }
@@ -72,12 +72,12 @@
 
 /* Card Styling Refinement */
 .company-review__card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 24px;
   padding: 60px 40px;
   text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-  border: 1px solid #e2e8f0;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
 }
 
 .company-review__rating-wrapper {

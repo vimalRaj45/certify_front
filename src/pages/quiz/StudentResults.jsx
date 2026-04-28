@@ -60,7 +60,7 @@ const StudentResults = () => {
                     <div style={{ width: 32, height: 32, background: 'var(--aurora-gradient)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <i className="pi pi-verified text-white" style={{ fontSize: '0.9rem' }}></i>
                     </div>
-                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', color: 'var(--text)' }}>CertifyPro Results</span>
+                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', color: 'var(--text)' }}>CertLock Results</span>
                 </div>
                 <Button label="Home" icon="pi pi-home" className="p-button-text p-button-sm" onClick={() => navigate('/')} />
             </nav>

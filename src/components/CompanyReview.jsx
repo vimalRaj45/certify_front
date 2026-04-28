@@ -33,7 +33,7 @@ const CompanyReview = () => {
   };
 
   return (
-    <section className="section company-review" id="company-review" style={{ padding: '80px 24px', background: '#F8FAFF' }}>
+    <section className="section company-review" id="company-review" style={{ padding: '80px 24px', background: 'var(--bg-primary)' }}>
       <Toaster position="bottom-center" />
       <div className="container" style={{ maxWidth: 800, margin: '0 auto' }}>
         <motion.div 
@@ -57,8 +57,8 @@ const CompanyReview = () => {
                     <i className="pi pi-heart-fill"></i> Give Us Feedback
                     </span>
                 </div>
-                <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit' }}>Rate Your Experience with CertifyPro</h2>
-                <p style={{ color: '#64748B', maxWidth: 550, margin: '0 auto', fontSize: '1rem' }}>
+                <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 900, marginBottom: 16, fontFamily: 'Outfit', color: 'var(--text)' }}>Rate Your Experience with CertLock</h2>
+                <p style={{ color: 'var(--text-secondary)', maxWidth: 550, margin: '0 auto', fontSize: '1rem' }}>
                   Your feedback drives our excellence. Let us know how we're doing!
                 </p>
 

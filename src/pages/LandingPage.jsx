@@ -340,8 +340,8 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
             <section style={{ padding: '100px 24px' }} data-aos="zoom-in">
                 <div style={{ 
                     maxWidth: 1000, margin: '0 auto', textAlign: 'center', borderRadius: 40, padding: '80px 24px',
-                    background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1E40AF 100%)',
-                    boxShadow: '0 25px 50px -12px rgba(37,99,235,0.3)',
+                    background: 'var(--aurora-gradient)',
+                    boxShadow: '0 25px 50px -12px rgba(37,99,235,0.2)',
                     position: 'relative', overflow: 'hidden'
                 }}>
                     <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: 250, height: 250, background: 'rgba(255,255,255,0.1)', filter: 'blur(60px)', borderRadius: '50%' }}></div>
@@ -357,9 +357,9 @@ const LandingPage = ({ onStartApp, onVerify, user }) => {
                         <button 
                             className="p-button-raised"
                             style={{ 
-                                padding: '18px 48px', fontSize: '1.1rem', background: '#FFFFFF', color: '#2563EB', 
+                                padding: '18px 48px', fontSize: '1.1rem', background: 'var(--accent)', color: '#FFFFFF', 
                                 fontWeight: 800, border: 'none', borderRadius: 50, cursor: 'pointer',
-                                transition: 'transform 0.2s', boxShadow: '0 12px 24px -10px rgba(0,0,0,0.2)'
+                                transition: 'transform 0.2s', boxShadow: '0 12px 24px -10px rgba(59,130,246,0.5)'
                             }} 
                             onClick={onStartApp}
                         >

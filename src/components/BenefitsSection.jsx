@@ -48,7 +48,7 @@ const BenefitsSection = () => (
                     <span style={{ color: 'var(--accent)', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Benefits</span>
                 </div>
                 <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 900, fontFamily: 'Outfit', marginBottom: 16, color: 'var(--text)' }}>
-                    Why You'll Love CertifyPro
+                    Why You'll Love CertLock
                 </h2>
                 <p style={{ color: 'var(--text-secondary)', maxWidth: 480, margin: '0 auto', fontSize: '1rem', lineHeight: 1.7 }}>
                     Built for anyone who values their time and wants results without complexity.
@@ -119,7 +119,7 @@ const BenefitsSection = () => (
                     Anyone Creating Certificates in Bulk
                 </h3>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, maxWidth: 520, margin: '0 auto 28px' }}>
-                    Students, teachers, event organizers, HR teams — if you need fast results without complexity, CertifyPro is built for you.
+                    Students, teachers, event organizers, HR teams — if you need fast results without complexity, CertLock is built for you.
                 </p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
                     {AUDIENCE.map((tag, i) => (

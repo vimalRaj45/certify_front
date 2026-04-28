@@ -14,7 +14,7 @@ const StartupCheck = ({ children }) => {
         "Establishing Secure Verification Tunnel...",
         "Preparing Pixel-Perfect Renderer...",
         "Optimizing High-Speed Generation Worker...",
-        "Syncing with CertifyPro Database...",
+        "Syncing with CertLock Database...",
         "Securing Document Integrity Layers..."
     ];
 
@@ -94,7 +94,7 @@ const StartupCheck = ({ children }) => {
                         {messages[msgIndex]}
                     </h2>
                     <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.9rem, 3vw, 1.1rem)', lineHeight: '1.6', fontWeight: 500, letterSpacing: '0.01em', margin: '0 auto', maxWidth: 450 }}>
-                        Connecting to the CertifyPro environment. 
+                        Connecting to the CertLock environment. 
                         Our high-performance engine is preparing your workspace.
                     </p>
                     
