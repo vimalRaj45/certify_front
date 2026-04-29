@@ -1,0 +1,106 @@
+/* Success State Animations */
+@keyframes happy-float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+@keyframes happy-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 5px 15px rgba(37, 99, 235, 0.2)); }
+  50% { transform: scale(1.1); filter: drop-shadow(0 15px 30px rgba(37, 99, 235, 0.4)); }
+}
+
+.company-review__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.company-review__success-img {
+  width: 100px;
+  height: 100px;
+  animation: happy-float 3s ease-in-out infinite, happy-pulse 2s ease-in-out infinite;
+}
+
+/* Company Review Inputs */
+.company-review__dialog .p-inputgroup {
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  align-items: stretch !important;
+  border: 1px solid var(--border);
+}
+
+.company-review__dialog .p-inputgroup-addon {
+  background: rgba(255,255,255,0.03) !important;
+  color: var(--accent) !important;
+  border: 1px solid var(--border) !important;
+  border-right: none !important;
+  padding: 0 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.company-review__dialog .p-inputgroup-addon i {
+  font-size: 1.1rem !important;
+}
+
+.company-review__dialog .p-inputtext, 
+.company-review__dialog .p-inputtextarea {
+  border: 1px solid var(--border) !important;
+  padding: 10px 14px !important;
+  font-size: 0.9rem !important;
+  border-radius: 0 8px 8px 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+.company-review__dialog .p-inputtext:focus,
+.company-review__dialog .p-inputtextarea:focus {
+  border-color: var(--accent) !important;
+  background: rgba(255,255,255,0.08) !important;
+  outline: none !important;
+  box-shadow: none !important; /* Remove any glowing/blinking effects */
+}
+
+/* Specific to Textarea */
+.company-review__dialog .p-inputtextarea {
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+/* Card Styling Refinement */
+.company-review__card {
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 60px 40px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+}
+
+.company-review__rating-wrapper {
+  margin-top: 40px;
+  display: flex !important;
+  justify-content: center !important;
+  width: 100%;
+}
+
+/* Ensure PrimeReact's internal rating container is also centered */
+.company-review__rating-wrapper .p-rating {
+  justify-content: center !important;
+  gap: 12px;
+}
+
+.company-review__dialog-body {
+  padding: 10px 10px 20px;
+}
+
+.company-review__dialog .p-dialog-content {
+  padding: 0 30px 30px 30px !important;
+}
+
+.company-review__dialog .p-dialog-header {
+  padding: 30px 30px 15px 30px !important;
+}
