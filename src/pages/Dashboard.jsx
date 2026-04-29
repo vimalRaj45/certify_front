@@ -298,6 +298,20 @@ function Home() {
 
     const addField = (fieldName) => {
         if (fields.find(f => f.field === fieldName)) return;
+        
+        // Stability Logic: Limit fields based on row count
+        const rowCount = csvData?.participants?.length || 0;
+        const limit = rowCount > 500 ? 2 : 4;
+
+        if (fields.length >= limit) {
+            toast.error(`Stability Limit: For ${rowCount} participants, you can only map up to ${limit} fields.`, {
+                icon: '⚖️',
+                duration: 4000,
+                style: { borderRadius: '12px', background: '#0F172A', color: '#fff', fontWeight: 700 }
+            });
+            return;
+        }
+
         setFields([...fields, {
             field: fieldName,
             x: 50,
@@ -895,6 +909,18 @@ function Home() {
                                                 </button>
                                             );
                                         })}
+                                    </div>
+                                </div>
+
+                                {/* MAPPING LIMITS NOTICE */}
+                                <div style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.05), rgba(168,85,247,0.05))', borderRadius: 12, padding: '12px 16px', border: '1px solid rgba(59,130,246,0.12)', marginTop: 8 }}>
+                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                                        <i className="pi pi-shield" style={{ color: '#3B82F6', fontSize: '0.85rem', marginTop: 2 }}></i>
+                                        <div style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.6 }}>
+                                            <strong style={{ color: '#3B82F6' }}>Stability Guard</strong> — To ensure browser stability during large batches:<br/>
+                                            • Over 500 rows: <strong>2 fields</strong> allowed.<br/>
+                                            • Under 500 rows: <strong>4 fields</strong> allowed.
+                                        </div>
                                     </div>
                                 </div>
 
