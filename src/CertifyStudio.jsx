@@ -333,6 +333,19 @@ function CertifyStudio() {
 
     const addField = (fieldName) => {
         if (fields.find(f => f.field === fieldName)) return;
+
+        // Dynamic Limit Enforcement: >500 rows = 2 fields, <=500 rows = 4 fields
+        const rowCount = csvData?.participants?.length || 0;
+        const limit = rowCount > 500 ? 2 : 4;
+
+        if (fields.length >= limit) {
+            toast.error(`Mapping Limit: For ${rowCount > 500 ? 'over 500' : 'under 500'} participants, you are limited to ${limit} mappings to ensure generation stability.`, {
+                icon: '⚠️',
+                style: { borderRadius: '12px', background: '#7f1d1d', color: '#fff', fontWeight: 700 }
+            });
+            return;
+        }
+
         setFields([...fields, {
             field: fieldName,
             x: 50,
@@ -910,7 +923,14 @@ function CertifyStudio() {
                                 </div>
 
                                 <div style={{ marginBottom: 16 }}>
-                                    <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Available Columns</div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Available Columns</div>
+                                        {csvData && (
+                                            <div style={{ fontSize: '0.65rem', fontWeight: 800, color: fields.length >= (csvData.participants.length > 500 ? 2 : 4) ? 'var(--amber)' : 'var(--accent)' }}>
+                                                {fields.length} / {csvData.participants.length > 500 ? 2 : 4} mapped
+                                            </div>
+                                        )}
+                                    </div>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                                         {csvData.columns.map(col => {
                                             const isMapped = fields.find(f => f.field === col);

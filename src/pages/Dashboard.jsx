@@ -298,16 +298,15 @@ function Home() {
 
     const addField = (fieldName) => {
         if (fields.find(f => f.field === fieldName)) return;
-        
-        // Stability Logic: Limit fields based on row count
+
+        // Dynamic Limit Enforcement: >500 rows = 2 fields, <=500 rows = 4 fields
         const rowCount = csvData?.participants?.length || 0;
         const limit = rowCount > 500 ? 2 : 4;
 
         if (fields.length >= limit) {
-            toast.error(`Stability Limit: For ${rowCount} participants, you can only map up to ${limit} fields.`, {
-                icon: '⚖️',
-                duration: 4000,
-                style: { borderRadius: '12px', background: '#0F172A', color: '#fff', fontWeight: 700 }
+            toast.error(`Mapping Limit: For ${rowCount > 500 ? 'over 500' : 'under 500'} participants, you are limited to ${limit} mappings to ensure generation stability.`, {
+                icon: '⚠️',
+                style: { borderRadius: '12px', background: '#7f1d1d', color: '#fff', fontWeight: 700 }
             });
             return;
         }
@@ -896,7 +895,14 @@ function Home() {
                                 </div>
 
                                 <div style={{ marginBottom: 16 }}>
-                                    <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Available Columns — Click to map to canvas</div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Available Columns — Click to map to canvas</div>
+                                        {csvData && (
+                                            <div style={{ fontSize: '0.65rem', fontWeight: 800, color: fields.length >= (csvData.participants.length > 500 ? 2 : 4) ? '#F59E0B' : '#2563EB' }}>
+                                                {fields.length} / {csvData.participants.length > 500 ? 2 : 4} mapped
+                                            </div>
+                                        )}
+                                    </div>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                                         {csvData.columns.map(col => {
                                             const isMapped = fields.find(f => f.field === col);
@@ -909,18 +915,6 @@ function Home() {
                                                 </button>
                                             );
                                         })}
-                                    </div>
-                                </div>
-
-                                {/* MAPPING LIMITS NOTICE */}
-                                <div style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.05), rgba(168,85,247,0.05))', borderRadius: 12, padding: '12px 16px', border: '1px solid rgba(59,130,246,0.12)', marginTop: 8 }}>
-                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                                        <i className="pi pi-shield" style={{ color: '#3B82F6', fontSize: '0.85rem', marginTop: 2 }}></i>
-                                        <div style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.6 }}>
-                                            <strong style={{ color: '#3B82F6' }}>Stability Guard</strong> — To ensure browser stability during large batches:<br/>
-                                            • Over 500 rows: <strong>2 fields</strong> allowed.<br/>
-                                            • Under 500 rows: <strong>4 fields</strong> allowed.
-                                        </div>
                                     </div>
                                 </div>
 
