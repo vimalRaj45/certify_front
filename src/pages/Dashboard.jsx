@@ -139,6 +139,12 @@ function Home() {
     const [customWidth, setCustomWidth] = useState(600);
     const [customHeight, setCustomHeight] = useState(400);
 
+    const [globalInfo, setGlobalInfo] = useState({
+        eventName: '',
+        providedBy: '',
+        dateTime: ''
+    });
+
     const [sendEmail, setSendEmail] = useState(false);
     const hasEmailColumn = useMemo(() => {
         if (!csvData || !csvData.columns) return false;
@@ -298,6 +304,18 @@ function Home() {
 
     const addField = (fieldName) => {
         if (fields.find(f => f.field === fieldName)) return;
+
+        const rowCount = csvData?.participants?.length || 0;
+        const maxAllowed = rowCount > 500 ? 2 : 4;
+
+        if (fields.length >= maxAllowed) {
+            toast.error(`For ${rowCount} records, mapping is restricted to ${maxAllowed} fields for stability.`, {
+                icon: '⚠️',
+                style: { borderRadius: '12px', background: '#0F172A', color: '#fff', fontWeight: 700 }
+            });
+            return;
+        }
+
         setFields([...fields, {
             field: fieldName,
             x: 50,
@@ -325,8 +343,17 @@ function Home() {
         setIsPreviewing(true);
         try {
             await new Promise(resolve => setTimeout(resolve, 800)); // Artificial delay to show loader
+            
+            // Merge global info into the first participant for preview
+            const previewParticipant = {
+                ...csvData.participants[0],
+                "Event Name": globalInfo.eventName || "Sample Event",
+                "Provided By": globalInfo.providedBy || "Sample Organization",
+                "Date Time": globalInfo.dateTime || "April 29, 2026"
+            };
+
             const res = await axios.post(`${API_BASE}/preview-pdf`, {
-                participant: csvData.participants[0], templateUrl, fields,
+                participant: previewParticipant, templateUrl, fields,
                 customDimensions: useCustomSize ? { width: customWidth, height: customHeight } : null
             }, { responseType: 'blob' });
 
@@ -335,7 +362,7 @@ function Home() {
             // Consistently download preview across all devices
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Preview_${csvData.participants[0][Object.keys(csvData.participants[0])[0]] || 'Certificate'}.pdf`;
+            link.download = `Preview_${previewParticipant[Object.keys(previewParticipant)[0]] || 'Certificate'}.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -360,6 +387,7 @@ function Home() {
                 templateUrl,
                 publicId,
                 fields,
+                globalInfo, // SEND GLOBAL INFO
                 force_mass_email: true, // HARDCODED TRUE FOR TESTING
                 customDimensions: useCustomSize ? { width: customWidth, height: customHeight } : null
             };
@@ -797,19 +825,47 @@ function Home() {
                             </div>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                                {/* CSV UPLOAD */}
+                                {/* DATA UPLOAD (CSV/EXCEL) */}
                                 <div className="upload-zone-premium">
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                                         <div style={{ width: 36, height: 36, borderRadius: 10, background: csvData ? 'rgba(16,185,129,0.1)' : 'rgba(59,130,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <i className={`pi ${csvData ? 'pi-check-circle' : 'pi-file'}`} style={{ color: csvData ? '#10B981' : '#3B82F6', fontSize: '1rem' }}></i>
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>CSV Data File</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>{csvData ? `${csvData.participants.length} records, ${csvData.columns.length} columns loaded` : 'Accepts .csv — Max 10MB, 100 rows'}</div>
+                                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>Participant Data</div>
+                                            <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>{csvData ? `${csvData.participants.length} records, ${csvData.columns.length} columns loaded` : 'Accepts CSV, Excel — Max 10MB, 1000 rows'}</div>
                                         </div>
                                         {csvData && <div style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 800, color: '#10B981', background: 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: 999 }}>✓ Ready</div>}
                                     </div>
-                                    <FileUpload mode="basic" name="csv" accept=".csv" maxFileSize={10000000} onSelect={onCsvUpload} auto chooseLabel={csvData ? 'Replace CSV' : 'Upload CSV'} className="w-full" />
+                                    <FileUpload mode="basic" name="csv" accept=".csv,.xlsx,.xls" maxFileSize={10000000} onSelect={onCsvUpload} auto chooseLabel={csvData ? 'Replace File' : 'Upload CSV/Excel'} className="w-full" />
+                                </div>
+
+                                {/* GLOBAL EVENT INFO */}
+                                <div style={{ background: '#F8FAFC', borderRadius: 20, padding: 20, border: '1px solid #E2E8F0' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                                        <i className="pi pi-calendar-plus" style={{ color: '#2563EB', fontSize: '1rem' }}></i>
+                                        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1E293B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Event Details</span>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                        <div style={{ position: 'relative' }}>
+                                            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: '0.6rem', fontWeight: 900, color: '#94A3B8', zIndex: 5 }}>EVENT</span>
+                                            <input type="text" placeholder="e.g. AI Masterclass 2026" value={globalInfo.eventName} onChange={(e) => setGlobalInfo({ ...globalInfo, eventName: e.target.value })} 
+                                                style={{ width: '100%', padding: '12px 12px 12px 60px', borderRadius: 12, border: '1px solid #E2E8F0', fontSize: '0.85rem', fontWeight: 700 }} />
+                                        </div>
+                                        <div style={{ position: 'relative' }}>
+                                            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: '0.6rem', fontWeight: 900, color: '#94A3B8', zIndex: 5 }}>BY</span>
+                                            <input type="text" placeholder="e.g. VSGRPS Academy" value={globalInfo.providedBy} onChange={(e) => setGlobalInfo({ ...globalInfo, providedBy: e.target.value })} 
+                                                style={{ width: '100%', padding: '12px 12px 12px 60px', borderRadius: 12, border: '1px solid #E2E8F0', fontSize: '0.85rem', fontWeight: 700 }} />
+                                        </div>
+                                        <div style={{ position: 'relative' }}>
+                                            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: '0.6rem', fontWeight: 900, color: '#94A3B8', zIndex: 5 }}>DATE</span>
+                                            <input type="text" placeholder="e.g. 29 April 2026" value={globalInfo.dateTime} onChange={(e) => setGlobalInfo({ ...globalInfo, dateTime: e.target.value })} 
+                                                style={{ width: '100%', padding: '12px 12px 12px 60px', borderRadius: 12, border: '1px solid #E2E8F0', fontSize: '0.85rem', fontWeight: 700 }} />
+                                        </div>
+                                    </div>
+                                    <div style={{ marginTop: 12, fontSize: '0.65rem', color: '#64748B', fontStyle: 'italic' }}>
+                                        These values will appear as "Event Name", "Provided By", and "Date Time" in Step 2.
+                                    </div>
                                 </div>
 
                                 {/* TEMPLATE UPLOAD */}
@@ -851,12 +907,14 @@ function Home() {
                                     </div>
                                 )}
 
-                                {/* FREE TIER NOTICE */}
+                                {/* TIER LIMITS NOTICE */}
                                 <div style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.05), rgba(168,85,247,0.05))', borderRadius: 12, padding: '12px 16px', border: '1px solid rgba(59,130,246,0.12)' }}>
                                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                                         <i className="pi pi-info-circle" style={{ color: '#3B82F6', fontSize: '0.85rem', marginTop: 2 }}></i>
                                         <div style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.6 }}>
-                                            <strong style={{ color: '#3B82F6' }}>100% Free</strong> — Batches limited to 100 rows. Need higher limits or advanced features? <a href="#" style={{ color: '#7C3AED', fontWeight: 800 }}>Contact VSGRPS →</a>
+                                            <strong style={{ color: '#3B82F6' }}>Mapping Logic</strong> — <br/>
+                                            • Under 500 rows: Up to <strong>4 fields</strong> allowed.<br/>
+                                            • Over 500 rows: Up to <strong>2 fields</strong> allowed for stability.
                                         </div>
                                     </div>
                                 </div>
@@ -884,6 +942,18 @@ function Home() {
                                 <div style={{ marginBottom: 16 }}>
                                     <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Available Columns — Click to map to canvas</div>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                        {/* Global Fields */}
+                                        {['Event Name', 'Provided By', 'Date Time'].map(col => {
+                                            const isMapped = fields.find(f => f.field === col);
+                                            return (
+                                                <button key={col} className={`field-chip ${isMapped ? 'mapped' : ''}`} style={{ borderStyle: 'dashed', borderColor: isMapped ? 'var(--accent)' : '#CBD5E1' }}
+                                                    onClick={() => isMapped ? setFields(fields.filter(f => f.field !== col)) : addField(col)}>
+                                                    <i className="pi pi-star-fill" style={{ fontSize: '0.75rem', color: '#F59E0B' }}></i>
+                                                    {col}
+                                                </button>
+                                            );
+                                        })}
+                                        {/* CSV Columns */}
                                         {csvData.columns.map(col => {
                                             const isMapped = fields.find(f => f.field === col);
                                             return (
@@ -891,7 +961,6 @@ function Home() {
                                                     onClick={() => isMapped ? setFields(fields.filter(f => f.field !== col)) : addField(col)}>
                                                     <i className={`pi ${isMapped ? 'pi-check-circle' : 'pi-plus-circle'}`} style={{ fontSize: '0.75rem' }}></i>
                                                     {col}
-                                                    {isMapped && <i className="pi pi-times" style={{ fontSize: '0.6rem', opacity: 0.6 }}></i>}
                                                 </button>
                                             );
                                         })}
