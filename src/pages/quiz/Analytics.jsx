@@ -24,7 +24,7 @@ const Analytics = () => {
           quizApi.getQuiz(id),
           quizApi.getQuizAnalytics(id)
         ]);
-        
+
         if (quizRes.success) setQuiz(quizRes.quiz);
         if (analyticsRes.success) setData(analyticsRes);
       } catch (err) {
@@ -36,35 +36,6 @@ const Analytics = () => {
     };
     fetchData();
   }, [id]);
-
-  const handleCSVExport = async () => {
-    try {
-      const res = await quizApi.exportQuizResults(id);
-      if (res.success && res.participants) {
-        const headers = ['Name', 'Email', 'Score', 'Percentage', 'Date'];
-        const csvRows = res.participants.map(p => [
-          `"${p.name}"`,
-          `"${p.email}"`,
-          p.score,
-          `${p.percentage}%`,
-          `"${new Date(p.submitted_at).toLocaleString()}"`
-        ].join(','));
-        
-        const csvContent = [headers.join(','), ...csvRows].join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `results_${quiz?.title || id}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        toast.success("CSV Downloaded!");
-      }
-    } catch (err) {
-      toast.error("Failed to export CSV");
-    }
-  };
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text)' }}>
@@ -90,28 +61,25 @@ const Analytics = () => {
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text)', padding: '40px 20px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <Breadcrumbs items={[{ label: 'Quiz Hub', url: '/quiz' }, { label: quiz?.title || 'Quiz' }]} />
-        
+
         <header style={{ marginBottom: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
           <div>
             <h1 style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'var(--font-h)', margin: 0, color: 'var(--text)' }}>Quiz Analytics</h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', fontWeight: 500 }}>Detailed performance breakdown for "{quiz?.title}"</p>
           </div>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <Button label="Export CSV" icon="pi pi-file-excel" className="p-button-outlined" 
-                    onClick={handleCSVExport}
-                    style={{ borderRadius: 12, borderColor: 'var(--green)', color: 'var(--green)' }} />
-            <Button label="Sync to Studio" icon="pi pi-sync" className="p-button-outlined" 
-                    onClick={async () => {
-                        const res = await quizApi.exportQuizResults(id);
-                        if (res.success) {
-                            localStorage.setItem('cert_participants', JSON.stringify(res.participants));
-                            toast.success("Ready for Certificate Studio!");
-                            navigate('/');
-                        }
-                    }} 
-                    style={{ borderRadius: 12, borderColor: 'var(--accent)', color: 'var(--accent)' }} />
-            <Button label="Hub" icon="pi pi-arrow-left" onClick={() => navigate('/quiz')} 
-                    style={{ borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
+          <div style={{ display: 'flex', gap: 15 }}>
+            <Button label="Export Results" icon="pi pi-download" className="p-button-outlined"
+              onClick={async () => {
+                const res = await quizApi.exportQuizResults(id);
+                if (res.success) {
+                  localStorage.setItem('cert_participants', JSON.stringify(res.participants));
+                  toast.success("Ready for Certificate Studio!");
+                  navigate('/');
+                }
+              }}
+              style={{ borderRadius: 12, borderColor: 'var(--accent)', color: 'var(--accent)' }} />
+            <Button label="Back to Hub" icon="pi pi-arrow-left" onClick={() => navigate('/quiz')}
+              style={{ borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text)' }} />
           </div>
         </header>
 
@@ -134,15 +102,15 @@ const Analytics = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 30, marginBottom: 40 }}>
           {/* Distribution */}
-          <Card header={<h3 style={{ margin: '20px 25px 0', fontSize: '1.2rem', fontFamily: 'var(--font-h)', color: 'var(--text)' }}>Score Distribution</h3>} 
-                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 24 }}>
+          <Card header={<h3 style={{ margin: '20px 25px 0', fontSize: '1.2rem', fontFamily: 'var(--font-h)', color: 'var(--text)' }}>Score Distribution</h3>}
+            style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 24 }}>
             <div style={{ padding: '0 10px 20px' }}>
               {Array.from({ length: 11 }).map((_, i) => {
                 const range = i * 10;
                 const d = distribution.find(dist => dist.range === range);
                 const count = d ? d.count : 0;
                 const percent = stats.total_attempts > 0 ? (count / stats.total_attempts) * 100 : 0;
-                
+
                 return (
                   <div key={range} style={{ marginBottom: 12 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: 4, color: 'var(--text-secondary)' }}>
@@ -158,7 +126,7 @@ const Analytics = () => {
 
           {/* Question Breakdown */}
           <Card header={<h3 style={{ margin: '20px 25px 0', fontSize: '1.2rem', fontFamily: 'var(--font-h)', color: 'var(--text)' }}>Question Difficulty</h3>}
-                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 24 }}>
+            style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 24 }}>
             <DataTable value={questions} className="p-datatable-sm" style={{ background: 'transparent' }} responsiveLayout="scroll">
               <Column field="question" header="Question" body={(rowData) => (
                 <div style={{ fontSize: '0.85rem', maxWidth: 300, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text)', fontWeight: 500 }}>{rowData.question}</div>
