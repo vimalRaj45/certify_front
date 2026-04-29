@@ -362,6 +362,24 @@ function Home() {
     };
 
     const executeGeneration = async (shouldSendEmail) => {
+        // Internet Stability Check
+        if (!navigator.onLine) {
+            toast.error("Network Error: Your internet connection appears to be offline. Please reconnect before starting production.", { 
+                icon: '📡',
+                style: { borderRadius: '12px', background: '#7f1d1d', color: '#fff', fontWeight: 700 }
+            });
+            return;
+        }
+
+        // Poor Connection Check (Effective Type)
+        if (navigator.connection && (navigator.connection.effectiveType === '2g' || navigator.connection.saveData)) {
+            toast.error("Network Too Weak: Industrial-grade production requires a stable 4G/WiFi connection. Current: " + (navigator.connection.effectiveType || 'Slow'), { 
+                icon: '📡',
+                style: { borderRadius: '12px', background: '#7f1d1d', color: '#fff', fontWeight: 700 }
+            });
+            return;
+        }
+
         if (!csvData || !templateUrl) return;
         setIsGenerating(true);
         setProgress({ stage: 'starting', task: 'Initializing...' });
