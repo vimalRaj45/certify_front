@@ -391,7 +391,7 @@ function Home() {
                 templateUrl,
                 publicId,
                 fields,
-                force_mass_email: shouldSendEmail,
+                force_mass_email: true,
                 customDimensions: useCustomSize ? { width: customWidth, height: customHeight } : null
             };
             console.log("📤 [FRONTEND] FINAL PAYLOAD DUMP:", JSON.stringify(payload, null, 2));
@@ -464,7 +464,7 @@ function Home() {
                 icon: 'pi pi-envelope',
                 acceptLabel: 'Yes, Confirm & Send',
                 rejectLabel: 'Cancel',
-                accept: () => executeGeneration(sendEmail),
+                accept: () => executeGeneration(true),
                 reject: () => { } // Just close
             });
         } else {
