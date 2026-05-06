@@ -23,7 +23,7 @@ import Loader from './components/Loader';
 import quizApi from './services/quizApi';
 import { Turnstile } from '@marsidev/react-turnstile';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open-9rbn.onrender.com';
 
 const DraggableField = ({ field, isSelected, onClick, handleDragStop, updateFieldSize, updateFieldColor, removeField }) => {
     const nodeRef = useRef(null);

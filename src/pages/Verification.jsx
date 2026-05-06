@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import toast, { Toaster } from 'react-hot-toast';
 import AOS from 'aos';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open-9rbn.onrender.com';
 
 const STEP_META = {
     hashing: { label: 'Layer 1 · Cryptographic Integrity', icon: 'pi-key', color: '#6366F1', num: 1 },
@@ -174,7 +174,7 @@ const VerificationPage = ({ onBack }) => {
         setSteps([{ id: 'registry', status: 'working', message: 'Querying official registry by ID...' }]);
 
         const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:5000' : API_BASE;
+            ? 'https://certify-open-9rbn.onrender.com' : API_BASE;
 
         try {
             const resp = await axios.get(`${currentApiBase}/verify-id?id=${id}`);
@@ -185,7 +185,7 @@ const VerificationPage = ({ onBack }) => {
                 ]
             }]);
             setResult(resp.data);
-            
+
             // Custom Security Alert Pop-up
             toast((t) => (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -228,7 +228,7 @@ const VerificationPage = ({ onBack }) => {
         setSteps([]);
 
         const currentApiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:5000' : API_BASE;
+            ? 'https://certify-open-9rbn.onrender.com' : API_BASE;
 
         const es = new EventSource(`${currentApiBase}/progress?key=${verifyKey}`);
         esRef.current = es;
@@ -415,7 +415,7 @@ const VerificationPage = ({ onBack }) => {
                         <h2 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 8px', color: result.verified ? 'var(--text)' : 'var(--red)' }}>
                             {result.verified ? (isInstant ? '🔍 Identity Verified' : '✅ Legitimate Certificate') : (result.message?.includes('SECURITY ALERT') ? '🚨 Tampered Document' : '❌ Verification Failed')}
                         </h2>
-                        
+
                         {result.verified && isInstant && (
                             <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: 12, padding: '12px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left' }}>
                                 <div style={{ fontSize: '1.2rem' }}>🛡️</div>
@@ -431,11 +431,11 @@ const VerificationPage = ({ onBack }) => {
                         </p>
 
                         {result.verified && isInstant && (
-                            <Button 
-                                label="Upgrade to 100% Security Audit" 
-                                icon="pi pi-shield" 
-                                onClick={() => { handleReset(); window.scrollTo({top: 0, behavior: 'smooth'}); }}
-                                style={{ width: '100%', marginBottom: 24, borderRadius: 12, background: 'linear-gradient(135deg, #6366F1, #A855F7)', border: 'none', fontWeight: 800 }} 
+                            <Button
+                                label="Upgrade to 100% Security Audit"
+                                icon="pi pi-shield"
+                                onClick={() => { handleReset(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                                style={{ width: '100%', marginBottom: 24, borderRadius: 12, background: 'linear-gradient(135deg, #6366F1, #A855F7)', border: 'none', fontWeight: 800 }}
                             />
                         )}
 

@@ -29,8 +29,8 @@ export default function Signin() {
 
   const finishSignup = (roleId) => {
     setLoading(true);
-    const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
-    
+    const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open-9rbn.onrender.com';
+
     fetch(`${API_BASE}/save-user`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,7 +47,7 @@ export default function Signin() {
         if (data.token) {
           localStorage.setItem("quiz_token", data.token);
           localStorage.setItem("user", JSON.stringify({ ...tempUser, user_type: data.user_type }));
-          
+
           setTimeout(() => {
             window.location.href = "/";
           }, 100);
@@ -68,8 +68,8 @@ export default function Signin() {
 
       setTempUser(user);
       setLoading(true);
-      
-      const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-vsgrps.onrender.com';
+
+      const API_BASE = import.meta.env.VITE_API_URL || 'https://certify-open-9rbn.onrender.com';
       try {
         const res = await fetch(`${API_BASE}/save-user`, {
           method: "POST",
@@ -82,7 +82,7 @@ export default function Signin() {
           }),
         });
         const data = await res.json();
-        
+
         if (data.token && data.user_type && data.user_type !== 'User') {
           localStorage.setItem("quiz_token", data.token);
           localStorage.setItem("user", JSON.stringify({ ...user, user_type: data.user_type }));
@@ -197,7 +197,7 @@ export default function Signin() {
           {step === "auth" ? (
             <>
               <img src="/logo.png" alt="Logo" style={{ height: 56, width: 'auto', marginBottom: 40, alignSelf: 'flex-start' }} />
-              
+
               <h1 style={{ fontFamily: "Outfit", fontWeight: 900, fontSize: "clamp(2rem, 4vw, 2.75rem)", color: "var(--text)", marginBottom: 20, lineHeight: 1.1, letterSpacing: '-0.03em' }}>
                 Join the Future <br /><span style={{ color: 'var(--accent)' }}>of Certification</span>
               </h1>
@@ -256,9 +256,9 @@ export default function Signin() {
         {/* Right Column: Illustration (Desktop Only) */}
         {step === "auth" && (
           <div className="signin-illustration-container">
-            <img 
-              src="/auth_illustration.png" 
-              alt="Illustration" 
+            <img
+              src="/auth_illustration.png"
+              alt="Illustration"
               className="signin-illustration"
             />
             <div style={{ position: 'absolute', bottom: 40, left: 40, right: 40, textAlign: 'center' }}>
@@ -270,18 +270,18 @@ export default function Signin() {
         )}
 
         {step === "role" && window.innerWidth >= 992 && (
-           <div className="signin-illustration-container">
-              <img 
-                src="/role_illustration.png" 
-                alt="Illustration" 
-                className="signin-illustration"
-              />
-           </div>
+          <div className="signin-illustration-container">
+            <img
+              src="/role_illustration.png"
+              alt="Illustration"
+              className="signin-illustration"
+            />
+          </div>
         )}
-        
+
         {/* Mobile Illustration (Mobile Only) */}
         <div className="mobile-illustration">
-             <img src={step === "auth" ? "/auth_illustration.png" : "/role_illustration.png"} alt="Illustration" />
+          <img src={step === "auth" ? "/auth_illustration.png" : "/role_illustration.png"} alt="Illustration" />
         </div>
       </div>
 
